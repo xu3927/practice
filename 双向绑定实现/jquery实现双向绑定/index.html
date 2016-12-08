@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jquery练习</title>
+</head>
+<body>
+<h1>jquery实现双向数据绑定</h1>
+<input type="text" data-bind-7788="wukong">
+<input type="text" data-bind-7788="wukong">
+<input type="text" data-bind-7788="wukong">
+<p data-bind-7788="wukong"></p>
+<p data-bind-7788="wukong"></p>
+<p data-bind-7788="wukong"></p>
+<input type="text" id='xixi' data-bind-7788="haha">
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+
+// 利用jquery的消息订阅模式实现双向绑定, 通过元素的属性来辨别元素
+
+// 数据绑定
+/**
+* 利用 data- 属性来标记元素
+* 绑定的时候同时实现trigger和on方法
+* trigger: 当元素改变(change)的时候调用trigger发出消息
+* on: 监听到消息时遍历所有拥有相同属性的元素更新其 value 和 html.
+*/ 
+function DataBinder (object_id, prop_name) {
+	this.id = object_id;
+	this.attr = 'data-bind-' + object_id;
+	this.propName = prop_name;
+	this.$attr = '[' + this.attr + '=' + this.propName + ']'; // 通过该属性可以获取该元素.
+	this.$Obj = jQuery({}); // 创建一个jquery对象.
+	var that = this;
+	var message = object_id + ':change';
+	jQuery(document).on('change', this.$attr, function () {
+		console.log("change", message);
+			var val = $(this).val();
+			that.trigger(message, val)
+		});
+	this.on(message);
+};
+DataBinder.prototype = {
+	trigger: function (message, val) {
+		this.$Obj.trigger(message, val);
+	},
+	on: function (message) {
+		var that = this;
+		this.$Obj.on(message, function ($eve, val) {
+			console.log("on, message", message);
+			$(that.$attr).each(function () {
+				var $ele = $(this);
+				if ($ele.is('input, text, area,select')) {
+					$ele.val(val);
+				} else {
+					$ele.html(val);
+				}
+			})
+		});
+	}
+};
+
+// var myData = new DataBinder(7788, 'wukong');
+
+// 设置数据绑定
+/**
+* 设置数据绑定
+* 给页面中的要做数据绑定的元素设置双向绑定
+* set 和 get方法
+* set: 用来给符合条件的元素设置双向绑定赋值
+* get: 获取符合条件的元素的当前的数据
+*/
+function setBinder (uid, name) {
+	this.binder = new DataBinder(uid, name);
+	this.attr = 'data-bind' + uid + '=' + name;
+}
+setBinder.prototype = {
+	set: function (key, val){
+		this.binder.on(key);
+		this.binder.trigger(key, val);
+	},
+	get: function () {
+		return $('[' + this.attr + ']').val();
+	}
+}
+
+var ceshi = new setBinder(7788, 'wukong');
+	// function DataBinder (object_id) {
+	// 	var pubSub = jQuery({}); // 创建一个jquery对象, 可以使用其 trigger, on 方法来实现消息机制
+	// 	var data_attr = 'bind-' + object_id;
+	// 	var message = object_id + ':change';
+	// 	// 利用data-binding属性来监听该元素上的变化事件
+	// 	$(document).on('change','[data-' + data_attr + ']', function (evt) {
+	// 		console.log(evt);
+	// 		var $input = $(this);
+	// 		debugger;
+	// 		pubSub.trigger(message, [$input.data(data_attr),$input.val()]);
+	// 	});
+	//   	//PubSub将变化传播到所有的绑定元素，设置input标签的值或者其他标签的HTML内容
+	//   	pubSub.on(message, function (evt, prop_name, new_val) {
+	//   		$('[data-' + data_attr + '=' + prop_name + ']').each(function () {
+	//   			var $bound = $(this);
+	//   			if ($bound.is('input, text, area,select')) {
+	//   				$bound.val(new_val);
+	//   			} else {
+	//   				$bound.html(new_val);
+	//   			}
+	//   		});
+	//   	});
+	//   	return pubSub;
+	// }
+
+	// // 创建一个user模型
+	// function User (uid) {
+	// 	var binder = new DataBinder(uid);
+	// 	var user = {
+	// 		attributes: {},
+	// 		 //属性设置器使用数据绑定器PubSub来发布变化
+	// 		 set: function (attr_name, val) {
+	// 		 	this.attributes[attr_name] = val;
+	// 		 	binder.trigger(uid + ':change', [attr_name, val, this]);
+	// 		 },
+	// 		 get: function (attr_name) {
+	// 		 	return this.attributes[attr_name];
+	// 		 },
+	// 		 _binder: binder
+	// 	};
+	// 	binder.on(uid + ':change', function (new_val, attr_name, initiator) {
+	// 		if (initiator !== user) {
+	// 			user.set(attr_name, new_val);
+	// 		}
+	// 	});
+	// 	return user;
+	// }
+
+	// // 应用
+	// var user = new User(123);
+	// user.set('name', 999);
+
+// 	function DataBinder( object_id ) {
+//   	// Use a jQuery object as simple PubSub
+//   	var pubSub = jQuery({});
+
+// 	  // We expect a `data` element specifying the binding
+// 	  // in the form: data-bind-<object_id>="<property_name>"
+// 	  var data_attr = "bind-" + object_id,
+// 	      message = object_id + ":change";
+
+// 	  // Listen to change events on elements with the data-binding attribute and proxy
+// 	  // them to the PubSub, so that the change is "broadcasted" to all connected objects
+// 	  jQuery( document ).on( "change", "[data-" + data_attr + "]", function( evt ) {
+// 	  	console.log(this);
+// 	    var $input = jQuery( this );
+// 	    pubSub.trigger( message, [ $input.attr('data-' + data_attr ), $input.val() ] );
+// 	  });
+
+// 		  // PubSub propagates changes to all bound elements, setting value of
+// 		  // input tags or HTML content of other tags
+// 	  pubSub.on( message, function( evt, prop_name, new_val ) {
+// 	  	console.log(999,"[data-" + data_attr + "=" + prop_name + "]" );
+// 	  	// debugger;
+// 		    jQuery( "[data-" + data_attr + "=" + prop_name + "]" ).each( function() {
+// 		    	// debugger;
+// 		    	console.log(this);
+// 		      var $bound = jQuery( this );
+// 		      console.log("$bound", $bound);
+// 		      if ( $bound.is("input, textarea, select") ) {
+// 		        $bound.val( new_val );
+// 		      } else {
+// 		        $bound.html( new_val );
+// 		      }
+// 		    });
+//   		});
+
+//  	 return pubSub;
+// 	}
+	
+
+// 	function User( uid ) {
+//   var binder = new DataBinder( uid ),
+
+//       user = {
+//         attributes: {},
+
+//         // The attribute setter publish changes using the DataBinder PubSub
+//         set: function( attr_name, val ) {
+//           this.attributes[ attr_name ] = val;
+//           binder.trigger( uid + ":change", [ attr_name, val, this ] );
+//         },
+
+//         get: function( attr_name ) {
+//           return this.attributes[ attr_name ];
+//         },
+
+//         _binder: binder
+//       };
+
+//   // Subscribe to the PubSub
+//   binder.on( uid + ":change", function( evt, attr_name, new_val, initiator ) {
+//     if ( initiator !== user ) {
+//       user.set( attr_name, new_val );
+//     }
+//   });
+
+//   return user;
+// }
+
+// // javascript
+// var user = new User( 123 );
+// user.set( "name", "Wolfgang" );
+
+</script>
+</body>
+</html>
