@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>scope作用域关系</title>
+</head>
+
+<body>
+
+<div ng-app="app">
+	<div ng-controller="parentCtrl">
+		<h3>parentCtrl</h3>
+		<input type="text" ng-model="msg">
+		<input type="text" ng-model="obj.msg">
+		<p>{{msg}}</p>
+		<p>{{obj}}</p>
+		<div ng-controller="childCtrl1">
+			<hr>
+			<h3>childCtrl1</h3>
+			<input type="text" ng-model="msg">
+			<input type="text" ng-model="obj.msg">
+			<p>{{msg}}</p>
+			<p>{{obj}}</p>
+		</div>
+		<div ng-controller="childCtrl2">
+			<hr>
+			<h3>childCtrl2</h3>
+			<input type="text" ng-model="msg">
+			<input type="text" ng-model="obj.msg">
+			<p>{{msg}}</p>
+			<p>{{obj}}</p>
+		</div>
+		<div ng-controller="childCtrl3">
+			<hr>
+			<h3>childCtrl3</h3>
+			<input type="text" ng-model="msg">
+			<input type="text" ng-model="obj.msg">
+			<p>{{msg}}</p>
+			<p>{{obj}}</p>
+		</div>
+	</div>
+	
+</div>
+
+<script type="text/javascript" src="./angular-1.5.8/angular.js"></script>
+<script type="text/javascript">
+// 父子作用域没有隔离, 作用域会通过原型链继承. 则对于msg这样的值类型的数据, 父作用域中的改变会影响到子作用域, 但是当子作用域中也对该变量赋值后, 则子作用域的该变量即保持独立.  但是对于obj, 修改obj.msg, 一个作用域修改会影响父或子作用域中的值. 
+	angular.module('app', [])
+	.controller ('parentCtrl', function ($scope) {
+		console.log('par', $scope);
+	})
+	.controller ('childCtrl1', function ($scope) {
+		console.log('childCtrl1', $scope);
+	})
+	.controller ('childCtrl2', function ($scope) {
+		console.log('childCtrl2', $scope);
+	})
+	.controller ('childCtrl3', function ($scope) {
+		console.log('childCtrl3', $scope);
+	})
+</script>
+	
+</body>
+</html>
