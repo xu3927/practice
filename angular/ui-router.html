@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ui-router学习</title>
+</head>
+<body>
+<h1>ui-router</h1>
+<div ng-app="app">
+	<ui-view></ui-view>
+	<script type="text/ng-template" id="root.html">
+		<h3>我是root组件</h3>
+		<ui-view></ui-view>
+	</script>
+	<script type="text/ng-template" id="haha.html">
+		<h3>我是哈哈组件</h3>
+		<p>{{ctrl.msg}}</p>
+	</script>
+	<script type="text/ng-template" id="xixi.html">
+		<h3>我是嘻嘻组件</h3>
+	</script>
+</div>
+<script type="text/javascript" src="./lib/angular-1.5.8/angular.js"></script>
+<script type="text/javascript" src="./lib/angular-ui-router.js"></script>
+<script type="text/javascript">
+var app = angular.module('app', ['ui.router'])
+.config(function ($stateProvider) {
+	$stateProvider
+		// decorator 中可以进行一些配置或重写state
+		.decorator('views', function (state) {
+			console.log(state);
+		})
+	$stateProvider
+		/**
+		* state 用于配置路由, 页面 
+		* 匹配的路由 http://localhost:3000/ui-router.html#/root 
+		* @name 
+		* @name：状态的名称。
+		* @stateConfig：状态配置对象。配置具有以下各项属性：
+		* @template： string/function，html模板字符串，或者一个返回html模板字符串的函数。
+		* @templateUrl：string/function，模板路径的字符串，或者返回模板路径字符串的函数。
+		* @templateProvider：function，返回html模板字符串或模板路径的服务。
+		* @controller：string/function，新注册一个控制器函数或者一个已注册的控制器的名称字符串。
+		* @controllerProvider：function，返回控制器或者控制器名称的服务
+		* @controllerAs：string，控制器别名。
+		* @parent：string/object，手动指定该状态的父级。
+		* @resolve：object，将会被注入controller去执行的函数，<string,function>形式。
+		* @url：string，当前状态的对应url。
+		* @views：object，视图展示的配置。<string,object>形式。
+		* @abstract：boolean，一个永远不会被激活的抽象的状态，但可以给其子级提供特性的继承。默认是true。
+		* @onEnter：function，当进入一个状态后的回调函数。
+		* @onExit：function，当退出一个状态后的回调函数。
+		* @reloadOnSearch：boolean，如果为false，那么当一个search/query参数改变时不会触发相同的状态，用于当你修改$location.search()的时候不想重新加载页面。默认为true。
+		* @data：object，任意对象数据，用于自定义配置。继承父级状态的data属性。换句话说，通过原型继承可以达到添加一个data数据从而整个树结构都能获取到。
+		* @params：url里的参数值，通过它可以实现页面间的参数传递。
+		*/
+		.state({
+			// 状态名称
+			name: 'root',
+			url: '/root',
+			templateUrl: 'root.html'
+		})
+		/* 匹配路由 http://localhost:3000/ui-router.html#/root/haha */
+		.state({
+			name: 'root.haha',
+			url: '/haha',
+			templateUrl: 'haha.html',
+			controller: 'hahaCtrl',
+			controllerAs: 'haha',
+			onEnter: function () {
+				console.log('Enter,haha');
+			},
+			onExit: function () {
+				console.log("Exit,haha");
+			}
+		})
+		/* http://localhost:3000/ui-router.html#/root/xixi */
+		.state('root.xixi', {
+			url: '/xixi',
+			templateUrl: 'xixi.html',
+			onEnter: function () {
+				console.log('Enter,xixi');
+			},
+			onExit: function () {
+				console.log("exit,xixi");
+			}
+		})
+
+		console.log($stateProvider);
+})
+.controller('hahaCtrl', function ($scope) {
+	console.log(this);
+	// this.msg = '我是哈哈'
+})
+
+</script>
+
+</body>
+</html>

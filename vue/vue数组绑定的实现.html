@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<style>
+	html,body{
+		font-size: 20px;
+	}
+</style>
+</head>
+<body>
+
+<div id="app">
+	<button @click="clickBtn">按钮</button>
+	<p>{{msg}}</p>
+	<p v-for="item in arr" track-by="$index">{{item}}</p>
+</div>
+
+<script type="text/javascript" src="./lib/vue.js"></script>
+<script type="text/javascript">
+var vm = new Vue({
+	el: '#app',
+	data: {
+		msg: '哈哈',
+		arr: [1,2,3,4,5]
+	},
+	methods: {
+		clickBtn () {
+			var num = parseInt(Math.random() * 10);
+			// this.arr.push(num);
+			this.arr = haha;
+			console.log("111", this.arr);
+		}
+	}
+});
+
+// vue中数组检测的实现
+
+// 获取数组原型
+const arrayProto = Array.prototype;
+// 创新新的原型对象
+const arrayMethods = Object.create(arrayProto);
+
+['push', 'pop', 'shift', 'unshift', 'sort', 'slice'].forEach(function (method) {
+	// 获取数组的相应方法
+	const originalMethod = arrayMethods[method];
+
+	Object.defineProperty(arrayMethods, method, {
+		value: function () {
+			let i = arguments.length;
+			// 复制参数数组
+			const args = new Array(i);
+			while (i--) {
+				args[i] = arguments[i];
+			}
+			// 
+			const result = originalMethod.apply(this, args);
+			// 绑定观察者
+			const ob = this.__ob__;
+			// 是否更改数组本身
+			let inserted;
+			switch (method) {
+				case 'push':
+				inserted = args;
+				case 'unshift':
+		          inserted = args;
+		          break;
+		        case 'splice':
+		          inserted = args.slice(2);
+		          break;
+			}
+			// 观察新数组
+			 inserted && ob.observeArray(inserted)
+		     // 触发更新
+		     ob.dep.notify()
+		     return result
+
+		},
+		enumerable: true,
+		writable: true,
+		configurable: true
+	})
+
+});
+
+// Observer 模块的实现
+function Observer (value) {
+	this.dep = new Dep();
+	this.value = value;
+	// 如果是数组则更改其原型指向
+	if (Array.isArray(value)) {
+		value.__proto__ = arrayMethods;
+		this.observerArray(value);
+	} else {
+		this.walk(value);
+	}
+}
+// 如果某项是数组, 继续调用Observer观测该元素
+Observer.prototype.observerArray = function (items) {
+	for (let i = 0, l = items.length; i < l; i++) {
+    	observe(items[i])
+  	}
+}
+
+// watcher的实现, 只需要更改其update方法
+Watcher.prototype.update = function (dep) {
+	const value = this.get();
+	const oldValue = this.value;
+	this.value = value;
+	if (value !== this.value || value !== null) {
+		this.cb.call(this.vm, value, oldValue);
+	    // 移除旧的观察者, 如果没有此函数， 会导致重复调用 $watch 回调函数。
+	    // 原因：数组变异过了，并对新数组也进行了观察，
+	    dep.subs.shift()
+	}
+}
+
+
+</script>
+</body>
+</html>
+
+
+
