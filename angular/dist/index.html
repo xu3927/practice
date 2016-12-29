@@ -7,6 +7,7 @@
 <body>
 <h1>ui-router</h1>
 <div ng-app="app">
+<hr>
 	<ui-view></ui-view>
 	<script type="text/ng-template" id="root.html">
 		<h3>我是root组件</h3>
@@ -14,7 +15,8 @@
 	</script>
 	<script type="text/ng-template" id="haha.html">
 		<h3>我是哈哈组件</h3>
-		<p>{{ctrl.msg}}</p>
+		<p>{{haha.msg}}</p>
+		<div ng-include="'includeTpl.html'"></div>
 	</script>
 	<script type="text/ng-template" id="xixi.html">
 		<h3>我是嘻嘻组件</h3>
@@ -23,13 +25,15 @@
 <script type="text/javascript" src="./lib/angular-1.5.8/angular.js"></script>
 <script type="text/javascript" src="./lib/angular-ui-router.js"></script>
 <script type="text/javascript">
+
 var app = angular.module('app', ['ui.router'])
 .config(function ($stateProvider) {
-	$stateProvider
+	// $stateProvider
 		// decorator 中可以进行一些配置或重写state
-		.decorator('views', function (state) {
-			console.log(state);
-		})
+		// .decorator('views', function (state) {
+		// 	// console.log(state);
+		// 	return state;
+		// })
 	$stateProvider
 		/**
 		* state 用于配置路由, 页面 
@@ -89,11 +93,12 @@ var app = angular.module('app', ['ui.router'])
 		console.log($stateProvider);
 })
 .controller('hahaCtrl', function ($scope) {
-	console.log(this);
-	// this.msg = '我是哈哈'
+	console.log("$scope", $scope);
+	console.log('this', this);
+	this.msg = '我是哈哈'
 })
 
 </script>
 
-</body>
+<script type="text/javascript" src="bundle.js"></script></body>
 </html>
