@@ -38,7 +38,7 @@
 					title="标题: 选择一项" 
 					theme="bootstrap"
 					close-on-select="true"
-					ng-disabled="true"
+					ng-disabled="false"
 					search-enabled="true"
 					class="col-md-8"
 					reset-search-input="true"
@@ -59,10 +59,10 @@
             </ui-select-match>
 			<!-- ui-select-choices 下拉列表的选项. 通过repeat指令来重复. 其中可以插入下拉列表中所显示的每项内容. -->
 			<ui-select-choices 
-            repeat="country.code as country in ctrl.countries track by $index"
+            repeat="country.code as country in ctrl.arr track by $index"
             refresh="ctrl.refreshEvent()"
             >
-				<div ng-bind-html="country.name | highlight: $select.search"></div>
+				<div ng-bind-html="country.name | highlight: $select.search" ng-click="ctrl.clickChooice(country)"></div>
 			</ui-select-choices>
 		</ui-select>
 		</div>
@@ -74,7 +74,23 @@
 <script type="text/javascript" src="./lib/angular-1.5.8/angular-sanitize.js"></script>
 <script type="text/javascript" src="./lib/ui-select.js"></script>
 <script type="text/javascript">
-
+var arr = [];
+var obj1 = {
+    name: 'obj1'
+};
+var obj2 = {
+    name: 'obj2',
+    parent: obj1
+};
+var obj3 = {
+    name: 'obj3',
+    parent: obj2
+};
+obj1.child = obj2;
+obj2.child = obj3;
+arr.push(obj1);
+arr.push(obj2);
+arr.push(obj3);
 
 	var app = angular.module('app', ['ui.select', 'ngSanitize'])
 	app.controller('demoCtrl', function ($scope, $http) {
@@ -99,7 +115,10 @@
             vm.selectVal = ['AF','AI'];
             vm.refreshData();
         }
-
+        vm.clickChooice = function (item) {
+            console.log('clickChooice:', item);
+        }
+        vm.arr = arr;
 		vm.countries =[ 
     {name: 'Afghanistan', code: 'AF'},
     {name: 'Åland Islands', code: 'AX'},

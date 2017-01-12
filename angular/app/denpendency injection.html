@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<script type="text/javascript">
+	
+	var fun1 = function () {
+		console.log("arguments", typeof arguments.callee.toString());
+		console.log("caller", fun1.caller);
+	}
+	var fun2 = function () {
+		console.log("arguments", arguments.callee);
+		console.log("caller", fun2.caller);
+		fun1()
+	}
+	fun2();
+</script>
+</body>
+</html>
