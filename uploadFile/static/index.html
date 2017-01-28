@@ -3,6 +3,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>上传文件测试</title>
+    <style type="text/css">
+        .drop-box{
+            width: 200px;
+            height: 200px;
+            border: 5px solid #ddd;
+        }
+        .drop-box.hover{
+            border-style: dashed;
+        }
+    </style>
 </head>
 <body>
 <h1>上传文件</h1>
@@ -16,9 +26,86 @@
 
 -->
 <form action="tijiao" method="post" id="upload-form" enctype="multipart/form-data">
-    <input type="file" id="upload" name="upload">
-    <input type="submit" value="提交"/>
-</form>
+    <!-- multiple属性可选择多个文件 -->
+    <p>
+        <input type="file" id="upload" multiple name="upload">
+    </p>
+    <div>
+        <h3>拖拽上传文件并显示缩略图</h3>
+        <div class="drop-box">
+            <p>把要上传的文件拖到该区域中</p>
+        </div>
+    </div>
+    <div class="file-list">
 
+    </div>
+    <p>
+        <button type="submit" value="提交">提交</button>
+    </p>
+</form>
+<script type="text/javascript">
+    var inputEle = document.querySelector('#upload');
+    var fileList = document.querySelector('.file-list');
+    var tpl = '<p><b>文件名: </b><span>hha.txt;</span>&emsp;<b>大小: </b><span>100k</span></p>';
+    // 当选取文件后会触发input的change事件
+    /**
+     * 选取文件后, input标签的files属性中会保存有所选取的文件信息, 包含, name, size, type等.
+     */
+
+    inputEle.onclick = function () {
+        fileList.innerHTML = '';
+        tpl = '';
+    }
+    inputEle.onchange = function () {
+        console.log(this.files);
+        var _fileList = this.files;
+        if (_fileList.length > 0) {
+            for (var i = 0 , l = _fileList.length; i < l; i++) {
+                tpl += '<p><b>文件名: </b><span>' + _fileList[i].name + ';</span>&emsp;<b>大小: </b><span>' + _fileList[i].size/1000 + 'K</span></p>'
+            }
+            tpl = '<p>您选择了' + this.files.length + '个文件:</p>' + tpl;
+        } else {
+            tpl = '<p>没有选中任何文件</p>';
+        }
+        fileList.innerHTML = tpl;
+        fileList.style.display = 'block';
+    }
+
+    /**
+     * 拖拽文件上传.
+     * 在drop之后直接输出dataTransfer.files 可以看到拖拽的文件, 如果输出dataTransfer再点开files属性看不到文件.
+     */
+    var dropBox = document.querySelector('.drop-box');
+    dropBox.ondragover = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.className = 'drop-box hover';
+    }
+    dropBox.ondragleave = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.className = 'drop-box';
+    }
+    dropBox.ondrop = function (event) {
+        event.preventDefault();
+        var dt = event.dataTransfer;
+        this.className = 'drop-box';
+        console.log(dt.files[0]);
+        preViewFile(dt.files[0]);
+    }
+    function preViewFile (file) {
+        if (window.FileReader) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var img = document.createElement('img');
+                console.log(event.target);
+                img.src = event.target.result;
+                img.width = 150;
+                dropBox.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 </body>
 </html>

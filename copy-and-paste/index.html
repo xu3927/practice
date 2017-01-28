@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>复制粘贴</title>
+</head>
+<body>
+<h1>复制粘贴练习</h1>
+<script type="text/javascript">
+    /**
+     * copy, cut, paste事件可以监听到系统的复制粘贴事件动作.
+     * event.clipboardData 属性可以用来设置或获取数据
+     */
+    document.oncopy = function (event) {
+        console.log('copy:', event)
+    }
+    document.oncut = function (event) {
+        console.log('cut:', event)
+    }
+    document.onpaste = function (event) {
+        console.log('past:', event.clipboardData.items[0])
+    }
+</script>
+
+</body>
+</html>

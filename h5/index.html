@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>H5 特性练习</title>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+<h1>H5特性练习</h1>
+<h3>video</h3>
+
+
+<!--
+controls: 值 controls	如果出现该属性，则向用户显示控件，比如播放按钮。
+autoplay: 值 autoplay如果出现该属性，则视频在就绪后马上播放。
+width: 像素
+height:	pixels	设置视频播放器的高度。
+loop: loop，则当媒介文件完成播放后再次开始播放。
+preload: preload 如果出现该属性，则视频在页面加载时进行加载，并预备播放。 如果使用 "autoplay"，则忽略该属性。
+src: url	要播放的视频的 URL。
+video 标签中可以包含多个source标签来设置视频的src, 默认播放第一个浏览器支持的src
+-->
+<video
+        controls="controls"
+        autoplay="autoplay"
+        width="300px"
+        loop="loop"
+        preload="preload"
+        id="videoEle">
+    <source src="movie.ogg">
+    <source src="movie.mp4">
+</video>
+
+<h3>音频</h3>
+<audio src="洪尘 - 似是故人来.mp3" controls="controls"></audio>
+<script type="text/javascript">
+    /**
+     * video
+     */
+    var videoEle = document.getElementById('videoEle');
+    videoEle.load(function () {
+        console.log('loaded:', arguments);
+    });
+    setTimeout(function () {
+//        videoEle.play().then(function () {
+//            console.log('played');
+//        });
+        videoEle.pause();
+    }, 100)
+
+</script>
+</body>
+</html>

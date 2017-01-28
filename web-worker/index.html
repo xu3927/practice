@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>web worker</title>
+</head>
+<body>
+<h1>web worker</h1>
+<script type="text/javascript">
+    /**
+     * 新建子线程. 通过构造函数建立worker, 参数是一段要执行的js脚本.
+     * 子线程中也可以新建线程
+     * 线程关闭:
+     * worker.terminate(); 或者在子线程中 self.close();
+     * 通过postMessage方法可以实现父子线程的通信
+     * 父子线程通信可以传递文本, 或对象. 不过是拷贝后的对象, 子线程修改对象不会影响父线程.
+     */
+    var worker = new Worker('http://127.0.0.1:3000/worker.js');
+    worker.postMessage('我是父线程, 向你发送消息');
+    worker.addEventListener("message", function (event) {
+        console.log('父线程:', event);
+        var obj = {a: 1, b: 2};
+        console.log(this);
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>drag and drop</title>
+    <style type="text/css">
+        .drag ul{
+            width: 350px;
+            float: left;
+            border: 2px solid #ddd;
+            background-color: #fff;
+            margin: 10px;
+            padding: 10px;
+        }
+        .drag ul li{
+            padding: 10px 0;
+            list-style: none;
+            border: 1px solid #ddd;
+            background: #efefef;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>H5中的拖拽操作</h1>
+<h3>拖放</h3>
+<div class="drag">
+    <div class="boxDest" style="background: #efefef; width: 300px; height: 300px;"></div>
+    <div class="boxSrc" id="boxSrc" style="background: #abc; width: 200px; height: 200px;" draggable="true"></div>
+    <ul class="dest">
+        <li class="txt">文字</li>
+        <li class="url">链接</li>
+        <li class="img">图片</li>
+        <li class="file" style="height: 200px">文件</li>
+        <li class="fileList"></li>
+    </ul>
+    <ul class="source">
+        <li class="txt" draggable="true">我是要被拖动的文字</li>
+        <li class="url">
+            <p>
+                <a href="/hahaxixi"  draggable="true">
+                    我是要被拖动的链接1
+                </a>
+            </p>
+            <p>
+                <a href="/hahaxixi2"  draggable="true">
+                    我是要被拖动的链接2
+                </a>
+            </p>
+            <p>
+                <a href="/hahaxixi3"  draggable="true">
+                    我是要被拖动的链接3
+                </a>
+            </p>
+        </li>
+        <li class="img">
+            <img id="haha" src="tu.jpeg" alt="图片" width="200px" draggable="true">
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+    /**
+     * 拖动
+     * 参考 https://developer.mozilla.org/zh-CN/docs/DragDrop/Drag_Operations#dragstart
+     * https://developer.mozilla.org/zh-CN/docs/DragDrop/Recommended_Drag_Types#image
+     * 默认情况下，浏览器阻止任何东西向HTML元素放置拖拽的发生。要使一个元素称为可放置区域，需要阻止浏览器的默认行为，也就是要监听dragenter 和 dragover 事件。
+     * ****
+     * 拖动事件的生命周期
+     * 拖动开始: ondragstart 在拖动操作开始时执行脚本（对象是被拖拽元素）
+     * 拖动过程中: ondrag 只要在被拖动就执行该事件（对象是被拖拽元素）
+     * 拖动过程中: ondragenter 当元素被拖动到一个合法的放置目标时，执行事件（对象是目标元素）
+     * 拖动过程中: ondragover 只要元素正在合法的放置目标上拖动时，就执行事件（对象是目标元素）
+     * 拖动过程中: ondragleave 当元素离开合法的放置目标时（对象是目标元素）
+     * 拖动结束: ondrop 将被拖拽元素放在目标元素内时运行事件（对象是目标元素）
+     * 拖动结束: ondragend 在拖动操作结束时运行事件（对象是被拖拽元素）
+     * *****
+     *  dataTransfer 对象
+     *  在拖拽开始时调用setData('@format')方法设置数据. 在drop时可以调用getData('@format')来获取数据;
+     *  在设置数据的时候需要设置其数据类型. 常见类型有 text/plain, text/uri-list, text/html, 'image/png'等. 可以参考 https://developer.mozilla.org/zh-CN/docs/DragDrop/Recommended_Drag_Types
+     *  设置拖拽操作的类型:
+     *  dropEffect属性: 设置目标元素可以接受的类型, 可选的有 copy, move, link, none,
+     *  effectAllowed属性: 设置被拖拽元素的拖拽类型, 可选的有 copy, link, move, copyLink, copyMove, linkMove, all, none, uninitialized(不限定, 效果和all一样);
+     */
+    var boxDest = document.querySelector('.boxDest');
+    var boxSrc = document.querySelector('.boxSrc');
+    boxSrc.addEventListener('dragstart', function (event) {
+        var dt = event.dataTransfer;
+        var id = event.target.id;
+        console.log('id', id);
+        dt.effectAllowed = 'copy';
+        dt.setData('Text', id);
+    });
+    boxDest.ondragover = function (event) {
+        event.preventDefault();
+        var dt = event.dataTransfer;
+        dt.dropEffect = 'copy';
+    }
+    boxDest.ondrop = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var dt = event.dataTransfer;
+        var data = dt.getData('Text');
+        console.log('drop:', data);
+        var ele = document.getElementById(data);
+        boxDest.appendChild(ele);
+    }
+    // 文本拖放
+    var srcTxtEle = document.querySelector('.drag .source .txt');
+    var destTxtEle = document.querySelector('.drag .dest .txt');
+    srcTxtEle.ondragstart = function (event) {
+        var dt = event.dataTransfer;
+        var txt = event.target.innerText;
+        dt.setData('text/plain', txt);
+    }
+    srcTxtEle.ondragenter = function (event) {
+        event.dataTransfer.dropEffect = 'copy';
+        event.target.style.backgroundColor = 'rgba(255,255,255,0.5)';
+        console.log('dragenter', event.target);
+    }
+    destTxtEle.ondragover = function (event) {
+        event.dataTransfer.effectAllowed = 'copy';
+        event.target.style.border = '5px dashed #ddd';
+        event.preventDefault();
+    }
+    srcTxtEle.ondragleave = function (event) {
+        event.target.style.backgroundColor = '';
+        console.log('ondragleave', event.target);
+    }
+    destTxtEle.ondrop = function (event) {
+        event.preventDefault();
+        var dt = event.dataTransfer;
+        var data = dt.getData('text/plain');
+        event.target.innerText = data;
+    }
+
+    // url 拖放
+    var urlSrcEle = document.querySelectorAll('.source .url a');
+    var urlDestEle = document.querySelector('.dest .url');
+    urlSrcEle.forEach(function (ele) {
+        ele.ondragstart = dragstartHandler;
+    });
+    function dragstartHandler (event) {
+        var dt = event.dataTransfer;
+        var html = event.target.outerHTML;
+        dt.setData('text/plain', html);
+        dt.dropEffect = 'copy';
+    }
+    urlDestEle.ondragover = function (event) {
+        event.preventDefault();
+        event.target.style.border = '5px dashed #ddd';
+        event.dataTransfer.effectAllowed = 'copyMove';
+    }
+    urlDestEle.ondragleave = function (event) {
+        event.preventDefault();
+        event.target.style.border = '';
+    }
+    urlDestEle.ondrop = function (event) {
+        var dt = event.dataTransfer;
+        var html = dt.getData('text/plain');
+        if (html) {
+            event.target.innerHTML = html;
+        }
+    }
+
+    // 图片拖放
+    var imgSrcEle = document.querySelector('.source .img img');
+    var imgDestEle = document.querySelector('.dest .img');
+    imgSrcEle.ondragstart = function (ev) {
+        console.log(ev.dataTransfer);
+        ev.dataTransfer.setData("Text", ev.target.id);
+        ev.dataTransfer.setData("image/png", ev.target.id);
+    };
+    imgDestEle.ondragover = function (ev) {
+        ev.preventDefault();
+    };
+    imgDestEle.ondrop = function (ev) {
+        ev.preventDefault();
+        var data=ev.dataTransfer.getData("Text");
+        ev.target.appendChild(document.getElementById(data).cloneNode());
+    };
+
+    // 文件拖放
+    var fileDestEle = document.querySelector('.dest .file');
+    fileDestEle.ondragover = function (ev) {
+        ev.preventDefault();
+    };
+    fileDestEle.ondrop = function (event) {
+        event.preventDefault();
+        var _fileList = event.dataTransfer.files;
+        // event.dataTransfer.files 中保存了所拖拽的文件的信息. name, size等
+        console.log(_fileList);
+        showFileInfoList(_fileList);
+        for (var i = 0, l = _fileList.length; i < l; i++) {
+            if (_fileList[i].type.indexOf('image') >= 0) {
+                preViewFile(_fileList[i])
+                        .then(function (url) {
+                            var img = document.createElement('img');
+                            img.src = url;
+                            img.width = 100;
+                            fileDestEle.appendChild(img);
+                        });
+            }
+        }
+    };
+
+    function showFileInfoList (_fileList) {
+        var fileListEle = document.querySelector('.dest .fileList');
+        var tpl = '';
+        if (_fileList.length > 0) {
+            for (var i = 0 , l = _fileList.length; i < l; i++) {
+                tpl += '<p><b>文件名: </b><span>' + _fileList[i].name + ';</span>&emsp;<b>大小: </b><span>' + _fileList[i].size/1000 + 'K</span></p>'
+            }
+            tpl = '<p>您选择了' + _fileList.length + '个文件:</p>' + tpl;
+        } else {
+            tpl = '<p>没有选中任何文件</p>';
+        }
+        fileListEle.innerHTML = tpl;
+    }
+    // 图片文件预览
+    function preViewFile (file) {
+        return new Promise(function (resolve, reject) {
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var url = event.target.result;
+                    resolve(url);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                reject();
+            }
+        })
+    }
+</script>
+</body>
+</html>
