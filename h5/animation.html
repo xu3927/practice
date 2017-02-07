@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>animation</title>
+    <style type="text/css">
+        /**
+        * 动画属性定义方式有2种, 可以复合写, 也可以分开transition属性写
+        div {
+            transition: <property> <duration> <timing-function> <delay>;
+        }
+        */
+        .box1 {
+            border-style: solid;
+            border-width: 1px;
+            display: block;
+            width: 100px;
+            height: 100px;
+            background-color: #0000FF;
+            -webkit-transition:width 2s ease 0.5s, height 3s,
+            background-color 4s, -webkit-transform 1s;
+            transition:width 2s ease 0.5s, height 3s, background-color 4s, transform 1s;
+        }
+        .box1:hover {
+            background-color: #FFCCCC;
+            width:200px;
+            height:200px;
+            -webkit-transform:rotate(180deg);
+            transform:rotate(180deg);
+        }
+        .box2{
+            width: 100px;
+            height: 100px;
+            transform: rotate(0deg);
+            transition-property: width, height, transform;
+            transition-duration: 2s, 1s, 3s;
+            transition-timing-function: ease;
+            transition-delay: 0s, 0.2s, 0.3s;
+            background: yellow;
+        }
+        .box2:hover{
+            width: 200px;
+            height: 200px;
+            transform: rotate(520deg);
+        }
+        /**
+        * animation 动画
+        * css属性 animation 是如下属性的简写形式：animation-name, animation-duration, animation-timing-function, animation-delay, animation-iteration-count, animation-direction 和 animation-fill-mode.
+        */
+        .box3{
+            width: 100px;
+            height: 100px;
+            background: hotpink;
+        }
+        .box3:hover{
+            animation: blink 1s linear 0s 3 alternate forwards;
+        }
+        @keyframes blink {
+            0%{
+                opacity: 1;
+            }
+            50%{
+                opacity: 0.3;
+            }
+            100%{
+                opacity: 0.1;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>animation练习</h1>
+
+<div class="box1"></div>
+<div class="box2"></div>
+<div class="box3"></div>
+<script type="text/javascript">
+    /**
+     * transition 过渡动画事件属性
+     * transitionend 动画完成触发, 每个属性的动画完成都会触发一次
+     * 事件event属性propertyName表示完成过渡的属性
+     * 事件event属性 elapsedTime 浮点数，指示当触发该transitionend事件时过渡已运行的时间（秒）。这个值不受 transition-delay 影响。
+     */
+    var oBox1 = document.querySelector('.box1');
+    oBox1.addEventListener('transitionend', function (event) {
+        /**
+         * event.propertyName表示完成过渡的属性
+         * event.elapsedTime 浮点数，指示当触发该transitionend事件时过渡已运行的时间（秒）。这个值不受 transition-delay 影响。
+         */
+        console.log('过渡动画结束', event);
+    });
+
+    /**
+     * animation 动画事件
+     * animationstart, animationend, animationiteration
+     * animationiteration: 对于重复执行的动画, 每次重复都会触发该事件
+     */
+    var oBox3 = document.querySelector('.box3');
+    oBox3.addEventListener('animationstart', function (event) {
+        /**
+         * event.elapsedTime 动画时间
+         * event.animationName 动画名称
+         */
+        console.log('animationstart', event);
+    });
+    oBox3.addEventListener('animationiteration', function (event) {
+        console.log('animationiteration', event);
+    });
+    oBox3.addEventListener('animationend', function (event) {
+        console.log('animationend', event);
+    })
+
+</script>
+</body>
+</html>

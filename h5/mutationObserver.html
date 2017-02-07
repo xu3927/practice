@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mutation observer</title>
+    <style type="text/css">
+        #mutation{
+            width: 200px;
+            height: 200px;
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+<h1>mutation observer</h1>
+<button type="button" style="padding: 7px 10px;" id="btn">按钮</button>
+<div id="mutation">
+
+</div>
+<script type="text/javascript">
+    /**
+     * MutationObserver 用来检测dom的变动, dom发生变动之后会触发该事件
+     * 与普通的dom事件不同, 该事件是异步事件, 会在dom变动之后触发, dom连续发生多次变动, 只会触发一次.
+     *
+     */
+
+
+    /**
+     * observe的回调函数接受2个参数, 分别是变动的记录保存有相应的dom变动信息和observe实例本身.
+     * mutationRecord 对象: 保存dom变动的信息.
+     */
+    var callback = function (mutationRecord, mutationObserver) {
+        console.log('dom发生变动', arguments);
+    };
+    /**
+     * 实例observer 有3个方法
+     * observe: 设置观测的dom及回调
+     * disconnect: 停止观测
+     * takeRecords: 方法用来清除变动记录，即不再处理未处理的变动。该方法返回变动记录的数组。
+     */
+    var observer = new MutationObserver(callback);
+    var ele = document.getElementById('mutation');
+    var options = {
+        'childList': true, // 子节点变动
+        'attributes': true,  // 节点属性
+        'characterData': true,  // 节点内容或文本变动
+        'subtree': true, // 后代节点
+        'attributeOldValue': false, // 是否记录属性变动前的值
+        'characterDataOldValue': false, // 是否记录节点内容变动之前的值
+        'attributeFilter': ['class', 'style'] // 数组, 需要观察的属性
+    };
+    observer.observe(ele, options);
+
+    var btn = document.getElementById('btn');
+    var num = 0;
+    btn.onclick = function () {
+        var oP = document.createElement('p');
+        oP.innerText = num;
+        num++;
+        ele.appendChild(oP);
+        ele.appendChild(oP);
+        ele.appendChild(oP);
+        ele.appendChild(oP);
+    }
+</script>
+</body>
+</html>
