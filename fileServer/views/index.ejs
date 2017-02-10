@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>我的哈哈文件</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+	<h1>文件列表</h1>
+    <ul>
+        <%
+            for (var i = 0; i < videos.length; i++) {
+                %>
+        <li>
+            <video
+                    controls="controls"
+                    width="100%"
+                    loop="loop"
+                    id="videoEle">
+                <source src="<%=videos[i]%>">
+            </video>
+        </li>
+        <%
+            }
+        %>
+    </ul>
+
+</body>
+</html>
