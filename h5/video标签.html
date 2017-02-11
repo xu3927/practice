@@ -49,7 +49,10 @@ video 标签中可以包含多个source标签来设置视频的src, 默认播放
 //        });
         videoEle.pause();
     }, 100)
-
+    document.querySelectorAll('video').forEach(function (videoELe) {
+        // videoELe.autoplay = false;
+        console.log(videoELe.paused);
+    })
 </script>
 </body>
 </html>
