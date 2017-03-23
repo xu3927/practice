@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>指令的compile</h1>
+<div ng-app="app">
+    <div ng-controller="ctrl1">
+        <input type="text" ng-model="msg"/>
+        <div mydirective="true" msg="msg">
+            <div>
+                <p>我是插入的内容</p>
+            </div>
+            <p>{{msg}}</p>
+        </div>
+    </div>
+    <script type="text/ng-template" id="tpl.html">
+        <div class="mydirective">
+            <h3>我是指令模板</h3>
+            <hr>
+            <ng-transclude></ng-transclude>
+            <hr>
+        </div>
+    </script>
+</div>
+<script type="text/javascript" src='./lib/angular-1.5.8/angular.js'></script>
+<script type="text/javascript">
+angular.module('app', [])
+    .directive('mydirective', function ($compile) {
+        return {
+            restrict: 'EA',
+            scope: {
+                msg: '='
+            },
+            transclude: true,
+            compile: function (tEle, tAttr, transcludeFn) {
+                console.log('compile:', arguments);
+                return {
+                    pre: function () {
+                        console.log('pre:', arguments);
+                    },
+                    post: function (scope, tEle, tAttr, ctrl, transclude) {
+                        console.log('$compile:', $compile.prototype);
+                        console.log('子指令:', scope)
+                        console.log('post:', arguments);
+                        transclude(function(clone, newScope) {
+                            console.log('transclude:', clone, newScope);
+                        });
+                    }
+                }
+            },
+            templateUrl: 'tpl.html'
+        }
+    })
+    .controller('ctrl1', function ($scope, $rootScope) {
+        console.log('父ctrl:', $scope);
+        $scope.msg = 'ctrl1';
+        $scope.name = 'ctrl1';
+        $rootScope.name = 'root作用域'
+    })
+
+</script>
+</body>
+</html>

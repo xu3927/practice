@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <h1>Map对象练习</h1>
+</head>
+<body>
+<script type="text/javascript">
+    /**
+     Map 对象是表示集合数据的一种数据结构
+     */
+
+    /**
+     创建map对象:
+     构造函数
+     new Map([iterable])
+     参数iterable可以是数组, 或其它的迭代对象, 元素是键值对.
+     */
+
+    /**
+     * map 与对象的区别
+     * map的key可以是任意类型, 包括 NaN, undefined 等. object的key是字符串或symbol
+     * map 可以通过size获取元素的数量, object需要遍历
+     * map 实例没有prototype, object有(通过Object.create(null)可以创建无原型的对象)
+     * map 对象可以使用 for...of 遍历
+     */
+    var kvArray = [['a', 'aaa'], ['b', 'bbb']];
+    var map1 = new Map(kvArray); // 得到map对象
+    var map = new Map();
+    /**
+     实例的方法.
+     set, get, clear, size
+     forEach方法用来循环map对象的，参数是一个回调函数
+     */
+    map.set('a', 'aaa');
+    map.get('a') // => aaa
+    map.size // map的元素个数
+    map.clear() //清空map, 移除所有的项
+    map.delete('a') // 删除某项, 返回true / false
+    map.has('a') //返回 true/false
+    map.keys() // 返回所有的key, 得到一个 Iterator 对象
+    map.values() // 返回所有的value, 得到一个 Iterator 对象
+
+    /**
+     * 迭代方法
+     * 回调函数的第一个参数表示map对象的value
+     * 回调函数的第二个参数表示map对象的key
+     * 回调函数的第三个参数表示map对象
+     * Map对象不能使用for循环遍历
+     * Map对象不能使用for in循环
+     */
+
+
+
+</script>
+</body>
+</html>

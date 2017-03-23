@@ -9,6 +9,9 @@
 
 <div ng-app="app">
 	<div ng-controller="parentCtrl">
+	<div ng-repeat="item in arr track by $index">
+		<p><span>item</span>我是啊哈哈哈</p>
+	</div>
 		<h3>parentCtrl</h3>
 		<p>{{ctrl.haha}}</p>
 		<input type="text" ng-model="msg">
@@ -22,6 +25,9 @@
 			<input type="text" ng-model="obj.msg">
 			<p>{{msg}}</p>
 			<p>{{obj}}</p>
+            <div ng-controller="childCtrl11">
+                <h3>childCtrl11</h3>
+            </div>
 		</div>
 		<div ng-controller="childCtrl2">
 			<hr>
@@ -38,10 +44,11 @@
 			<input type="text" ng-model="obj.msg">
 			<p>{{msg}}</p>
 			<p>{{obj}}</p>
-		</div>
+            <dir-scope-obj2></dir-scope-obj2>
+        </div>
 	</div>
-	<!-- <div dir-scope-true dir-scope-false dir-scope-obj dir-scope-obj2>我是测试元素, 身上有多个指令</div> -->
-	<div dir-scope-true>我是测试元素, 身上有多个指令</div>
+	 <!--<div dir-scope-true dir-scope-false dir-scope-obj dir-scope-obj2>我是测试元素, 身上有多个指令会报错</div>-->
+	<div dir-scope-true>我是测试元素, 身上有多个指令, 会报错</div>
 	<dir-scope-true></dir-scope-true>
 	<dir-scope-false></dir-scope-false>
 	<dir-scope-obj></dir-scope-obj>
@@ -53,16 +60,24 @@
 // 父子作用域没有隔离, 作用域会通过原型链继承. 则对于msg这样的值类型的数据, 父作用域中的改变会影响到子作用域, 但是当子作用域中也对该变量赋值后, 则子作用域的该变量即保持独立.  但是对于obj, 修改obj.msg, 一个作用域修改会影响父或子作用域中的值. 
 	var app = angular.module('app', [])
 	.controller ('parentCtrl', function ($scope) {
+		$scope.arr = [9,7,5,4,3];
+	    $scope.name = 'parentCtrl';
 		console.log('par', $scope);
 	})
 	.controller ('childCtrl1', function ($scope) {
-		console.log('childCtrl1', $scope);
+        $scope.name = 'childCtrl1';
+        console.log('childCtrl1', $scope);
+	})
+    .controller ('childCtrl11', function ($scope) {
+        $scope.name = 'childCtrl11';
+		console.log('childCtrl11', $scope);
 	})
 	.controller ('childCtrl2', function ($scope) {
 		console.log('childCtrl2', $scope);
 	})
 	.controller ('childCtrl3', function ($scope) {
 		console.log('childCtrl3', $scope);
+        $scope.name = 'childCtrl3';
 	})
 
 	// 定义指令
@@ -79,7 +94,7 @@
 	})
 	.directive('dirScopeFalse', function () {
 		return {
-			scope: true,
+			scope: false,
 			restrict: 'EA',
 			link: function (scope) {
 				scope.name = '我是falseScope'
@@ -90,7 +105,6 @@
 	})
 	.directive('dirScopeObj', function ($rootScope) {
 		return {
-			scope: true,
 			restrict: 'EA',
 			scope: {
 
@@ -105,7 +119,6 @@
 	})
 	.directive('dirScopeObj2', function () {
 		return {
-			scope: true,
 			restrict: 'EA',
 			scope: {
 
