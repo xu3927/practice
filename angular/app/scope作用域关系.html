@@ -117,19 +117,31 @@
 			template: '	<p>scope是obj</p>'
 		}
 	})
-	.directive('dirScopeObj2', function () {
+	.directive('dirScopeObj2', function (factory1) {
 		return {
 			restrict: 'EA',
 			scope: {
 
 			},
 			link: function (scope) {
+				console.log('5555', factory1());
 				scope.name = '我是obj2Scope'
 				console.log("scopeObj2", scope);
 			},
 			template: '	<p>scope是obj2</p>'
 		}
 	})
+	.factory('factory1', function ($injector) {
+		return function () {
+			console.log('1111', $injector.get('factory2'));
+			console.log('I am factory1111');
+		}
+	})
+	.factory('factory2', function (factory1) {
+		return function () {
+			console.log('I am factory22222');
+		};
+	})	
 </script>
 	
 </body>

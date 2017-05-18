@@ -1,6 +1,7 @@
 **/.DS_Store/*
 .DS_Store
 .idea/*
-node_modules/*
-angular/node_modules/*
-*.log
+node_modules/**
+**/*.log
+**/yarn.lock
+**/yarn-error.log

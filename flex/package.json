@@ -1,0 +1,11 @@
+{
+  "name": "flex-practice",
+  "version": "1.0.0",
+  "description": "practice css flex",
+  "main": "index.js",
+  "author": "xuzhichao",
+  "license": "MIT",
+  "dependencies": {
+    "webpack": "^2.3.1"
+  }
+}

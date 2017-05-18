@@ -30,18 +30,18 @@ module.exports = {
 	 // loader
 	 module: {
 	 	loaders: [
-	 		{
-	 			// 通过正则匹配需要处理的文件
-	 			test: /\.css$/,
-	 			// loaders是一个数组, 包含要处理这些程序的loaders, loaders的处理顺序是从右到左的. 这里会先运行css-loader, 然后运行style-loader
-	 			loaders: ['style', 'css'],
-	 			include: APP_PATH
-	 		},
-	 		{
-	 			test: /\.scss$/,
-	 			loaders: ['style', 'css?sourceMap', 'sass?sourceMap']],
-	 			include: APP_PATH
-	 		}	
+	 		// {
+	 		// 	// 通过正则匹配需要处理的文件
+	 		// 	test: /\.css$/,
+	 		// 	// loaders是一个数组, 包含要处理这些程序的loaders, loaders的处理顺序是从右到左的. 这里会先运行css-loader, 然后运行style-loader
+	 		// 	loaders: ['style', 'css'],
+	 		// 	include: APP_PATH
+	 		// },
+	 		// {
+	 		// 	test: /\.scss$/,
+	 		// 	loaders: ['style', 'css?sourceMap', 'sass?sourceMap'],
+	 		// 	include: APP_PATH
+	 		// }	
 	 	]
 	 }
 }
