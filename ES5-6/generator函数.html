@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<h1 id="app">hello</h1>
+<script type="text/javascript">
+
+</script>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+<script type="module">
+
+function * stateGenerator (){
+	yield "state1";
+	yield "state2";
+	yield "state3";
+	yield "state4";
+	yield "state5";
+	yield "state6";
+
+}
+
+var sg = stateGenerator();
+
+console.log(sg);
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+console.log(sg.next());
+
+
+
+</script>
+</body>
+</html>

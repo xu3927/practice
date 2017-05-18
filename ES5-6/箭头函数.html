@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>箭头函数</title>
+</head>
+<body>
+<h1 id="app">hello</h1>
+<script type="text/javascript">
+
+</script>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+<script type="module">
+
+
+//箭头函数中的this由定义时确定, 不能被更改. 但是可以通过更改其定义时候的作用域来更改箭头函数的this
+// call apply 均不能更改箭头函数的this
+
+var obj = {
+	a : function(){
+		console.log(this,"普通函数");
+	},
+	b : () => {
+		console.log(this,"箭头函数");
+	},
+	c : {
+		cc : function(){
+			console.log(this,"对象中的普通函数");
+			var fn = () =>{
+			console.log(this,"对象中的箭头函数");
+			}
+			fn();
+		} 
+		
+	}
+}
+
+obj.a();
+obj.b(); 
+obj.c.cc(); 
+
+console.log("--------------");
+
+function Dog(name,age){
+	this.name = name;
+	this.age = age;
+}
+
+Dog.prototype = {
+	wang : function(){
+		console.log(this,"普通函数");
+		console.log(this.name + "汪汪");
+	},
+	bite : (per,harm) => {
+		console.log(this,"箭头函数");
+		console.log(this.name + "咬了" + per +"一口,造成" + harm + "伤害");
+	}
+}
+
+
+
+var xiaobai = new Dog("小白",15);
+
+xiaobai.wang();
+xiaobai.bite("吕洞宾",30) // this 是window对象, 找不到this.name
+
+</script>
+</body>
+</html>

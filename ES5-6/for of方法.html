@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app">
+	哈哈
+</div>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+// for of 遍历器, 其中可以使用break, continue关键字
+
+var arr = [1,2,3,4,5];
+
+for (var k of arr){
+	
+	if(k == 3){
+		continue;
+	}
+
+	console.log(k);
+}
+
+console.log("-----------");
+
+var obj = {
+	a : 1,
+	b : 2,
+	c : 3
+}
+
+console.log(obj);
+
+
+console.log("-----");
+
+var s = new Set(["a","b",1,"1",1]);
+console.log(s);
+
+var [x,y,...num] = s;
+console.log(x,y,num,"sssssssss");
+
+for (var kk of s){
+	console.log(kk);
+}
+
+
+console.log("-----");
+
+var m = new Map()
+m.set('color', 'red')
+m.set(document, 'green');
+console.log(m);
+for (var [kk,v] of m){
+	console.log(kk,v);
+}
+
+
+
+
+</script>
+
+
+</body>
+</html>

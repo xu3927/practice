@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+class Animal {
+
+	// 构造函数
+	constructor (name,age) {
+		this.name = name;
+		this.age = age;
+	}
+
+	// 定义方法
+	eat () {
+		console.log(this.name + "吃饭");
+		// 在函数内部可以获取函数的静态属性方法
+		console.log(Dog.run(),111); 
+	}
+
+	// static 定义静态属性方法,只能在函数内部调用。 静态方法不会被继承
+	static run () {
+		//静态方法中的this属性无法被读取
+		console.log(this.name + "跑走了");
+	}
+}
+
+//子类
+class Dog extends Animal {
+
+	//构造函数
+	constructor (name,age,color,harm) {
+		//继承父类的构造函数
+		super (name,age);
+		// 子类的this属性定义要放在super之后
+		this.color = color;
+		this.harm = harm;
+	}
+
+	// 定义方法
+	bite (per) {
+		console.log(this.name + "咬了" + per + "一口，造成" + this.harm + "点伤害");
+	}
+
+	// 使用get， set定义属性， 在设置或取值的时候会触发相应的方法
+	get harmZhi () {
+		console.log(this.name + "伤害值是" + this.harm);
+	}
+
+	set harmZhi (zhi) {
+		this.harm = zhi;
+		console.log(this.name + "伤害值修改为了" + this.harm);
+	}
+}
+
+var xiaobai = new Dog("小白",3,"白色","33")
+console.log(xiaobai);
+console.log(xiaobai.harm);
+console.log(xiaobai.bite("吕洞宾"));
+console.log(xiaobai.harmZhi = 44,333); // 设置该属性会调用 set方法
+console.log(xiaobai.harm);
+// console.log(xiaobai.run()); //无法继承父类的静态方法
+
+</script>
+
+
+</body>
+</html>

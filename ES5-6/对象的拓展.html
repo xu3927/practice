@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app"></div>
+<ul>
+	<li> 1 1 1</li>
+	<li> 2 2 2</li>
+	<li> 3 3 3</li>
+	<li> 4 4 4</li>
+	<li> 5 5 5</li>
+</ul>
+
+<script type="text/javascript" src="lib/jquery.js"></script>
+
+<script type="text/javascript">
+
+
+var o1 = {
+	a : "a"
+}
+
+
+var o2 = {
+	b : "b"
+}
+
+var o3 = {
+	c : {
+		color : "red"
+	}
+}
+
+function foo(){
+	var foo2 = function(){
+
+	}
+	return foo2
+}
+
+var a = foo();
+var b = foo();
+
+
+
+// 拓展对象
+var res = Object.assign(o1,o2,o3)
+
+console.log(res);
+console.log(o1);
+console.log(o2);
+console.log(o3);
+
+console.log("--------------------");
+	
+</script>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+
+let obj1 = {
+	a : "a"
+}
+
+
+
+let obj2 = {
+	b : "b"
+}
+
+let obj3 = {
+	c : {
+		color : "red"
+	}
+}
+
+// assign 拓展对象 是浅复制 类似jquery的extend方法
+var res = Object.assign(obj1,obj2,obj3)
+
+console.log(res);
+console.log(obj1);
+console.log(obj2);
+console.log(obj3);
+
+</script>
+
+
+</body>
+</html>

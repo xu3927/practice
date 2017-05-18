@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app">
+	哈哈
+</div>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+
+
+// Proxy 代理函数
+ 
+var Star = {
+	name : "章子怡",
+	age : "35",
+	money : "100"
+}
+
+var agent = new Proxy(Star,{
+
+	get : function(target,key){
+		if(key === "money"){
+			return "secret"
+		}
+		return target[key]
+	},
+
+	set : function(target,key,value){
+		if(key === "age"){
+			return "你不能修改该项"
+		}else{
+			target[key] = value
+			return "修改成功" 
+		}
+	}
+
+})
+
+// 通过代理获取属性
+console.log(agent.age);  // 35
+console.log(agent.money);   // secret
+
+// 设置属性
+console.log(agent.hobby = "拍电影");
+console.log(agent.age = 100);
+console.log(Star);
+
+
+//用 "=" 来默认参数
+function setColor(cor = "red"){
+	var dom = document.getElementById("app");
+	dom.style.color = cor;
+}
+
+setColor()
+
+
+// rest参数 剩余参数
+//...语法用来表示多个参数
+function add(num1,num2,...num){
+
+	console.log(num);
+}
+
+add(1,2,3)
+add(1,2,3,4,5,6)
+
+
+</script>
+
+
+</body>
+</html>

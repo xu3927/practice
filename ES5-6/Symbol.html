@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+// symbol 数据类型. 用来创建不同的值. 不能使用new关键字
+
+let sym1 = Symbol("haha");
+let sym2 = Symbol("haha");
+
+console.log(sym1 === sym2); // false
+
+var obj = {
+	[sym1] : "red",
+	[sym2] : "green"
+}
+
+console.log(obj);
+
+console.log(obj[sym1]);
+
+console.log(sym1.toString());
+</script>
+
+
+</body>
+</html>

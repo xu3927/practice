@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+class Dog{
+
+	constructor (name,age){
+		this.name = name;
+		this.age = age;
+	}
+
+	wang (){
+		console.log(Dog.eat(),111); // 在函数内部可以获取函数的静态属性方法
+		console.log(this.name + "汪汪汪")
+	}
+
+	// static 定义静态属性方法,只能在函数内部调用。 静态方法不会被继承
+	static eat (){
+		//静态方法中的this属性无法被读取
+		console.log(this.name + "开始吃饭");
+	}
+
+}
+
+// 继承父类
+class Samoye extends Dog{
+	
+	constructor (name,age,cor,harm) {
+	// 继承父类中的构造函数
+		super (name,age);
+		// this 要在super后面使用
+		this.cor = cor;
+		this.harm = harm;
+		
+	}
+
+	bite (per){
+		console.log(this.age + "岁的" + this.name + "咬了" + per + "一口,造成" + this.harm * 3 + "伤害");
+	}
+
+	// 通过get set 定义属性, 在设置或取值的时候会触发相应的方法
+	get harmVal(){
+		console.log("111");
+		return this.harm;
+	}
+
+	set harmVal(val){
+		this.harm = val;
+		console.log("伤害值改为了" + this.harm);
+	}
+
+
+}
+
+var xiaobai = new Samoye("小白",15,"白色",35);
+
+
+xiaobai.wang()
+xiaobai.bite("吕洞宾")
+
+console.log(xiaobai.harmVal);
+xiaobai.harmVal = 100;
+var gou = new Dog("狗狗狗狗",18)
+console.log(gou.wang(),555);	
+
+
+class People {
+    constructor (name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    sayHello () {
+        console.log('我是' + this.name + '; 我今年' + this.age + '岁了.');
+    }
+}
+
+class Student extends People {
+    constructor (name, age, sex, job) {
+        super(name, age);
+        this.sex = sex;
+        this.job = job;
+    }
+    work () {
+        console.log('我是一个' + this.job + ', 我要开始工作了.');
+    }
+}
+
+let xiaoMing = new Student('小明', 16, '男', '学生');
+console.log(xiaoMing.sayHello());	
+
+</script>
+
+
+</body>
+</html>

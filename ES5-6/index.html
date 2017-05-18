@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app"></div>
+<ul>
+	<li> 1 1 1</li>
+	<li> 2 2 2</li>
+	<li> 3 3 3</li>
+	<li> 4 4 4</li>
+	<li> 5 5 5</li>
+</ul>
+	
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+
+//let 与var 区别
+// let 是块级作用域, var没有块级作用域
+
+
+if(true){
+	var m = 5;
+	let n =5;
+}
+
+console.log(m,"mmm");
+// console.log(n,"nnn"); //这个会报错
+
+
+var arr1 = [];
+for(var i = 0;i<5;i++){
+	arr1[i] = function(){
+		console.log(i);
+	}
+}
+
+arr1[2]()  // 输出5
+
+console.log(i);
+
+var arr2 = [];
+for(let j = 0 ; j < 5 ; j++){
+	arr2[j] = function(){
+		console.log(j);
+	}
+}
+
+arr2[2]()  //输出2
+
+
+//字符串方法
+
+var str = "嘻嘻哈哈呵呵么么么哒"
+var res = str.startsWith("嘻嘻",0) //true
+var res = str.startsWith("嘻哈",1) //true
+
+var res = str.endsWith("么么",1) //false
+
+var res = str.includes("哈",3) //true 包含
+
+
+console.log(res);
+
+// 模板方法
+
+var ad = [
+	{
+		"title": "电影节礼包",
+		"description": "赢50元券",
+		"id": "1",
+		"url": "01.png"
+	},
+	{
+		"title": "10元毕业游",
+		"description": "学生过暑期",
+		"id": "2",
+		"url": "02.png"
+	},
+	{
+		"title": "旅拍跳楼价",
+		"description": "0元住城堡",
+		"id": "3",
+		"url": "03.png"
+	}
+];
+
+var tpl = "";
+
+for(var i = 0; i< ad.length; i ++ ){
+
+	tpl += `
+	<a href="#product/${ad[i].id}">
+		<h3>${ad[i].title}</h3>
+		<p>${ad[i].description}</p>
+	</a>	
+	`
+}
+
+document.getElementById("app").innerHTML = tpl
+
+// repeat 方法. 重复字符串n次
+var str = "东西南北"
+console.log(str.repeat(3))
+
+// number方法
+//判断是否有限 值 true, false
+var res = Number.isFinite(1/0) 
+res = Number.isNaN(NaN)
+
+//判断整数 值 true, false
+res = Number.isInteger(100)
+res = Number.isInteger(-100.1)
+
+//判断正负, 值有1,-1,0,-0,NaN
+res = Math.sign(100)
+
+res = Math.sign(-100)
+console.log(res);
+
+
+// from方法. 把类数组对象转为数组
+var lis = document.querySelectorAll("ul li");
+var arr = Array.from(lis)
+
+var arr2 = Array.from(lis,function(val,idx){
+	val.innerHTML += "内容已修改"
+	return val
+})
+console.log(lis);
+console.log(arr);
+console.log(arr2);
+
+
+// 数组方法of  of方法用来解决传递参数不同得到属性的行为不一致的问题
+
+console.log(Array.of()) 
+console.log(Array.of(5))
+console.log(Array.of(5,6))
+console.log(Array.of(5,6,7)) 
+
+
+// find方法
+
+var arr = ['刘能', '赵四', '小沈阳', '宋小宝'];
+//find只能返回找到的第一项
+var res = arr.find(function(val,idx,arr){
+	return val.indexOf("小") > -1
+})
+
+var res = arr.findIndex(function(val,idx,arr){
+	return val.indexOf("小") > -1
+})
+
+
+// for of 数组迭代器
+// 数组 keys, values 方法. 得到数组的索引值 .  value值
+var keys = arr.keys();
+// 遍历数组的索引值
+for (var key of keys){
+	console.log(key);
+}
+
+var values = arr.values();
+for (var val of values){
+	console.log(val);
+}
+
+
+// 数组 entries 方法. 把数组的索引值和value值组成一个新的二维数组. 
+var entries = arr.entries();
+for (var item of entries){
+	console.log(item);
+}
+
+
+</script>
+
+
+</body>
+</html>

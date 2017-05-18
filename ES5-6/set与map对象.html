@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app">
+	哈哈
+</div>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+// set 对象 建立没有重复值的对象
+var s = new Set([0,1,3,4,{"a" : 1 ,"b" :2},1,0,1,"1"])
+console.log(s);
+console.log(Set.prototype);
+
+// clear 清空
+s.clear();
+console.log(s);
+
+// add 方法 添加属性; 每次只能添加一个
+s.add(55);
+s.add(1);
+s.add(0);
+s.add(2);
+s.add("1");
+console.log(s);
+
+
+
+// has 方法
+console.log(s.has(1)); 
+
+// delete 方法 删除成功返回true, 失败返回false
+var ss = s.delete(55);
+console.log(s,ss);
+
+// size 方法
+console.log(s.size);
+
+// for of 遍历 set
+for(var kk of s){
+	console.log(kk);
+}
+
+console.log("--------------");
+
+//=========================
+
+
+// map对象;属性值可以是undefined, null , boolen等
+
+var m = new Map();
+
+console.log(m.__proto__);
+
+// 对map实例化对象添加属性，要用set方法,
+m.set('color', 'red')
+// 添加对象属性
+m.set(document, 'green');
+// 添加boolean属性
+m.set(true, 'blue');
+// 添加undefined属性
+var res = m.set(undefined, 'orange')
+
+console.log(res === m); //true  返回值与m是同一个值
+
+console.log(m);
+
+// 方法
+console.log(m.size);
+
+// 测试get方法
+console.log(m.get(document),"get 方法")
+
+// 测试delete,has方法
+console.log(m.delete(null))
+console.log(m.has(undefined))
+
+// 循环 forEach
+m.forEach(function(){
+	console.log(arguments);
+})
+
+// 支持 for of 循环
+
+for (var [k,v] of m ){
+	console.log(k,v);
+}
+
+console.log(m);
+</script>
+
+
+</body>
+</html>
