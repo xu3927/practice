@@ -1,12 +1,15 @@
 /*global __dirname, module, webpack */
 let path = require('path');
 const webpack = require('webpack');
-// ExtractTextPlugin 插件用于提取css文件到一个单独的文件中, 可以使css文件与js bundle包分离.
+// ExtractTextPlugin 插件用于提取css / html 文件到一个单独的文件中, 可以使css文件与js bundle包分离.
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const extractSass = new ExtractTextPlugin({
     filename: '[name].[contenthash].css',
     disable: process.env.NODE_ENV === 'development'
+});
+const extractHtml = new ExtractTextPlugin({
+   filename: '[name].[contenthash].html'
 });
 
 let config = {
@@ -15,7 +18,7 @@ let config = {
     },
     output: {
         // 输出的文件名, [name] 会取entry入口中的名称
-        filename: '[name].bundle.html',
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {
@@ -26,6 +29,9 @@ let config = {
         stats: {
             hot: true
         }
+    },
+    resolve: {
+        extensions: ['.ts', '.js', '.tsx']
     },
     module: {
         rules: [
@@ -41,7 +47,9 @@ let config = {
             },
             {
                 test: /.html$/,
-                use: "html-loader"
+                loader: extractHtml.extract({
+                    use: 'html-loader'
+                })
             },
             {
                 test: /\.scss$/,
@@ -76,6 +84,7 @@ let config = {
     devtool: 'inline-source-map',
     plugins: [
         extractSass,
+        extractHtml,
         new HtmlWebpackPlugin({
             template: './src/index.ejs'
         })

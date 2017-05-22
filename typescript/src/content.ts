@@ -1,4 +1,4 @@
-import './content.html';
+import tpl from './content.tpl.js';
 import './content.scss';
 
-document.querySelector('#content').innerHTML = '<h3>哈哈哈</h3>';
+document.querySelector('#content').innerHTML = tpl;
