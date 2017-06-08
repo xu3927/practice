@@ -1,0 +1,37 @@
+{
+  "name": "cross-origin",
+  "version": "1.0.0",
+  "description": "cross origin",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.config.js",
+    "build": "webpack --config webpack.config.js"
+  },
+  "author": "3927",
+  "license": "ISC",
+  "dependencies": {
+    "copy-webpack-plugin": "^4.0.1",
+    "cors": "^2.8.3",
+    "express": "^4.15.3",
+    "express-http-proxy": "^1.0.3",
+    "html-loader": "^0.4.5",
+    "ws": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-env": "^1.4.0",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file": "^0.2.2",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.28.0",
+    "node-sass": "^4.0.0",
+    "sass-loader": "^4.1.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^2.6.0",
+    "webpack-dev-server": "^2.4.5"
+  }
+}

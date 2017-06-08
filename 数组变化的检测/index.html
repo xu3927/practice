@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数组变化的检测</title>
+</head>
+<body>
+
+<h1>数组变动的检测</h1>	
+<script type="text/javascript">
+let arrPrototype = Array.prototype;
+	['push', 
+	'pop',
+	'shift',
+	'unshift',
+	'splice']
+	.forEach((item) => {
+		let originFn = arrPrototype[item];
+		arrPrototype[item] = function () {
+			console.log('检测到数组' + item);
+			return originFn.apply(this, [...arguments]);
+		}
+	});
+
+// define property
+let obj = {};
+
+
+</script>
+</body>
+</html>

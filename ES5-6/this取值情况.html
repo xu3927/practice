@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>this指向的情况</title>
+</head>
+<body>
+<!-- <h1>this指向的情况</h1> -->
+<button type="button" id="btn">按钮</button>
+<script type="text/javascript">
+
+/**
+* this的取值
+*/
+console.log('全局', this); // 全局中的this	= window
+// 块级作用域
+if (true) {
+    console.log('块级作用域:', this);
+}
+function Strict () {
+    'use strict';
+    console.log('严格模式中的默认this:', this); // undefined
+    function Dog () {
+        console.log('Dog:', this); // undefined
+    }
+    Dog();
+    let snoopy = {
+        name: 'snoopy',
+        sayHello () {
+            console.log('对象属性普通函数:', this); // snoopy
+            // 块级作用域
+            if (true) {
+                console.log('strict块级作用域:', this); // snoopy
+            }   
+            function _haha () {
+                console.log('严格模式下对象的函数中:', this); // undefined
+            } 
+            _haha();        
+        },
+        whoIam: () => {
+            console.log('对象属性是箭头函数:', this); // undefined 定义的时候即是 undefined
+        }        
+    }
+    snoopy.sayHello();
+    snoopy.whoIam();
+}
+
+Strict();
+
+function haha () {
+    console.log('非严格模式函数作用域', this); // 直接调用是window, 作为linghuchong属性调用指向对象linghuchong
+    setTimeout(function () {
+        console.log('setTimeout普通函数:', this); // 直接调用是window, 作为linghuchong属性调用指向 window
+    });
+    setTimeout(() => console.log('setTimeout箭头函数:', this)); // 直接调用是window, 作为linghuchong属性定义并调用指向 linghuchong
+}
+console.log('----非严格模式函数直接调用-------');
+// haha();
+let linghuchong = {
+    name: '令狐冲',
+    age: 21,
+    haha: haha,
+    common () {
+        console.log('common', this);  // 作为属性调用指向对象linghuchong
+        function _haha () {
+            console.log('非严格模式下对象的函数中:', this); // window
+        }
+        _haha();
+    },
+    arrow: () => console.log('arrow', this) // window 定义时的this指向window
+}
+console.log('----非严格模式函数作为对象属性调用-------');
+linghuchong.haha();
+console.log('----非严格模式普通函数作为对象属性调用-------');
+linghuchong.common();
+console.log('----非严格模式箭头函数作为对象属性调用-------');
+linghuchong.arrow();
+</script>
+</body>
+</html>

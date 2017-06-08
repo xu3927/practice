@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket</title>
+</head>
+<body>
+<h1>websocket</h1>
+<p>
+    <input type="text" id="inp" />
+    <button type="button" onclick="clickBtn()">
+        按钮
+    </button>
+</p>
+<p>
+    <textarea name="text" id="textarea" cols="30" rows="10"></textarea>
+</p>
+<script type="text/javascript">
+    // websocket 通过 ws / wss 协议来传递数据, 可以跨域. 利用websocket 可以实现跨域获取数据
+    const socket = new WebSocket('ws://localhost:3001');
+    const inp = document.querySelector('#inp');
+    const textEle = document.querySelector('#textarea');
+    socket.addEventListener('open', function (event) {
+        socket.send('Hello,server');
+    });
+    socket.addEventListener('message', function (event) {
+        let _msg = event.data;
+        textEle.value = _msg;
+    });
+    function clickBtn () {
+        let _val = inp.value;
+        socket.send(_val);
+    }
+</script>
+</body>
+</html>

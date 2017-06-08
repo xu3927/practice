@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div id="app"></div>
+<ul>
+	<li> 1 1 1</li>
+	<li> 2 2 2</li>
+	<li> 3 3 3</li>
+	<li> 4 4 4</li>
+	<li> 5 5 5</li>
+</ul>
+
+<script type="text/javascript" src="lib/jquery.js"></script>
+
+<script type="text/javascript">
+/**
+* Object.assign(target, ...sources) 用来浅拷贝对象, 只拷贝源对象自身的并且可枚举的属性
+* 深拷贝对象需要迭代, 遇到非值类型的属性继续迭代, 直到复制到值类型为止.
+*/
+
+var o1 = {
+	a : "a"
+}
+
+
+var o2 = {
+	b : "b"
+}
+
+var o3 = {
+	c : {
+		color : "red"
+	}
+}
+
+var o4 = Object.create(o3);
+o4.o4 = {
+	num: '44'
+}
+
+// 拓展对象 浅复制, 只复制了引用地址. 
+var res = Object.assign(o1, o2, o3, o4)
+
+console.log(res);
+console.log(o1);
+console.log(o2);
+console.log(o3);
+
+console.log("--------------------");
+	
+</script>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+
+<script type="module">
+
+
+// let obj1 = {
+// 	a : "a"
+// }
+
+
+
+// let obj2 = {
+// 	b : "b"
+// }
+
+// let obj3 = {
+// 	c : {
+// 		color : "red"
+// 	}
+// }
+
+// // assign 拓展对象 是浅复制 类似jquery的extend方法
+// var res = Object.assign(obj1,obj2,obj3)
+
+// console.log(res);
+// console.log(obj1);
+// console.log(obj2);
+// console.log(obj3);
+
+</script>
+
+
+</body>
+</html>

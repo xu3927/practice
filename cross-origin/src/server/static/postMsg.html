@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>postMessage</title>
+</head>
+<body>
+<h1>postMessage</h1>
+<script type="text/javascript">
+    let i = 1000;
+    window.addEventListener('message', function (event) {
+        let msg = event.data;
+        let source = event.source;
+        console.log('子域onmessage:', msg);
+        setTimeout(function () {
+            if (msg && msg.type === 'popup') {
+                let reply = {
+                    type: 'popup',
+                    data: '我是popup子窗口',
+                    num: msg.num++
+                };
+                document.write('<p>' + msg.num + '</p>');
+                source.postMessage(reply, '*');
+            } else if (msg && msg.type === 'iframe') {
+                let reply = {
+                    type: 'iframe',
+                    data: '我是iframe子窗口'  + i--
+                }
+                parent.postMessage(reply, 'http://localhost.com/main.html');
+            }
+        }, 2000)
+    });
+</script>
+</body>
+</html>

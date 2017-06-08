@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<h1>我是AAAA</h1>
+<script type="text/javascript">
+    console.log('我是a.html');
+    window.name = '我是aaa';
+    // 监听 hashchange 事件, 或 window.name 来获取子iframe传递的消息
+    window.onhashchange = () => {
+        console.log('a.html中hash改变:', document.location.hash);
+        console.log('a.html的window.name:', window.name);
+    };
+    let iframeEle = document.createElement('iframe');
+    iframeEle.src = 'http://localhost.com/haha.html';
+    document.body.appendChild(iframeEle);
+</script>
+</body>
+</html>

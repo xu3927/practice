@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>排序</title>
+</head>
+<body>
+<!-- <h1>排序</h1> -->
+<script type="text/javascript">
+let origin = [];
+let n = 100;
+for (let i = 0; i < n; i++) {
+	origin.push(parseInt(Math.random() * 100));
+}
+
+/**
+ * 冒泡
+ * 比较相邻的两个值, 如果 a > b, 则调整两者的顺序.
+ * 从0项开始比较到末尾.
+ * 每循环一次, 可以确定一个值的位置.
+ * 最坏时间复杂度 O(n^2)
+ * 最优时间复杂度 O(n)
+ * 平均时间复杂度 O(n^2)
+ * 空间复杂度 O(n)
+ */
+
+/**
+ * 助记码
+    i∈[0,N-1)                //循环N-1遍
+    j∈[0,N-1-i)            //每遍循环要处理的无序部分
+    swap(j,j+1)          //两两排序（升序/降序）
+*/
+function bubble_sort(arr) {
+    let _n = 0;
+    let len = arr.length;
+    for (let i = 0; i < len - 1; i++) {
+        for (let j = 0; j < len - 1 - i; j++) {
+            _n++;
+            if (arr[j] > arr[j + 1]) {
+                let _data = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = _data;
+            }
+        }
+
+    }
+    console.log('bubble_sort总次数:', _n);
+}
+
+var copy = JSON.parse(JSON.stringify(origin));
+bubble_sort(copy);
+
+/**
+ * 冒泡的改进
+ * 如果已经是有序的状态, 则可以不再进行后续的循环.
+ * 设置一个flag = 0;
+ * 循环过程中如果需要调整顺序, 则置为1. 否则不变
+ * 若循环结束flag === 0; 则证明数据已是有序的, 可以结束排序.
+ */
+
+function bubble_sort2 (arr) {
+    let _n = 0;
+    let len = arr.length;
+    let flag = 0;
+    for (let i = 0; i < len - 1; i++) {
+        for (let j = 0; j < len - 1 - i; j++) {
+            _n++;
+            if (arr[j] > arr[j + 1]) {
+                let _data = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = _data;
+                flag = 1;
+            }
+        }
+        if (flag === 0) {
+            break;
+        }
+    }
+    console.log('bubble_sort2总次数:', _n);
+}
+var copy = JSON.parse(JSON.stringify(origin));
+bubble_sort2(copy);
+
+/**
+ * 快排 Quick sort
+ * 原理:
+ * 1. 定一个基准值, 其他元素通过与该基准值比较, 比该值大的放到一侧, 小的放到该值的另一侧.
+ * 2. 在每侧递归执行该过程, 直到该侧无法再分区为止.
+ * (in-place)原地分区版本, 通过数组内元素位置调整来排序, 不需要消耗额外的内存空间
+ * 1. 将基准值与该部分最右侧的数据调换位置.
+ * 2. 设置 storeIndex = left. 初始化值, 通过递增该值将比基准值小的数据都放到从left开始往后的位置.
+ * 3. 遍历下标为left 到 (right - 1)的元素, 与基准值比较大小. 若小与基准值, 则调换下标为 storeIndex 和 i 的值
+ * 4. 遍历结束后, 调换 storeIndex 与 right 的值.
+ * 5. 完成以上步骤即完成了一部分的左右顺序的调整. 继续分别迭代左侧和右侧的数据即可.
+ *
+ * 最坏时间复杂度	O(n^2)
+ * 最优时间复杂度	O(n lg n)
+ * 平均时间复杂度	O(n lg n)
+ */
+function quick_sort (arr) {
+    let _n = 0;
+    Iterator(0, arr.length - 1, 0);
+    function Iterator (left, right, pivotIndex) {
+        if (right <= left) {
+            return;
+        }
+        let pivotVal = arr[pivotIndex];
+        let storeIndex = left;
+        [arr[right], arr[pivotIndex]] = [arr[pivotIndex], arr[right]]; // 把基准元素移到最右侧
+        for (let i = left; i < right - 1; i++) {
+            _n++;
+            if (arr[i] < pivotVal) {
+                [arr[storeIndex], arr[i]] = [arr[i], arr[storeIndex]]; // 把小的元素依次放到左侧,下标递增.
+                storeIndex++;
+            }
+        }
+        [arr[right], arr[storeIndex]] = [arr[storeIndex], arr[right]]; // 从左到右循环结束后把基准值放到storeIndex的位置.
+        // 递归调用分别处理左右侧的数据
+        Iterator(left, storeIndex, left);
+        Iterator(storeIndex + 1, right, right);
+    }
+    console.log('quick_sort总次数:', _n);
+}
+
+var copy = JSON.parse(JSON.stringify(origin));
+quick_sort(copy);
+
+/**
+ * 简单选择排序
+ * 类似人类排序方式, 排序直观
+ * 1. 遍历将最小(大)的放到最前面.
+ * 2. 遍历剩下的选择最小(大)的放到位置.
+ * 3. 直到最后完成
+ * 最坏时间复杂度	О(n²)
+ * 最优时间复杂度	О(n²)
+ * 平均时间复杂度	О(n²)
+ * 空间复杂度	О(n) total, O(1) auxiliary
+ */
+function selection_sort (arr) {
+    let _n = 0;
+    let len = arr.length;
+    for (let i = 0; i < len; i++) {
+        let _minimum  = Infinity;
+        let _minimumIndex = 0;
+        for (let j = i + 1; j < len; j++) {
+            _n++
+            if (arr[j] < _minimum) {
+                _minimum = arr[j];
+                _minimumIndex = j;
+            }
+        }
+        [arr[i], arr[_minimumIndex]] = [arr[_minimumIndex], arr[i]];
+    }
+    console.log('selection_sort:', _n);
+}
+var copy = JSON.parse(JSON.stringify(origin));
+selection_sort(copy);
+
+/**
+ * 堆排序
+ * 二叉堆是完全二叉树或近似完全二叉树
+ * 二叉堆满足2个特性:
+ * 1. 父节点的值总是大于等于(或小于等于)任何一个子节点的值
+ * 2. 每个节点的左子树和右子树都是一个二叉堆(都是最大堆或最小堆).
+ * 父节点大于等于子节点时为最大堆, 父节点总是小于等于子节点为最小堆.
+ * 参考二叉堆.html
+ */
+</script>
+</body>
+</html>

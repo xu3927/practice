@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<h1 id="app">异步</h1>
+<script type="text/javascript">
+    var p = new Promise((resove,reject) => {
+         setTimeout(function(){
+         	resove();
+         	// reject();
+         }, 5000)
+    });
+    p
+        .then(success, fail)
+        .then(function () {
+            console.log('then2');
+        })
+    function success () {
+        console.log('success');
+    }
+
+    function fail () {
+        console.log('fail');
+    }
+
+    /**
+     * 将一个异步对象转为promise
+     * Promise.resolve(param) 或者 Promise.reject(param)
+     * 参数如果不是一个具有then方法的对象(thenable对象), 则返回一个新的promise对象, 同时它的状态为fullfilled, 会立即执行
+     * 参数如果是一个promise的实例, 则会直接返回该实例.
+     */
+    function timeout (t) {
+        return new Promise ((resovle, reject) => {
+            setTimeout(function () {
+                console.log('timeout');
+                resovle(111);
+            }, t);
+        });
+    }
+    var p2 = Promise.resolve(timeout(1000));
+    p2.then(res => console.log('p2:', res));
+    /**
+     * async 定义异步函数
+     * await 操作符, 用于在async函数中获取promise对象的返回值.
+     * await 后面跟一个promise对象或者普通值, 如果是promise对象,
+     * 会在该promise执行结束后获取并返回其执行结果, 如果是一个普通的值不是promise, 则直接返回该值.
+     * await会阻塞async函数, 当promise执行结束会继续执行async后面的语句.
+     */
+
+    function resolveAfter2S (x) {
+        return new Promise((resovle, reject) => {
+            setTimeout(function () {
+                if (x < 50) {
+                    resovle(x);
+                    console.log('resolved');
+                } else {
+                    reject(x);
+                    console.log('rejected');
+                }
+            }, 2000);
+        });
+    }
+    var add1 = async function (x) {
+        var a = resolveAfter2S(20);
+        var b = resolveAfter2S(30);
+        try {
+            await resolveAfter2S(60); // 当promise 为 reject时, 可以通过try catch 捕获结果
+        }
+        catch (e) {
+            var c = e;
+        }
+        return x + await a + await b + c; // prints 60 after 2 seconds.
+    }
+    add1(10).then(res => console.log('add1:', res));
+    var add2 = async function (x) {
+        var a = await resolveAfter2S(20); // 阻塞函数, 2s后promise执行完毕函数继续执行
+        var b = await resolveAfter2S(30); // 继续阻塞函数2s
+        console.log('await为普通值-pre');
+        var c = await 40; // 为普通值直接返回该值, 阻塞 0s.
+        console.log('await为普通值-post', c);
+        return x + a + b + c;
+    }
+    add2(10).then(res => console.log('add2:', res)); // prints 60 after 4 seconds.
+</script>
+
+<script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+<script type="module">
+
+</script>
+</body>
+</html>

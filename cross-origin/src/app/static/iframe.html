@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>跨域吧</h1>
+<script type="text/javascript">
+    const iframe = document.createElement('iframe');
+    let onloadTime = 0;
+    iframe.onload = function () {
+        if (onloadTime > 1) {
+            return;
+        }
+        if (onloadTime === 1) {
+            console.log('window.name:', iframe.contentWindow.name);
+            return;
+        }
+        onloadTime++;
+        iframe.src = 'http://localhost.com/static/proxy2.html';
+    }
+    iframe.src = 'http://sub.localhost.com/byName.html';
+    document.body.appendChild(iframe);
+</script>
+</body>
+</html>

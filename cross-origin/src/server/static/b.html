@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>我是BBBBB</h1>
+<script type="text/javascript">
+    let hash = document.location.hash;
+    console.log('bbb中获取到a.html的href:', window.top.location.href);
+    // 修改a.html的hash
+    let i = 0;
+    setInterval(function () {
+        window.parent.parent.location.hash = ++i;
+        window.top.name = i;
+        console.log('b.html修改a.html的hash成功');
+    }, 1000);
+</script>
+</body>
+</html>

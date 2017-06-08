@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>二叉堆</title>
+    <style type="text/css">
+        span{
+            width: 25px;
+            display: inline-block;
+        }
+        #render>p>span:nth-child(1) {
+            margin-left: 0!important;
+        }
+    </style>
+</head>
+<body>
+<h1>二叉堆</h1>
+<div id="render1" style="text-align: center;"></div>
+<div id="render2" style="text-align: center;"></div>
+<div id="render3" style="text-align: center;"></div>
+<script type="text/javascript">
+/**
+ * 堆heap: 堆是一种完全二叉树, 包括最大堆(父节点大于子节点), 最小堆(父节点小于子节点值)
+ * 满足2个条件, 1. 任何一个父节点的值大于等于(小于等于)其左或右子节点的值. 2. 每个节点的左右子树都是一个二叉堆.
+ * 一个二叉树不一定符合堆的结构.
+ * 以下代码均为处理最大堆
+ */
+// 交换2个值
+Array.prototype.swap = function (i, j) {
+    let _arr = this;
+    let temp = _arr[i];
+    _arr[i] = _arr[j];
+    _arr[j] = temp;
+}
+/**
+ * 构建最大堆
+ * 判断父节点, 与子节点大小, 把最大的值交换到父节点上, 如果发生交换, 则遍历相应子节点的二叉树, 完成该分支更新.
+ */
+
+Array.prototype.max_heap = function (dad) {
+    let _arr = this.slice(0);
+    let len = _arr.length;
+    let son_l = dad * 2 + 1;
+    let son_r = dad * 2 + 2;
+    let maxIndex_son = son_l;
+    if (son_l >= len) {
+        return;
+    }
+    if (son_r < len && _arr[son_l] < _arr[son_r]) {
+        maxIndex_son = son_r;
+    }
+    if (_arr[dad] < _arr[maxIndex_son]) {
+        this.swap(dad, maxIndex_son);
+        this.max_heap(maxIndex_son);
+    }
+}
+// 初始数组
+let origin = [];
+let n = 100;
+for (let i = 0; i < n; i++) {
+    origin.push(parseInt(Math.random() * 100));
+}
+//origin = [12, 8, 40, 35, 88, 99, 24, 56, 78, 87];
+//let copy = JSON.parse(JSON.stringify(origin));
+//render(copy, '#render1');
+
+// 完全二叉树构建堆. 二叉树是一种有根树, 通过数组来存储, 序号为 i 的父节点, 子节点为 2*i+1, 2*i+2
+function build_heap (arr) {
+    let len = arr.length;
+    // 从最后一个父节点开始构建堆
+    for (let i = Math.floor(len / 2); i >= 0; i--) {
+        arr.max_heap(i);
+    }
+}
+build_heap(origin);
+
+/**
+ * 堆的插入
+ * 每次插入新值相当于数组的push, 放在最后.
+ * 此时需要更新新值所在的分支.
+ * 相当于把最后的一个值上浮的过程
+ * @param arr: 已经插入值的新堆数组.
+ * @param index: 待调整顺序的节点的下标.
+ */
+function heap_insert (arr, index) {
+    let dad =  parseInt((index - 1) / 2);
+    if (dad < 0) {
+        return;
+    }
+    if (arr[dad] < arr[index]) {
+        arr.swap(dad, index);
+        heap_insert(arr, dad);
+    }
+}
+
+// 测试
+//origin.push(119);
+//heap_insert(origin, origin.length - 1);
+
+/**
+ * 堆的删除
+ * 堆中每次都只能删除第0个数据, 即根节点, 删除后堆的结构混乱.
+ * 为便于重建堆, 实际会把最后一个值赋值给根节点. 将根节点与2个子节点比较调整.
+ * 相当于是从根节点把一个数据下沉的过程.
+ * @param arr
+ */
+function heap_delete (arr) {
+    // 删除根节点. 相当于把最后一个节点移动到根节点.
+    arr[0] = arr[arr.length - 1];
+    arr.pop();
+    let len = arr.length;
+    node_sink(0);
+    function node_sink (index) {
+        let son_l = index * 2 + 1;
+        let son_r = index * 2 + 2;
+        let son_max = son_l;
+        if (son_l >= len) {
+            return;
+        }
+        if (son_r < len - 1 && arr[son_r] > arr[son_l]) {
+            son_max = son_r;
+        }
+        arr.swap(son_max, index);
+        node_sink(son_max);
+    }
+}
+
+/**
+ * 堆排序
+ * 原理: 堆的根节点是当前堆中的最大值. 取出根节点, 相当于堆的删除, 对堆进行重建后, 再取出根节点, 依次类推, 可以得到按序的数组
+ * 实际操作中不需要删除根节点, 可以将根节点与 len - 1个节点交换, 然后对堆重建, 再将 len - 2 与根节点交换. ...
+ */
+
+function heap_sort (arr) {
+    let len = arr.length;
+    for (let i = len - 1; i >= 1; i--) {
+        arr.swap(0, i);
+        node_sink(0, i);
+    }
+    function node_sink (dad, end) {
+        let son_l = dad * 2 + 1;
+        let son_r = dad * 2 + 2;
+        let son_max = son_l;
+        if (son_l >= end) {
+            return;
+        }
+        if (son_r < end && arr[son_r] > arr[son_l]) {
+            son_max = son_r;
+        }
+        if (arr[son_max] > arr[dad]) {
+            arr.swap(son_max, dad);
+            node_sink(son_max, end);
+        }
+    }
+}
+heap_sort(origin);
+var copy = JSON.parse(JSON.stringify(origin));
+render(copy, '#render3');
+
+// 图像展示堆形状, 该方法还有bug. 展示不太准确, 仅供参考
+function render (arr, id) {
+    let dom = document.querySelector(id);
+    let domStr = '<p>';
+    let allFloor = parseInt(Math.log2(arr.length) + 1);
+    arr.forEach((val, index) => {
+        let f = parseInt(Math.log2(index + 1)) + 1;
+        domStr += `<span style="margin-left: ${Math.pow(2, allFloor - f - 1) * 10}px;">${val}</span>`;
+        if (index + 1 === (Math.pow(2, f) - 1)) {
+            domStr += '</p><p>';
+        }
+        if (index === arr.length - 1) {
+            domStr += '</p>';
+        }
+    });
+    dom.innerHTML = domStr;
+}
+render(origin, '#render2');
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>华山派</title>
+</head>
+<body>
+
+<h1>Welcome 华山派</h1>
+<h3>思过崖</h3>
+<script type="text/javascript">
+    let domain = document.domain;
+    console.log('domain:', domain);
+    document.domain = 'localhost.com';
+    console.log('domain222:', domain);
+    function childFn () {
+        window.parent.parentFn();
+        console.log('我是iframe中的fn');
+    }
+</script>
+</body>
+</html>

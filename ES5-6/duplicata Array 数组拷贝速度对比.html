@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数组拷贝</title>
+</head>
+<h1>数组拷贝方法</h1>
+<body>
+<script type="text/javascript">
+/**
+* 数组拷贝方法
+* slice, loop, spread operator, concat, Array.from()
+* 速度对比 slice 一般都最快(浏览器对该方法有优化), loop, concat 差不多,  sperad operator 很慢, Array.from 最慢
+*/
+
+var n = 1000 * 1000;
+var arr1 = new Array(n);
+var arr2 = new Array(n);
+
+// var s0 = +new Date();
+// while (n >= 1) {
+// 	let i = --n;
+// 	arr2[i] = i;
+// }
+// console.log('loop create Array:', new Date() - s0);
+
+// loop
+var s0 = +new Date();
+for (var i = 0; i < n; i++) {
+	arr1[i] = arr2[i];
+}
+console.log('loop:', new Date() - s0);
+
+// slice
+var s0 = +new Date();
+arr1 = arr2.slice(0);
+console.log('slice:', new Date() - s0);
+
+// spread operator
+var s0 = +new Date();
+arr1 = [...arr2];
+console.log('spread operator:', new Date() - s0);
+
+// concat
+var s0 = +new Date();
+arr1 = [].concat(arr2);
+console.log('concat:', new Date() - s0);
+
+// Array.from
+var s0 = +new Date();
+arr1 = Array.from(arr2);
+console.log('Array.from:', new Date() - s0);
+
+</script>
+</body>
+</html>

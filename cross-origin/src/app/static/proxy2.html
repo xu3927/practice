@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>跨域Proxy页面222</title>
+</head>
+<body>
+<h1>跨域Proxy页面2222</h1>
+<script type="text/javascript">
+    window.addEventListener('message', function (event) {
+        let msg = event.data;
+        let source = event.source;
+        console.log('子域onmessage:', msg);
+        setTimeout(function () {
+            if (msg && msg.type === 'popup') {
+                let reply = {
+                    type: 'popup',
+                    data: '我是popup子窗口',
+                    num: msg.num++
+                };
+                document.write('<p>' + msg.num + '</p>');
+                source.postMessage(reply, '*');
+            }
+        }, 2000)
+    });
+</script>
+</body>
+</html>
