@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js继承</title>
+</head>
+<body>
+<h1>js继承</h1>
+
+<script type="text/javascript">
+// 1. 原型式继承
+// 父类
+function Animal () {
+	this.canMove = true;
+	this.kingdom = 'Animal';
+	this.colors = ["red", "blue", "green"];
+	this.run = function () {
+		console.log(this.name + 'run');
+	}
+}
+// 原型
+// 普通值
+Animal.prototype.val = 999;
+// 对象属性
+Animal.prototype.family = {dad: 'dad', son: 'son'};
+// 原型函数
+Animal.prototype.fight = function (fighter) {
+	console.log(this.name + ' fight ' + fighter);	
+}
+var child = new Animal();
+// 子类
+function Cat (name) {
+	this.name = name;
+	this.phylum = 'Cat';
+	this.legs = 4;
+	this.eyes = 2;
+}
+// 原型链指向父类的一个实例, 缺陷, 由于js中对象是引用类型, 如果父类的原型链上的某个属性是对象, 则父类修改或子类修改该对象都会互相影响.
+Cat.prototype = new Animal();
+Cat.prototype.eat = function () {
+	console.log(this.name + '开始吃饭');
+}
+var tom1 = new Cat('Tom1');
+tom1.colors.push('pink'); // 会修改到原型链上的属性, 并且是引用类型, 会影响后续的实例.
+var tom11 = new Cat('Tom11');
+
+// 2. 构造函数式继承.
+function Cat2 (name) {
+	// 通过执行父类的构造函数, 继承父类构造函数
+	Animal.apply(this, []);
+	this.name = name;
+	this.phylum = 'Cat';
+	this.legs = 4;
+	this.eyes = 2;	
+}
+
+Cat2.prototype.eat = function () {
+	console.log(this.name + '开始吃饭');
+}
+
+var tom2 = new Cat2('tom2');
+var tom22 = new Cat2('tom22');
+tom2.colors === tom22.colors // false, 引用类型相互不影响
+tom2.run === tom22.run // false. 无法实现父类中函数的复用
+
+// 3. 组合式继承, 结合构造函数式继承和原型链式继承
+function Cat3 (name) {
+// 通过执行父类的构造函数, 继承父类构造函数
+	Animal.apply(this, []);
+	this.name = name;
+	this.phylum = 'Cat';
+	this.legs = 4;
+	this.eyes = 2;		
+}
+
+Cat3.prototype = new Animal();
+Cat3.prototype.eat = function () {
+	console.log(this.name + '开始吃饭');
+}
+
+var tom3 = new Cat3('tom3');
+
+// 4. 寄生组合式继承
+function createObject (obj) {
+	var F = function () {};
+	F.prototype = obj;
+	return new F();
+}
+
+function Super () {
+	// 构造函数中定义值类型, 及引用类型
+	this.val = 1;
+	this.colors = ['red', 'blue', 'green'];
+}
+// 父类原型链上定义函数方法
+Super.prototype.fn1 = function () {};
+Super.prototype.fn2 = function () {};
+
+function Sub () {
+	Super.call(this);
+}
+var _proto = createObject(Super.prototype);
+// 绑定constructor属性
+_proto.constructor = Sub;
+// 原型链继承
+Sub.prototype = _proto;
+var child1 = new Sub();
+var child2 = new Sub();
+
+
+</script>
+	
+</body>
+</html>

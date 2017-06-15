@@ -6,17 +6,61 @@
 </head>
 <body>
 <script type="text/javascript">
-	
-	var fun1 = function () {
-		console.log("arguments", typeof arguments.callee.toString());
-		console.log("caller", fun1.caller);
+	// 参考 http://www.alloyteam.com/2015/09/angularjs-study-of-dependency-injection/
+	var fun1 = function ($scope, $http, $uibModal) {
+		let str = arguments.callee.toString();
+		let reg_args = /^function\s+\((.+)\)/;
+		let reg_arg = /\,\s*(.+?)$/g;
+		let argArr = [];
+		let args = str.replace(reg_args, function ($1, $2) {
+			var s = $2.split(',');
+			s.forEach(item => {item.replace(/\s/g, ''); argArr.push(item);});		
+		});
+		console.log(argArr);
 	}
-	var fun2 = function () {
-		console.log("arguments", arguments.callee);
-		console.log("caller", fun2.caller);
-		fun1()
+	fun1();
+	// 一个普通的函数, 在调用时根据传入的实际参数来替代形参执行.
+	function foo (name) {
+		console.log(name);
 	}
-	fun2();
+	foo('小明'); // 小明
+	// 如果不传入参数
+	foo (); // undefined
+	// 如何实现让别人帮自己注入参数呢?
+	function inject (name, callback) {
+		return function () {
+			callback(name);
+		};
+	}
+	// 函数定义的时候将所需要的参数交给注入器, 在调用的时候将参数注入并执行.
+	var controller = inject('小明', function foo (name) {
+		console.log(name);
+	});
+	// 这样在调用的时候可以不传参数, 参数的值保存在第三方, 由第三方进行参数的注入. 这就是最简单的依赖注入的原理.
+	controller(); // 输出小明
+	// angular中依赖注入实现
+	var $Inject = {
+		dependencies: {},
+		register: function (key ,value) {
+			this.dependencies[key] = value;
+		},
+		// 实现注入
+		resolve: function (deps, func, scope) {
+			var arr = [];
+			for (var i = 0; i < deps.length; i++) {
+				if (this.dependencies.hasOwnProperty(deps[i])) {
+					arr.push()
+				}
+			}
+			console.log(arr);
+			return function () {
+				func.apply(scope || {}, arr);
+			}
+		}
+	}
+
+
+
 </script>
 </body>
 </html>
