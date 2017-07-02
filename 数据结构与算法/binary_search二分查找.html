@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<h1>二分查找</h1>
+<script type="text/javascript">
+	/**
+	* 时间复杂度 O(logn)
+	* 适用于有序数列
+	* 可以用于相等判断, 也可以用于查找排名
+	*/
+
+	// 以下适用于升序数组, 查找排名
+	function binary_search (start, end, key_val, originArr) {
+		if (!Array.isArray(originArr)) {
+			return;
+		}
+		if (start >= end) {
+			return start;
+		}
+		if (originArr[start] >= key_val) {
+			return start;
+		} 
+		if (originArr[end] <= key_val) {
+			return end;
+		}
+		var mid = parseInt((start + end) / 2);
+		if (originArr[mid] >= key_val) {
+			return binary_search(start, mid, key_val, originArr);
+		} else {
+			return binary_search(mid + 1, end, key_val, originArr);
+		}
+	}
+
+	var arr = [1, 3, 5, 6, 10, 22, 555, 645, 7688, 24534];
+	var res = binary_search(0, arr.length - 1, 335, arr);
+	console.log(res);
+</script>
+</body>
+</html>

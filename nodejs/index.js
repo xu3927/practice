@@ -1,2 +1,4 @@
-const stream = require('stream');
-console.log(stream);
+
+const koa = require('./src/koa.js');
+
+koa();

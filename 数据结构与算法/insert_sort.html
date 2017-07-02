@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Insertion Sort</title>
+</head>
+<body>
+<h1>Insertion Sort</h1>
+<script type="text/javascript">
+/**
+* 插入排序: 
+* 通过构建有序数列, 对于未排序的数据, 在有序数列中从前向后扫描, 找到合适的位置插入,并调整数组的下标顺序.
+* 主要的耗时操作为 1 查找可以插入的位置, 2 数组元素的后移
+* 时间复杂度 O(n^2), 最好的情况对于有序数组, 则复杂度为O(n). 
+* 空间复杂度 O(1)
+* 
+*/ 
+
+/**
+* 实现过程
+* 对于数列a0, a1, ..., an 将数列分为2个区域: 有序区[0, i -1], 无序区[i, n], i >= 1
+* 取出无序区中的数据, 在有序区中找到合适的位置插入, 并调整有序区中后续数据的位置.
+*/
+
+function inser_sort (arr) {
+	var len = arr.length;
+	for (var i = 1; i < len; i++) {
+		let _item = arr[i];
+		for (var j = 0; j < i; j++) {
+			// 找到插入位置后插入数据
+			if (arr[j] < _item) {
+				arr.splice(j, 0, arr[i]);
+				arr.splice(i + 1, 1);
+				break;				
+			}
+		}
+	}
+}
+
+function swap (x, y, arr) {
+	arr[x] = [arr[y], arr[y] = arr[x]][0];
+}
+
+var arr2 = [1, 8, 7, 1, 3, 5, 4, 9, 15]
+inser_sort(arr2)
+
+/**
+* 优化:
+* 二分查找排序: 在有序数组中查找一个插入位置, 可以通过二分查找
+* 希尔排序: 如果序列本来就是升序或部分元素升序，那么比较+后移赋值操作次数就会减少。希尔排序正是通过分组的办法让部分元素升序再进行整个序列排序。（原因是，当增量值很大时数据项每一趟排序需要的个数很少，但数据项的距离很长。当增量值减小时每一趟需要和动的数据增多，此时已经接近于它们排序后的最终位置。）
+*/
+
+
+
+/**
+* 希尔排序, 由Donald Shell设计.
+* 传统的插入排序, 每次操作元素只能向终点位置移动1位. 希尔排序的思想是通过设置一个比较大的步长, 使每次移动元素能向终点位置移动一大步, 从而提高效率.
+* 参考 https://zh.wikipedia.org/wiki/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F
+*/
+
+/**
+* 实现
+* 设置一个较大的初始步长, 进行一次插入排序
+* 逐渐减小步长, 直到最后一步步长为1, 进行一次插入排序, 则完成排序.
+* 外层是一个步长 gap 从大到小的循环, gap = len >> 1; gap >= 1; gap >>= 1;
+* 内层是一个插入排序, 插入排序包含2个循环, 外循环遍历无序区是从a[gap]...a[n], 步长为1递增
+* 插入排序的内循环是遍历有序区, 从a[sort_i]....a[sort_i % gap] 递减遍历; 步长为 gap.
+*/
+
+/**
+* 复杂度
+* 最坏情况 O(n^2)
+* 平均 O(n(logn)^2), 要比快排差一些
+*/
+function shell_sort (arr) {
+	var len = arr.length;
+	for (var gap = len >> 1; gap >= 1; gap >>= 1) {
+		for (var i = gap; i < len; i++) {
+			// 有序区为递增数列
+			for (var j = i - gap; j >= 0; j -= gap) {
+				if (arr[j + gap] < arr[j]) {
+					swap(j + gap, j, arr);
+				} else {
+					break;
+				}
+			}  
+		}
+	} 
+}
+
+var arr3 = [1, 8, 7, 1, 3, 5, 4, 9, 15, 2, 44, 576, 16]
+
+shell_sort(arr3);
+
+console.log(arr3);
+
+
+</script>
+</body>
+</html>

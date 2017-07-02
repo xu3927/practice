@@ -38,7 +38,8 @@ function serve (mp4Files) {
     // 中间件
     app.use(function (req, res, next) {
         console.log('访问:', req.url);
-        next();
+        res.send('ok-hahaha');
+        // next();
     });
     // 请求video文件(MP4)
     app.get('/video/*', function (req, res){

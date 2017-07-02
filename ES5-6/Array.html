@@ -23,6 +23,43 @@
 	let newArr2 = arr2.reduce((accumulator, currentValue) => {
 		return accumulator.concat(currentValue);
 	}, []);
+
+	const newArr_filter = arr.filter(function (item) {
+		return item > 5
+	})
+
+	// map 返回一个新的数组
+	const newArr_map = arr.map((item, index, originArr) => {
+		return item + 100;
+	});
+	console.log('newArr_map:', newArr_map);
+
+	// forEach
+
+	const newArr_forEach = arr.map((item, index, originArr) => {
+		return item + 100;
+	});
+	console.log('newArr_forEach:', newArr_forEach);	
+
+	/**
+	 * from / of
+	 * Array.from(arrayLike) 创建一个数组, 参数传入一个类数组或可迭代对象
+	 * Array.of(5) 创建一个由所传入元素组成的新数组.
+	 */
+
+	const arr3 = Array.from([3, 4, 6, 7]) // [3, 4, 6, 7]
+	const arr4 = Array.of(7) // [7]
+	const arr5 = Array.of('1', 'a', 77) // ['1', 'a', 77]
+	new Array(3) // [ , , ]
+	new Array(3, 4) // [3, 4]
+
+	/**
+	* 
+	*/
+
+
+
+
 </script>
 </body>
 </html>

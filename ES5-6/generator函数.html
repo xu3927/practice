@@ -10,34 +10,97 @@
 
 </script>
 
-<script type="text/javascript" src="lib/traceur.js"></script>
-<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
-<script type="module">
+<!-- <script type="text/javascript" src="lib/traceur.js"></script>
+<script type="text/javascript" src="lib/traceur-bootstrap.js"></script> -->
 
-function * stateGenerator (){
-	yield "state1";
-	yield "state2";
-	yield "state3";
-	yield "state4";
-	yield "state5";
-	yield "state6";
+<script type="text/javascript" src="lib/co.js"></script>
 
+<script type="text/javascript">
+
+// <script type="module">
+
+/**
+* generator函数注册
+* 可以通过 function* () {} 或构造函数 new GeneratorFunction ([arg1[, arg2[, ...argN]],] functionBody)
+* 一个generator函数返回一个iterator可迭代对象. 当调用 sg.next()方法, 函数开始执行, 直到第一个yield 表达式. yield表达式指定要返回的值. 不会执行该yield后面的语句.  
+* yield* 表达式可以将函数过程委托给另外一个generator函数. 执行完该函数后再回到第一个generator中执行后续的流程. 
+* return: 如果generator中有return, 则执行到return后会得到相应的值, 并退出该函数. 停止执行后续的流程. 
+*/ 
+
+function resolveAfter2S (x) {
+    return new Promise((resovle, reject) => {
+        setTimeout(function () {
+            if (x < 50) {
+                resovle(x);
+                console.log('resolved');
+            } else {
+                reject(x);
+                console.log('rejected');
+            }
+        }, 2000);
+    });
+}
+
+// function* 注册迭代器
+// yield* 委托给另外一个generator
+
+function* stateGenerator (val){
+	var x = 0;
+	function add () {
+		return x++
+	}
+	
+	yield 'state1';
+	yield 'state2';
+	yield add();
+	yield add;
+	yield add();
+	yield 'state3';
+	yield* stateGenerator2(); // 可以委托给其他的generator
+	yield 'state4';
+	yield add();
+	yield* ['state5', 'state6']; // 可以委托给数组等可迭代对象
+	yield function () {
+		console.log('111');
+	}
+
+}
+
+function* stateGenerator2 (){
+	yield 'state21';
+	yield resolveAfter2S(10);
+	yield 'state22';
+	yield 'state23';
 }
 
 var sg = stateGenerator();
 
-console.log(sg);
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
-console.log(sg.next());
+go(sg);
 
+function go (fn_g) {
+	var res = fn_g.next();
+	console.log(res);
+	if (res.done) {
+		return;
+	}
+	if (typeof res.value === 'object' && typeof res.value.then === 'function') {
+		res.value.then(function () {
+			go(fn_g);
+		})
+	} else {
+		go(fn_g);
+	}
+}
+
+
+function* stateGenerator3 (val) {
+	yield Promise.resolve(val++);
+}
+
+var co_fn = co.wrap(stateGenerator3);
+
+console.log('co_fn', co_fn(333));
+co_fn(333).then(res => console.log('co_fn_res', res))
 
 
 </script>

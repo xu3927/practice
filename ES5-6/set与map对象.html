@@ -51,7 +51,23 @@ for(var kk of s){
 
 console.log("--------------");
 
-//=========================
+/** ========================= **/
+
+/**
+* weakset 对象
+* weakset 只能储存对象. 
+* 只有add, delete, has 方法
+*/
+
+
+var ws = new WeakSet([{a: 1}, {b: 2}, {c: 3}])
+var d = {d: 4}
+ws.add(d)
+ws.has(d)
+ws.delete(d)
+console.log('WeakSet ----- ');
+
+/** ========================= **/
 
 
 // map对象;属性值可以是undefined, null , boolen等

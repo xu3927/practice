@@ -18,6 +18,24 @@
 <script type="text/javascript" src="lib/jquery.js"></script>
 
 <script type="text/javascript">
+
+/**
+* var newObj = object.create(protoObj) 
+* 创建一个对象原型链为protoObj
+*/
+
+var o3 = {
+	c : {
+		color : "red"
+	}
+}
+
+var o4 = Object.create(o3);
+o4.o4 = {
+	num: '44'
+}
+
+
 /**
 * Object.assign(target, ...sources) 用来浅拷贝对象, 只拷贝源对象自身的并且可枚举的属性
 * 深拷贝对象需要迭代, 遇到非值类型的属性继续迭代, 直到复制到值类型为止.
@@ -38,10 +56,7 @@ var o3 = {
 	}
 }
 
-var o4 = Object.create(o3);
-o4.o4 = {
-	num: '44'
-}
+
 
 // 拓展对象 浅复制, 只复制了引用地址. 
 var res = Object.assign(o1, o2, o3, o4)
@@ -52,6 +67,41 @@ console.log(o2);
 console.log(o3);
 
 console.log("--------------------");
+
+/**
+* Object.keys() 获取所有的key, 得到一个数组
+*/
+
+var obj = {
+	a: 1,
+	b: 2,
+	c: 3
+}
+
+console.log(Object.keys(obj)) // ['a', 'b', 'c']
+
+/**
+* Object.is(val1, val2)
+* 判断2个值是否相同
+* 以下均返回true
+* 
+* both undefined
+* both null
+* both true or both false
+* both strings of the same length with the same characters
+* both the same object
+* both numbers and
+* both +0
+* both -0
+* both NaN
+* or both non-zero and both not NaN and both have the same value
+*/
+
+
+
+
+
+
 	
 </script>
 

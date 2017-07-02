@@ -82,6 +82,20 @@
      * 事件event属性 elapsedTime 浮点数，指示当触发该transitionend事件时过渡已运行的时间（秒）。这个值不受 transition-delay 影响。
      */
     var oBox1 = document.querySelector('.box1');
+    oBox1.addEventListener('transitionstart', function (event) {
+        /**
+         * event.propertyName表示完成过渡的属性
+         * event.elapsedTime 浮点数，指示当触发该transitionend事件时过渡已运行的时间（秒）。这个值不受 transition-delay 影响。
+         */
+        console.log('过渡动画start');
+    });     
+    oBox1.addEventListener('transitionrun', function (event) {
+        /**
+         * event.propertyName表示完成过渡的属性
+         * event.elapsedTime 浮点数，指示当触发该transitionend事件时过渡已运行的时间（秒）。这个值不受 transition-delay 影响。
+         */
+        console.log('过渡动画run');
+    });    
     oBox1.addEventListener('transitionend', function (event) {
         /**
          * event.propertyName表示完成过渡的属性
