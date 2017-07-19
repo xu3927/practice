@@ -2,7 +2,7 @@ const path = require('path');
 
 let config = {
 	entry: {
-		app: './main.js'
+		index: './index.js'
 	},
 	output: {
 		filename: '[name].js',
@@ -10,17 +10,22 @@ let config = {
 	},
 	module: {
 		rules: [{
-			test: /\.jsx?$/,
-			use: [{
-                test: /\.js$/,
-                include: [path.resolve(__dirname, "src")],
-                exclude: /node_modules/,
-                loader: 'babel-loader',
-                options: {
-                    presets: ['env']
-                }
-            }]
+				test: /\.js$/,
+                include: [path.resolve(__dirname, 'src')],
+                exclude: [/node_modules/],
+                use: [{
+	 				loader: 'babel-loader',
+	                options: {
+	                    presets: ['es2015'],
+	                    plugins: ['dynamic-import-webpack', 'dynamic-import-node']
+	                }
+                }]
+               		
 		}]
+	},
+	node: {
+	  fs: 'empty',
+	  net: 'empty'
 	}
 }
 

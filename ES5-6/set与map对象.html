@@ -63,7 +63,8 @@ console.log("--------------");
 var ws = new WeakSet([{a: 1}, {b: 2}, {c: 3}])
 var d = {d: 4}
 ws.add(d)
-ws.has(d)
+ws.has(d) // true
+ws.has({d: 4}) // false weakset判断的对象的引用地址. 
 ws.delete(d)
 console.log('WeakSet ----- ');
 

@@ -6,7 +6,6 @@ const WEBPACK_DONE_EVENT = 'webpack:done';
 
 
 
-
 webpackDone.once(WEBPACK_DONE_EVENT, function() {
   // -------- NodeMon --------
   var nodemon = require('nodemon'),
@@ -27,6 +26,7 @@ webpackDone.once(WEBPACK_DONE_EVENT, function() {
       logger().info('Main process crashed.');
     })
     .on('quit', function () {
+      logger().info('Main process quit.');
       process.exit();
     })
     .on('restart', function (files) {
@@ -49,8 +49,8 @@ webpackDone.once(WEBPACK_DONE_EVENT, function() {
 });
 
 
-
-const compiler = webpack(webpackConfig);
+// -------- Webpack Watch --------
+const compiler = webpack([webpackConfig]);
 
 compiler.watch({}, function (err, stats) {
   webpackDone.emit(WEBPACK_DONE_EVENT);

@@ -4,7 +4,7 @@ var HtmlwebpackPlugin = require('html-webpack-plugin');
 var ROOT_PATH = path.resolve(__dirname);
 var APP_PATH = path.resolve(ROOT_PATH, 'app');
 var DIST_PATH = path.resolve(ROOT_PATH, './dist');
-console.log('__dirname', __dirname);
+
 module.exports = {
 	entry: APP_PATH,
 	output: {

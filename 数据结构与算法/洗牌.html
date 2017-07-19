@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>洗牌</title>
+</head>
+<body>
+<script type="text/javascript">
+	// 生成一副扑克牌, 四种花色, A, 1 ... K
+	
+	function creatCard () {
+		var card = [], 
+			suit = 0; // 花色
+		for (var i = 0; i < 52; i++) {
+			if (i % 13 === 0) suit++
+			card.push('花色' + suit + '点数' + (i % 13 + 1))
+		}
+		return card
+	}
+
+	function shuffle (arr) {
+		for (var i = 0; i < 52; i++) {
+			// 生成随机数
+			var n = parseInt(Math.random() * 52)
+			// 将当前位置与一个随机位置的牌交换	
+			swap(i, n, arr)
+		}		
+	}
+
+	
+	var card = creatCard()
+	// 原牌
+	print(card)
+	// 洗牌
+	shuffle(card)
+	console.log('------');
+	// 洗后的
+	print(card)
+
+	function print (arr) {
+		var arr_row = []
+		for (var i = 0; i < 52; i++) {
+			arr_row.push(arr[i])
+			if (i % 13 === 12) {
+				console.log(arr_row.join(', '))
+				arr_row = []
+			}
+		}
+	}
+
+	function swap (i, j, arr) {
+		arr[i] = [arr[j], arr[j] = arr[i]][0]
+	}
+
+
+
+</script>
+</body>
+</html>

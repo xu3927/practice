@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<h1>angular provider测试</h1>
+<div ng-app="app">
+	<div ng-controller="ctrl">
+		<p>msg</p>
+	</div>
+</div>
+<script type="text/javascript" src="./lib/angular-1.5.8/angular.js"></script>
+<script type="text/javascript">
+// provider 服务通常用来注册一些需要在全局执行并且在应用开始之前要执行的方法
+	angular.module('app', [])
+	.provider('rocket', function rocketProvider () {
+		// provider的注册函数, 其中的this有一个$get方法, 注册服务时会调用该$get方法得到注册的服务. $get后面的函数即相当于factory中传入的函数.
+		console.log('provider:', this);
+		this.$get = function () {
+			console.log('$get函数:', this);	
+			console.log('注册 rocketProvider');
+			// $get中返回的值即在控制器中注入的服务, 可以返回值类型, 函数, 对象等.
+			return function () {
+				console.log('provider结果函数');
+			}
+		}
+	})
+	// factory中的第二个参数即相当于provider中的 this.$get 函数
+	.factory('myFactory', function () {
+		console.log('注册myFactory');
+		// 返回的结果即注入的内容
+		return function () {
+			console.log('注入的函数');	
+		}
+	})
+	.controller('ctrl', function ($scope, rocket, myFactory) {
+		$scope.msg = '哈哈';
+		console.log('controller中的服务rocket:', rocket);	
+		console.log('controller中的服务myFactory:', myFactory);	
+		rocket()
+		myFactory()
+	})
+</script>
+</body>
+</html>
