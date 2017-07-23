@@ -12,8 +12,7 @@
          	resove();
          	// reject();
          }, 5000)
-    });
-    p
+    })
         .then(success, fail)
         .then(function () {
             console.log('then2');
@@ -25,6 +24,19 @@
     function fail () {
         console.log('fail');
     }
+
+    // promise 中的return 无效, 可以终止当前函数, 但是不会捕获到return的值. 
+    var p2 = new Promise(function (resolve, reject) {
+        resolve('resolve')
+
+        return 1234;
+    })
+    p2.then(function (res) {
+        console.log('res', res);
+    }, function (err) {
+        console.log('err', err);
+    })
+    console.log(9999, p2);
 
     /**
      * 将一个异步对象转为promise
