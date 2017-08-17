@@ -5,6 +5,8 @@
 	<title>iframe练习</title>
 </head>
 <body>
+<button type="button" onclick="openNew()">新窗口打开</button>
+
 <h3>iframe练习</h3>
 <label for="msg">
 要发送的数据
@@ -33,6 +35,7 @@ srcdoc: html字符串, iframe中显示的页面html内容
 	seamless
 ></iframe>
 <script type="text/javascript">
+	var newWin;
 	function parentSay () {
 		console.log('parentSay');	
 	}
@@ -44,9 +47,15 @@ srcdoc: html字符串, iframe中显示的页面html内容
 	function postMsg () {
 		console.log(iFrame);
 		iFrame.postMessage(inp.value, '*');
+		if (newWin) {
+			newWin.postMessage(inp.value, '*');
+		}
 	}
 	window.onmessage = function (e) {
 		receiveMsg.innerHTML = e.data;
+	}
+	function openNew () {
+		window.newWin = window.open('./iframe2.html', 'iframe-new2')
 	}
 </script>
 	

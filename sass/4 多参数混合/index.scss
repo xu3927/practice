@@ -1,0 +1,16 @@
+
+@mixin box-shadow($shadow...) {
+	box-shadow : $shadow;
+	-webkit-box-shadow : $shadow;
+	-o-box-shadow : $shadow;
+	-ms-box-shadow : $shadow;
+	-moz-box-shadow : $shadow;
+}
+
+
+.box{
+	width : 200px;
+	height : 200px;
+	border : 2px solid red;
+	@include box-shadow(5px 5px 15px red);
+}

@@ -24,7 +24,7 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var path = require('path');
-var root = process.cwd();
+var root = './';
 
 var server = http.createServer(function(request, response) {
 	var pathname = decodeURIComponent(url.parse(request.url).pathname);

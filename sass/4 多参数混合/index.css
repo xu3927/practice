@@ -1,0 +1,11 @@
+.box {
+  width: 200px;
+  height: 200px;
+  border: 2px solid red;
+  box-shadow: 5px 5px 15px red;
+  -webkit-box-shadow: 5px 5px 15px red;
+  -o-box-shadow: 5px 5px 15px red;
+  -ms-box-shadow: 5px 5px 15px red;
+  -moz-box-shadow: 5px 5px 15px red; }
+
+/*# sourceMappingURL=index.css.map */

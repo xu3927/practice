@@ -1,0 +1,19 @@
+mystle, body div.box1 p, body div.box2 {
+  color: red; }
+
+body div.box2 p {
+  background: orange;
+  width: 200px;
+  height: 200px; }
+
+body div.box1 {
+  background: red;
+  height: 200px; }
+body mystle, body div.box1 p, body div.box2 {
+  width: 200px;
+  height: 300px; }
+body div.box2 {
+  background: yellow;
+  height: 200px; }
+
+/*# sourceMappingURL=index.css.map */

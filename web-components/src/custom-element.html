@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom Emement</title>
+</head>
+<body>
+<h1>Custom Emement</h1>
+<shadow-dom></shadow-dom>
+
+<!-- is属性用来扩展一些原生的html元素, 当前浏览器的支持不好 -->
+<button is="better-button">
+    <!-- the image and span are better-button's light DOM -->
+    <span>Click ME!</span>
+</button>
+
+<script type="text/javascript">
+
+    // 创建自定义元素, 自定义元素创建后会为其创建shaow DOM
+    class shadowDOM extends HTMLElement {
+        constructor () {
+            super()
+            // 为自定义元素创建shadow dom
+            const shadowRoot = this.attachShadow({mode: 'open'})
+            shadowRoot.innerHTML = `
+            <style>
+            div{
+                border: 1px solid #00d3ff;
+            }
+            </style>
+            <div>
+                 <h3>shadow dom</h3>
+                 <p>content</p>
+            </div>`
+        }
+    }
+    // 注册自定义元素, 元素名不支持驼峰
+    customElements.define('shadow-dom', shadowDOM)
+
+    // 扩展一个内置的元素, 浏览器尚不支持
+    class betterButton extends HTMLButtonElement {
+        constructor() {
+            super()
+            this.innerHTML = 'button'
+            this.addEventListener('click', () => {
+                console.log('click')
+                this.style.transition = 'all 1s ease 0s'
+                this.style.backgroundColor = 'yellow'
+                this.style.height = '100px'
+            })
+        }
+    }
+    customElements.define('better-button', betterButton, { extends: "button" })
+
+</script>
+</body>
+</html>

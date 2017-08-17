@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>新窗口</title>
+</head>
+<body>
+	<h1>新窗口</h1>
+	<div id="msg"></div>
+	<script type="text/javascript">
+		var oMsg = document.getElementById("msg")
+
+		window.onmessage = function (e) {
+			console.log('msg');
+			oMsg.innerHTML = e.data
+		}
+
+		if (window.opener) {
+			window.opener.postMessage('Msg from New Win', "*")
+		}		
+	</script>
+</body>
+</html>

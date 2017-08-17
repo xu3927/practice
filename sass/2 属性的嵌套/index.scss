@@ -1,0 +1,33 @@
+$bdCor:yellow;
+$h1Cor:pink;
+
+body{
+	background:$bdCor;
+	h1{
+	   height : 200px;
+	   background:$h1Cor;
+	}
+	div{
+		height:200px;
+		width:200px;
+		border : {
+			style : solid;
+			top : {
+			 	width : 30px;
+			 	color:green;
+			}
+			bottom:{
+				width:50px;
+				color:skyblue;
+			}
+			left:{
+				width:30px;
+				color:red;
+			}
+			right:{
+				width:20px;
+				color:skyblue;
+			}
+		}
+	}
+}

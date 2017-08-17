@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shadow DOM</title>
+</head>
+<style type="text/css">
+    custom-element{
+        /*定义一些样式变量, 在组件内部的样式中会使用这些变量*/
+        --panel-background-color: skyblue;
+    }
+</style>
+
+<body>
+<h1>Shadow DOM</h1>
+<h3>outer shadow</h3>
+
+<!--<better-button></better-button>-->
+<h3>原生元素的shadow dom</h3>
+<div class="shadow"></div>
+<hr>
+<h3>自定义元素的shadow dom</h3>
+<!--使用-->
+<custom-element>
+    <!--通过slot槽位插入内容, slot属性对应shadow dom中的slot标签的name-->
+    <button slot="title">Tab 1</button>
+    <button slot="title" selected>Tab 2</button>
+    <button slot="title">Tab 3</button>
+    <section>content panel 1</section>
+    <section>content panel 2</section>
+    <section>content panel 3</section>
+</custom-element>
+
+<script type="text/javascript">
+    // 选择Host(宿主)元素
+    let oShadow = document.querySelector('.shadow')
+    // 创建shaodw Root, 同时生成Shadow DOM
+    let shadowRoot = oShadow.attachShadow({mode: 'open'})
+    // 填充内容
+    shadowRoot.innerHTML = '<style>p{color: red;}</style><p>我是影子dom</p>'
+
+    console.log(oShadow)
+    console.log(shadowRoot)
+    
+    // 在组件外监听自定义元素的自定义事件
+    document.body.addEventListener('tab-select', function (e) {
+        console.log(e)
+    })
+    
+    // 为自定义元素创建shadowDOM
+
+    // 创建自定义元素, 自定义元素创建后会为其创建shaow DOM
+    let selected_ = null
+    class customElement extends HTMLElement {
+        constructor () {
+            super()
+            // 为自定义元素创建shadow dom
+            const shadowRoot = this.attachShadow({mode: 'open'})
+            shadowRoot.innerHTML =
+    ` <style>
+        :host {
+          display: inline-block;
+          width: 650px;
+          font-family: 'Roboto Slab';
+          contain: content;
+          border: 1px solid #000;
+        }
+        :host([background]) {
+          border-radius: 10px;
+          padding: 10px;
+        }
+        #panels {
+          box-shadow: 0 2px 2px rgba(0, 0, 0, .3);
+          background: white;
+          border-radius: 3px;
+          padding: 16px;
+          height: 250px;
+          overflow: auto;
+        }
+        #tabs {
+          display: inline-flex;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+        #tabs slot {
+          display: inline-flex; /* Safari bug. Treats <slot> as a parent */
+        }
+        /* Safari does not support #id prefixes on ::slotted
+           See https://bugs.webkit.org/show_bug.cgi?id=160538 */
+        #tabs ::slotted(*) {
+          font: 400 16px/22px 'Roboto';
+          padding: 16px 8px;
+          margin: 0;
+          text-align: center;
+          width: 100px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          cursor: pointer;
+          border-top-left-radius: 3px;
+          border-top-right-radius: 3px;
+          background: linear-gradient(#fafafa, #eee);
+          border: none; /* if the user users a <button> */
+        }
+        #tabs ::slotted([aria-selected="true"]) {
+          font-weight: 600;
+          background: white;
+          box-shadow: none;
+        }
+        #tabs ::slotted(:focus) {
+          z-index: 1; /* make sure focus ring doesn't get buried */
+        }
+        #panels{
+            /*使用一个样式变量, 该变量可以在组件外部定义*/
+             background: var(--panel-background-color, #fff);
+        }
+        #panels ::slotted([aria-hidden="true"]) {
+          display: none;
+        }
+      </style>
+      <div id="tabs">
+        <slot id="tabsSlot" name="title"></slot>
+      </div>
+      <div id="panels">
+        <slot id="panelsSlot"></slot>
+      </div>`
+        }
+        get selected() {
+            return selected_;
+        }
+        set selected(idx) {
+            selected_ = idx;
+            this._selectTab(idx);
+            // Updated the element's selected attribute value when
+            // backing property changes.
+            this.setAttribute('selected', idx);
+        }
+
+        connectedCallback() {
+            this.setAttribute('role', 'tablist');
+            const tabsSlot = this.shadowRoot.querySelector('#tabsSlot');
+            const panelsSlot = this.shadowRoot.querySelector('#panelsSlot');
+            // assignedNodes 获取slot中插入的元素, flatten为false则返回插入的内容, 默认是false. 为true则返回fallback content(默认的内容).
+            this.tabs = tabsSlot.assignedNodes({flatten: true});
+            this.panels = panelsSlot.assignedNodes({flatten: false}).filter(el => {
+                return el.nodeType === Node.ELEMENT_NODE;
+            });
+            // Add aria role="tabpanel" to each content panel.
+            for (let [i, panel] of this.panels.entries()) {
+                panel.setAttribute('role', 'tabpanel');
+                panel.setAttribute('tabindex', 0);
+            }
+
+            // Save refer to we can remove listeners later.
+            this._boundOnTitleClick = this._onTitleClick.bind(this);
+            this._boundOnKeyDown = this._onKeyDown.bind(this);
+            tabsSlot.addEventListener('click', this._boundOnTitleClick);
+            tabsSlot.addEventListener('keydown', this._boundOnKeyDown);
+
+            this.selected = this._findFirstSelectedTab() || 0;
+        }
+
+        disconnectedCallback() {
+            const tabsSlot = this.shadowRoot.querySelector('#tabsSlot');
+            tabsSlot.removeEventListener('click', this._boundOnTitleClick);
+            tabsSlot.removeEventListener('keydown', this._boundOnKeyDown);
+        }
+
+        _onTitleClick(e) {
+            if (e.target.slot === 'title') {
+                this.selected = this.tabs.indexOf(e.target);
+                e.target.focus();
+            }
+        }
+
+        _onKeyDown(e) {
+            switch (e.code) {
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    var idx = this.selected - 1;
+                    idx = idx < 0 ? this.tabs.length - 1 : idx;
+                    this.tabs[idx].click();
+                    break;
+                case 'ArrowDown':
+                case 'ArrowRight':
+                    e.preventDefault();
+                    var idx = this.selected + 1;
+                    this.tabs[idx % this.tabs.length].click();
+                    break;
+                default:
+                    break;
+            }
+        }
+        _findFirstSelectedTab() {
+            let selectedIdx;
+            for (let [i, tab] of this.tabs.entries()) {
+                tab.setAttribute('role', 'tab');
+                // Allow users to declaratively select a tab
+                // Highlight last tab which has the selected attribute.
+                if (tab.hasAttribute('selected')) {
+                    selectedIdx = i;
+                }
+            }
+            return selectedIdx;
+        }
+
+        _selectTab(idx = null) {
+            for (let i = 0, tab; tab = this.tabs[i]; ++i) {
+                let select = i === idx;
+                tab.setAttribute('tabindex', select ? 0 : -1);
+                tab.setAttribute('aria-selected', select);
+                this.panels[i].setAttribute('aria-hidden', !select);
+            }
+            /**
+             * 发出自定义事件
+             * dispatchEvent 发出事件, 参数是一个事件, 通过new Event来创建一个事件
+             * Event(eventType, eventInit)创建一个自定义事件.
+             * eventType事件类型, 可以自定义.
+             * eventInit事件的参数, bubbles是否冒泡, cancelable是否可以取消 等
+             * composed是否可以穿透Shadow DOM, true 可以穿透, 则在外部可以监听到事件. false(默认)不可穿透
+             * 可以通过改变元素的属性来传递信息.
+             */
+
+            this.tabs[idx].dispatchEvent(new Event('tab-select', {composed: true, bubbles: true, cancelable: false}));
+        }
+    }
+    // 注册自定义元素, 元素名不支持驼峰
+    customElements.define('custom-element', customElement)
+
+
+</script>
+
+</body>
+</html>

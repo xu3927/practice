@@ -1,0 +1,42 @@
+
+
+mystle {
+	color: red;
+}
+
+%hahastyle{
+	background:orange;
+	width: 200px;
+	height: 200px;
+}
+
+body{
+	@mixin setBg($c : red){
+		background: $c;
+		height: 200px;
+	}
+
+	div.box1{
+		@include setBg;
+		p{
+			@extend mystle;
+		}
+	}
+
+	mystle{
+		width: 200px;
+		height: 300px;
+	}	
+
+
+	div.box2{
+		@extend mystle;
+		@include setBg(yellow);
+		
+		p{
+			@extend %hahastyle;
+		}
+
+	}
+
+}

@@ -1,6 +1,6 @@
 # build
 
-npm run build
+npm run build 编译
 
 # node version 
 

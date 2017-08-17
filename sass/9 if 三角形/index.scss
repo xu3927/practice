@@ -1,0 +1,44 @@
+
+@mixin arrow($bian : top,$w : 20px,$c : yellow,$h : $w){
+
+	border : $w solid transparent;
+	border-#{$bian}-color : $c;
+	border-top-width:$w;
+	border-bottom-width:$w;
+	border-left-width:$h;
+	border-right-width:$h;	
+	width: 0;
+	font-size: 0;
+}
+
+
+@mixin arrow2($bian : top,$w : 20px,$c : yellow,$h : $w){
+
+	border : $w solid transparent;
+	
+	@if $bian == top or $bian == bottom {
+		border-left-width:$h;
+		border-right-width:$h;	
+	}
+
+	@else {
+		border-top-width:$h;
+		border-bottom-width:$h;
+	}
+
+	border-#{$bian}-color : $c;
+	width: 0;
+	font-size: 0;
+}
+
+
+div{
+	@include arrow(top,20px,red,30px);
+}
+
+strong{
+	@include arrow(bottom,20px,yellow,50px);
+}
+em{
+	@include arrow2(left,20px,blue,100px);
+}

@@ -1,0 +1,29 @@
+div {
+  border: 20px solid transparent;
+  border-top-color: red;
+  border-top-width: 20px;
+  border-bottom-width: 20px;
+  border-left-width: 30px;
+  border-right-width: 30px;
+  width: 0;
+  font-size: 0; }
+
+strong {
+  border: 20px solid transparent;
+  border-bottom-color: yellow;
+  border-top-width: 20px;
+  border-bottom-width: 20px;
+  border-left-width: 50px;
+  border-right-width: 50px;
+  width: 0;
+  font-size: 0; }
+
+em {
+  border: 20px solid transparent;
+  border-top-width: 100px;
+  border-bottom-width: 100px;
+  border-left-color: blue;
+  width: 0;
+  font-size: 0; }
+
+/*# sourceMappingURL=index.css.map */

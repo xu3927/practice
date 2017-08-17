@@ -1,0 +1,19 @@
+body {
+  background: yellow; }
+  body h1 {
+    height: 200px;
+    background: pink; }
+  body div {
+    height: 200px;
+    width: 200px;
+    border-style: solid;
+    border-top-width: 30px;
+    border-top-color: green;
+    border-bottom-width: 50px;
+    border-bottom-color: skyblue;
+    border-left-width: 30px;
+    border-left-color: red;
+    border-right-width: 20px;
+    border-right-color: skyblue; }
+
+/*# sourceMappingURL=index.css.map */

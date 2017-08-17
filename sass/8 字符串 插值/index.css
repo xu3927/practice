@@ -1,0 +1,13 @@
+div {
+  width: 0;
+  font-size: 0;
+  border: 10px solid transparent;
+  border-top: 10px solid red; }
+
+span {
+  width: 0;
+  font-size: 0;
+  border: 20px solid transparent;
+  border-left: 20px solid blue; }
+
+/*# sourceMappingURL=index.css.map */

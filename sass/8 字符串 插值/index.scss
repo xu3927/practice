@@ -1,0 +1,17 @@
+
+
+@mixin arrow($bian,$w,$c){
+	width : 0;
+	font-size:0 ;
+	border:$w solid transparent;
+	border-#{$bian}:$w solid $c;
+
+}
+
+div{
+	@include arrow(top,10px,red);
+}
+
+span{
+	@include arrow(left,20px,blue);
+}

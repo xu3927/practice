@@ -1,0 +1,18 @@
+
+div{
+	height: 20px;
+	background:orange;
+	margin-top: 20px;
+}
+
+@for $i from 1 through 12{
+	.col-lg-#{$i}{
+		width : 100%/12 * $i;
+	}
+	.col-lg-offset-#{$i}{
+		margin-left: 100%/12*$i;
+	}
+	.cor-#{$i}{
+		background: #101 * $i;
+	}
+} 

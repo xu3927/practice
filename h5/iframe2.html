@@ -55,6 +55,9 @@
 	}
 	document.getElementById("postBtn").onclick = function () {
 		window.parent.postMessage(inp.value, "*")
+		if (window.opener) {
+			window.opener.postMessage(inp.value, "*")
+		}
 		
 	}
 	</script>

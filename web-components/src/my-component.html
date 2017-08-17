@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="my-component.css">
+</head>
+<body>
+
+<template id="myComponent">
+    <style>
+        .my-component{
+            width: 200px;
+            height: 100px;
+            background-color: skyblue;
+        }
+    </style>
+	<div class="my-component">
+		<p>我是自定义组件</p>
+	</div>
+</template>
+
+<script>
+(function () {
+	var element = Object.create(HTMLElement.prototype);
+	// 获取模板
+	// document.currentScript.ownerDocument 可以获取当前的document
+	var tpl = document.currentScript.ownerDocument.getElementById('myComponent').innerHTML;
+
+    // 创建Custom Element
+	class MyComponent extends HTMLElement {
+	    constructor () {
+	        super()
+        }
+        connectedCallback() {
+            console.log('connectedCallback');
+            let ShadowHost = document.querySelector('my-component')
+            console.log(ShadowHost)
+            // 创建shaodw DOM
+            let shadowRoot = ShadowHost.attachShadow({mode: 'open'})
+            // 给shadow DOM填充内容
+            shadowRoot.innerHTML = tpl
+        }
+        disconnectedCallback () {
+            console.log('disconnectedCallback')
+        }
+        // 以下的生命周期API在chrome 60.0中测试仅支持 connectedCallback, disconnectedCallback
+		createdCallback () {
+			console.log('createdCallback');
+			this.append(tpl.clone(true));
+		}
+		attachedCallback () {
+			console.log('attachedCallback');
+
+		}
+		detachedCallback () {
+			console.log('detachedCallback');
+
+		}
+		attributeChangedCallback(attrName, oldVal, newVal){
+			console.log('attributeChangedCallback');
+
+		}
+	}
+	// 自定义HTML标签
+	window.customElements.define('my-component', MyComponent)
+})();
+</script>
+
+	
+</body>
+</html>
