@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+
+<script type="text/javascript">
+	
+	function LibFetch(url, config) {
+
+	    let {data, method, headers, ...remain} = config
+
+	    let myHeaders = new Headers(Object.assign({}, {
+	      'Accept': 'application/json',
+	      'Access-Control-Allow-Origin':'*',
+	      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
+	      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+	    }, headers || {}))
+
+	    let formData = null
+
+	    const query = Object.keys(data).reduce((accumulator, key, index) => {
+	      if (index > 0) {
+	        accumulator+= '&'
+	      }
+	      return accumulator + key + '=' + data[key]
+	    }, '')
+
+
+
+	    let init = {
+	      method: method,
+	      mode:'cors',
+	      cache: 'default',
+	      headers: myHeaders,
+	    }
+
+	    switch (method) {
+	      case 'POST':
+	        init.body = query
+	        break
+	      case 'GET':
+	        if (query.length > 0) {
+	          url += '?' + query
+	        }
+	    }
+
+	    return window.fetch(url, Object.assign({}, init, remain))
+  }
+
+  LibFetch('/esl/bindItem.json', {
+    method: 'GET',
+    data: {id: 23, haha: 999, xixi: 333},
+  })
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script type="text/javascript">
+		// 初始的HTML文档被下载并解析完成之后触发. 不会等待css, image或者子frame完成.
+	  window.addEventListener('DOMContentLoaded', function(){
+        console.log('DOMContentLoaded', +new Date())
+      })
+
+      window.addEventListener('load', function(){
+        console.log('load', +new Date())
+      })
+
+
+
+      window.addEventListener('beforeunload', function mHomeUnload() {
+        console.log('beforeunload:', +new Date())
+       })
+
+       window.addEventListener('unload', function mHomeUnload() {
+        console.log('unload:', +new Date())
+       })
+		
+		/**
+		* dom 状态改变触发, document.readyState取值有 loading, interactive, complete
+		* loading: document 加载中
+		* interactive: document文档加载完成并且已parsed, 但是sub-resources如 css, iamges仍然在下载中
+		* complete: document和所有的资源包括css, images已经加载完成. 此时会触发 load事件.
+		*/
+	   document.addEventListener('readystatechange', function mHomeUnload() {
+        console.log('readystatechange:', 'document', document.readyState, +new Date())
+       })
+
+       window.addEventListener('pagehide', function mHomepagehide() {
+        t1 = +new Date()
+        console.log('pagehide:', +new Date(), 'time:', (t1 - t0))
+       })
+       window.addEventListener('pageshow', function mHomepageshow() {
+        t1 = +new Date()
+        console.log('pageshow:', +new Date(), 'time:', (t1 - t0))
+       })
+		
+	</script>
+
+
+	<meta charset="UTF-8">
+	<title>DOM Event</title>
+	<meta name="viewport" content="width=device-width;initial-scale=1.0;minimum-scale=1.0;maxmium-scale=1.0">
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			font-size: 0.05rem;
+		}
+		html,body{
+			font-size: 100px;			
+		}
+		
+	</style>
+</head>
+<body>
+	<div>
+		<h1>事件</h1>
+	</div>
+	<div>
+		<input type="text" placeholder="输入">
+	</div>
+	<div>
+		<button>按钮</button>
+	</div>
+	
+</body>
+</html>

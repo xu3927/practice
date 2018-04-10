@@ -1,0 +1,13 @@
+{
+  "name": "local-server",
+  "version": "1.0.0",
+  "description": "test and practice",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "local-web-server": "^2.5.1"
+  },
+  "scripts": {
+  	"start": "sudo ./node_modules/.bin/ws -p 8880 --hostname web.com --https"
+  }
+}

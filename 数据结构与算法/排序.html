@@ -116,10 +116,10 @@ function quick_sort (arr) {
         }
         [arr[right], arr[storeIndex]] = [arr[storeIndex], arr[right]]; // 从左到右循环结束后把基准值放到storeIndex的位置.
         // 递归调用分别处理左右侧的数据
-        Iterator(left, storeIndex, left);
+        Iterator(left, storeIndex - 1, left);
         Iterator(storeIndex + 1, right, right);
     }
-    console.log('quick_sort总次数:', _n);
+    console.log('quick_sort总次数:', _n, arr);
 }
 
 var copy = JSON.parse(JSON.stringify(origin));
