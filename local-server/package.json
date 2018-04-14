@@ -8,6 +8,6 @@
     "local-web-server": "^2.5.1"
   },
   "scripts": {
-  	"start": "sudo ./node_modules/.bin/ws -p 8880 --hostname web.com --https"
+  	"start": "sudo node server.js"
   }
 }
