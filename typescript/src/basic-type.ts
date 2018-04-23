@@ -5,16 +5,18 @@ function basicType () {
     // 定义数组有2种形式
     let arr: number[] = [1, 2, 3]; // 元素类型 + []
     let arr2: Array<string> = ['哈哈', '嘻嘻', '么么哒']; // Array + 元素类型
-    // Tuple 类型数组
-    let tuple1: [string, number]; // 指定原数组类型, 超出定义的元素会遵循格式 [string|number]
+    // Tuple 元组 类型数组, 用于表示一个已知元素数量和类型的数组, 各元素的类型不必相同, 访问一个越界的元素会使用联合类型代替
+    let tuple1: [string, number]; // 指定原数组类型, 当访问一个越界的元素，会使用联合类型替代 [string|number]
     tuple1 = ['华山派', 99]; // 正确定义
     // tuple1 = [999, '华山派']; 错误, 第0位定义的是string, 第1位定义的是number.
     let _s = tuple1[0].substr(0); // 正确, string有substr方法
     // let _s = tuple1[0].substr(1); // 错误, number类型没有substr方法
-    tuple1 = ['华山派', 99, 8766, '嵩山派']; // 正确
+    // tuple1 = ['华山派', 99, 8766, '嵩山派']; // 错误
+    tuple1 = ['华山派', 9] // 正确
+
     let tuple2: [string|number]; // 指定元素是string或number
-    tuple2 = ['华山派', 99]; // 正确定义
-    tuple2 = [999, '华山派']; // 正确定义
+    tuple2 = ['华山派']; // 正确定义
+    tuple2 = [999]; // 正确定义
     console.log(str, num, arr, arr2, tuple1, tuple2);
 
     /**
