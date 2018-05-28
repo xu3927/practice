@@ -70,9 +70,9 @@ class APP extends Component{
     }
 
     render(){
-console.log('8899', this.props)
+        console.log('8899', this.props)
         return <div>
-            <p>redux练习</p>
+            <p>redux practice 111</p>
             <p>
                 <input style={{width: "60px"}} type="number" value={this.state.inp} onChange={(event) =>{
                     this.setState({inp: event.target.value})
