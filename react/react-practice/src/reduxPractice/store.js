@@ -2,6 +2,7 @@ import * as redux from 'redux'
 const {createStore} = redux
 
 console.log('redux:', redux)
+
 function counter(state = 0, action) {
     switch (action.type) {
     case 'INCREMENT':
@@ -13,6 +14,10 @@ function counter(state = 0, action) {
     }
   }
 
+/**
+ * 创建store
+ * @return {subscribe, dispatch, getState}
+ */
 let store = createStore(counter)
 
 store.subscribe(() =>

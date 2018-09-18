@@ -107,7 +107,7 @@ function quick_sort (arr) {
         let pivotVal = arr[pivotIndex];
         let storeIndex = left;
         [arr[right], arr[pivotIndex]] = [arr[pivotIndex], arr[right]]; // 把基准元素移到最右侧
-        for (let i = left; i < right - 1; i++) {
+        for (let i = left; i < right; i++) {
             _n++;
             if (arr[i] < pivotVal) {
                 [arr[storeIndex], arr[i]] = [arr[i], arr[storeIndex]]; // 把小的元素依次放到左侧,下标递增.
@@ -124,6 +124,28 @@ function quick_sort (arr) {
 
 var copy = JSON.parse(JSON.stringify(origin));
 quick_sort(copy);
+
+
+function quick_sort2 (arr) {
+    let _n = 0;
+
+    const len = arr.length
+    if(len < 2) return arr
+    const basic = arr[0], left = [], right = []
+    for(let i = 1; i < l; i++) {
+      const iv = arr[i]
+      iv >= basic && right.push(iv) // to avoid repeatly element.
+      iv < basic && left.push(iv)
+      _n++
+    }
+    return quick_sort2(left).concat(basic, quick_sort2(right))
+
+    console.log('quick_sort2总次数:', _n, arr);
+}
+
+var copy = JSON.parse(JSON.stringify(origin));
+quick_sort(copy);
+
 
 /**
  * 简单选择排序

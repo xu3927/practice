@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { createStore, combineReducers } from 'redux'
 import { Provider, connect } from 'react-redux'
 
-// 定义action厂里类型, action是一个普通的js对象, 用来描述要发生的事情
+// 定义action 类型, action是一个普通的js对象, 用来描述要发生的事情
 
 const ADD = 'ADD'
 const MINUS = 'MINUS'
@@ -23,29 +23,47 @@ function minus(value){
 }
 
 
-// reducer
-
-const calculate = function(state, action) {
-    switch (action.type) {
-        case ADD:
-            state.num += action.value
-        case MINUS:
-            state.num -= action.value
-        default:
-            return state
-    }
+// state
+const initialState = {
+    todoList: ['buy tomato'],
+    num: 220
 }
 
-const reducers = combineReducers(calculate)
+// reducer
+
+const calculate = function(num = 0, action) {
+
+    switch (action.type) {
+        case ADD:
+            num += action.value
+        case MINUS:
+            num -= action.value
+        default:
+    }
+    return num
+}
+
+const todoReducer = (list = [], action) => {
+    switch (action.type) {
+        case 'add':
+            list.push(action.value)
+            break;
+        case 'done':
+            list.splice(list.indexOf(action.value), 1)
+    }
+    return list
+}
+
+const reducers = combineReducers({
+        num: calculate,
+        todoList: todoReducer
+    })
 
 
 // store
 
-const _state = {
-    val: 0
-}
 
-let store = createStore(reducers, {num: 100})
+let store = createStore(reducers, initialState)
 
 
 
@@ -88,7 +106,7 @@ class APP extends Component{
     }
 }
 
-const APPConnet = connect(_state => _state)(APP)
+const APPConnet = connect(initialState => initialState)(APP)
 
 class ReduxPractice extends Component{
 

@@ -1,0 +1,34 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "title": "雷雨",
+      "author": "老舍",
+      "id": 2
+    },
+    {
+      "title": "骆驼祥子",
+      "author": "老舍",
+      "id": 3
+    },
+    {
+      "title": "笑傲江湖",
+      "author": "金庸",
+      "id": 4
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="react.js"></script>
+    <script src="react-dom.js"></script>
+    <script type="text/javascript">    
+
+        var arr = new Array(2000).fill(0).map(item => parseInt(100 * Math.random()))
+        
+
+        function quick_sort(arr) {
+            let _n = 0;
+            Iterator(0, arr.length - 1, 0);
+            function Iterator(left, right, baseIndex) {
+                if (right <= left) {
+                    return;
+                }
+                let baseVal = arr[baseIndex];
+                let storeIndex = left, equalIndexs = [];
+                [arr[right], arr[baseIndex]] = [arr[baseIndex], arr[right]]; // 把基准元素移到最右侧
+                for (let i = left; i < right; i++) {
+                    _n++;
+                    if (arr[i] < baseVal) {
+                        [arr[storeIndex], arr[i]] = [arr[i], arr[storeIndex]]; // 把小的元素依次放到左侧,下标递增.
+                        storeIndex++;
+                    }
+                   
+                }
+
+                [arr[right], arr[storeIndex]] = [arr[storeIndex], arr[right]]; // 从左到右循环结束后把基准值放到storeIndex的位置.
+            
+                // 递归调用分别处理左右侧的数据
+                Iterator(left, storeIndex - 1, left);
+                Iterator(storeIndex + 1, right, right);
+            }
+            console.log('quick_sort总次数:', _n, arr);
+        }
+
+        quick_sort(arr)
+        console.log(arr)
+    </script>
+</body>
+
+</html>
