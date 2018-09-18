@@ -6,18 +6,10 @@
 </head>
 <body>
 <h1 id="app">hello</h1>
-<script type="text/javascript">
-
-</script>
-
-<!-- <script type="text/javascript" src="lib/traceur.js"></script>
-<script type="text/javascript" src="lib/traceur-bootstrap.js"></script> -->
 
 <script type="text/javascript" src="lib/co.js"></script>
 
 <script type="text/javascript">
-
-// <script type="module">
 
 /**
 * generator函数注册
@@ -49,10 +41,8 @@ function* stateGenerator (val){
 	function add () {
 		return x++
 	}
-	
 	yield 'state1';
-	yield 'state2';
-	yield add();
+	yield add(); // 得到add的执行结果
 	yield add;
 	yield add();
 	yield 'state3';
@@ -63,7 +53,8 @@ function* stateGenerator (val){
 	yield function () {
 		console.log('111');
 	}
-
+	return '结束了'; // return 退出当前的generator, 并返回相应的值
+	yield 'state7';
 }
 
 function* stateGenerator2 (){
@@ -73,10 +64,52 @@ function* stateGenerator2 (){
 	yield 'state23';
 }
 
+/**
+ *  generator 执行后返回一个iterator对象
+ */
+
+const [...values] = stateGenerator()
+for (let _val of values) {
+	console.log('迭代generator的结果:', _val)
+}
+
+/**
+ * sg.next 可以传入参数, 传入的参数会作为该条yield语句的返回值
+ */ 
+ 
+execSG4()
+
+function* stateGenerator4 () {
+	const reply1 = yield 'what do you like?'
+	console.log('innner_stateGenerator4-reply1:', reply1)
+	let reply2 = ''
+	if (reply1 == 'cook') {
+		reply2 = yield Promise.resolve('我也喜欢做饭, 我们可以一起')
+	} else {
+		reply2 = yield Promise.resolve('哦, 挺不错的')
+	}
+	console.log('innner_stateGenerator4:', reply2)
+	const reply3 = yield '你喜欢喝茶么?'
+	console.log('innner_stateGenerator4:', reply3)
+
+}
+
+function execSG4 () {
+	let sg4 = stateGenerator4()
+	let res1 = sg4.next().value
+	console.log('execSG4-res1:', res1)
+	let res2 = sg4.next('cook').value
+	console.log('execSG4-res2:', res2)
+	let res3 = sg4.next('是的').value
+	console.log('execSG4-res3:', res3)
+}
+
+
 var sg = stateGenerator();
 
-go(sg);
+// 让generator自动调用
 
+go(sg);
 function go (fn_g) {
 	var res = fn_g.next();
 	console.log(res);
@@ -94,13 +127,26 @@ function go (fn_g) {
 
 
 function* stateGenerator3 (val) {
-	yield Promise.resolve(val++);
+	console.log('stateGenerator3:', val)
+	var res1 = yield Promise.resolve(val++);
+	console.log('stateGenerator3-res1:', res1)
+	var res2 = yield Promise.resolve(val++);
+	console.log('stateGenerator3-res2:', res2)
+	var res3 = yield Promise.resolve(val++);
+	console.log('stateGenerator3-res3:', res3)
+	// 最后return得到的结果可以在co.wrap之后的then中拿到
+	return res3++ 
 }
 
+// 把一个generator转为promise
 var co_fn = co.wrap(stateGenerator3);
 
-console.log('co_fn', co_fn(333));
-co_fn(333).then(res => console.log('co_fn_res', res))
+// console.log('co_fn', co_fn(333));
+co_fn(333)
+.then(res => {
+	console.log('co_fn_res:', res)
+})
+.catch(err => console.log('co_fn_err:', err))
 
 
 </script>
