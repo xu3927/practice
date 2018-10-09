@@ -1,0 +1,149 @@
+.scene-row {
+  display: flex;
+}
+.scene-row .cor-1, .scene-row .col-xs-1, .scene-row .col-md-1, .scene-row .col-lg-1 {
+  width: 4.1666666667%;
+}
+.scene-row .col-offset-1, .scene-row .col-xs-offset-1, .scene-row .col-md-offset-1, .scene-row .col-lg-offset-1 {
+  margin-left: 4.1666666667%;
+}
+.scene-row .cor-2, .scene-row .col-xs-2, .scene-row .col-md-2, .scene-row .col-lg-2 {
+  width: 8.3333333333%;
+}
+.scene-row .col-offset-2, .scene-row .col-xs-offset-2, .scene-row .col-md-offset-2, .scene-row .col-lg-offset-2 {
+  margin-left: 8.3333333333%;
+}
+.scene-row .cor-3, .scene-row .col-xs-3, .scene-row .col-md-3, .scene-row .col-lg-3 {
+  width: 12.5%;
+}
+.scene-row .col-offset-3, .scene-row .col-xs-offset-3, .scene-row .col-md-offset-3, .scene-row .col-lg-offset-3 {
+  margin-left: 12.5%;
+}
+.scene-row .cor-4, .scene-row .col-xs-4, .scene-row .col-md-4, .scene-row .col-lg-4 {
+  width: 16.6666666667%;
+}
+.scene-row .col-offset-4, .scene-row .col-xs-offset-4, .scene-row .col-md-offset-4, .scene-row .col-lg-offset-4 {
+  margin-left: 16.6666666667%;
+}
+.scene-row .cor-5, .scene-row .col-xs-5, .scene-row .col-md-5, .scene-row .col-lg-5 {
+  width: 20.8333333333%;
+}
+.scene-row .col-offset-5, .scene-row .col-xs-offset-5, .scene-row .col-md-offset-5, .scene-row .col-lg-offset-5 {
+  margin-left: 20.8333333333%;
+}
+.scene-row .cor-6, .scene-row .col-xs-6, .scene-row .col-md-6, .scene-row .col-lg-6 {
+  width: 25%;
+}
+.scene-row .col-offset-6, .scene-row .col-xs-offset-6, .scene-row .col-md-offset-6, .scene-row .col-lg-offset-6 {
+  margin-left: 25%;
+}
+.scene-row .cor-7, .scene-row .col-xs-7, .scene-row .col-md-7, .scene-row .col-lg-7 {
+  width: 29.1666666667%;
+}
+.scene-row .col-offset-7, .scene-row .col-xs-offset-7, .scene-row .col-md-offset-7, .scene-row .col-lg-offset-7 {
+  margin-left: 29.1666666667%;
+}
+.scene-row .cor-8, .scene-row .col-xs-8, .scene-row .col-md-8, .scene-row .col-lg-8 {
+  width: 33.3333333333%;
+}
+.scene-row .col-offset-8, .scene-row .col-xs-offset-8, .scene-row .col-md-offset-8, .scene-row .col-lg-offset-8 {
+  margin-left: 33.3333333333%;
+}
+.scene-row .cor-9, .scene-row .col-xs-9, .scene-row .col-md-9, .scene-row .col-lg-9 {
+  width: 37.5%;
+}
+.scene-row .col-offset-9, .scene-row .col-xs-offset-9, .scene-row .col-md-offset-9, .scene-row .col-lg-offset-9 {
+  margin-left: 37.5%;
+}
+.scene-row .cor-10, .scene-row .col-xs-10, .scene-row .col-md-10, .scene-row .col-lg-10 {
+  width: 41.6666666667%;
+}
+.scene-row .col-offset-10, .scene-row .col-xs-offset-10, .scene-row .col-md-offset-10, .scene-row .col-lg-offset-10 {
+  margin-left: 41.6666666667%;
+}
+.scene-row .cor-11, .scene-row .col-xs-11, .scene-row .col-md-11, .scene-row .col-lg-11 {
+  width: 45.8333333333%;
+}
+.scene-row .col-offset-11, .scene-row .col-xs-offset-11, .scene-row .col-md-offset-11, .scene-row .col-lg-offset-11 {
+  margin-left: 45.8333333333%;
+}
+.scene-row .cor-12, .scene-row .col-xs-12, .scene-row .col-md-12, .scene-row .col-lg-12 {
+  width: 50%;
+}
+.scene-row .col-offset-12, .scene-row .col-xs-offset-12, .scene-row .col-md-offset-12, .scene-row .col-lg-offset-12 {
+  margin-left: 50%;
+}
+.scene-row .cor-13, .scene-row .col-xs-13, .scene-row .col-md-13, .scene-row .col-lg-13 {
+  width: 54.1666666667%;
+}
+.scene-row .col-offset-13, .scene-row .col-xs-offset-13, .scene-row .col-md-offset-13, .scene-row .col-lg-offset-13 {
+  margin-left: 54.1666666667%;
+}
+.scene-row .cor-14, .scene-row .col-xs-14, .scene-row .col-md-14, .scene-row .col-lg-14 {
+  width: 58.3333333333%;
+}
+.scene-row .col-offset-14, .scene-row .col-xs-offset-14, .scene-row .col-md-offset-14, .scene-row .col-lg-offset-14 {
+  margin-left: 58.3333333333%;
+}
+.scene-row .cor-15, .scene-row .col-xs-15, .scene-row .col-md-15, .scene-row .col-lg-15 {
+  width: 62.5%;
+}
+.scene-row .col-offset-15, .scene-row .col-xs-offset-15, .scene-row .col-md-offset-15, .scene-row .col-lg-offset-15 {
+  margin-left: 62.5%;
+}
+.scene-row .cor-16, .scene-row .col-xs-16, .scene-row .col-md-16, .scene-row .col-lg-16 {
+  width: 66.6666666667%;
+}
+.scene-row .col-offset-16, .scene-row .col-xs-offset-16, .scene-row .col-md-offset-16, .scene-row .col-lg-offset-16 {
+  margin-left: 66.6666666667%;
+}
+.scene-row .cor-17, .scene-row .col-xs-17, .scene-row .col-md-17, .scene-row .col-lg-17 {
+  width: 70.8333333333%;
+}
+.scene-row .col-offset-17, .scene-row .col-xs-offset-17, .scene-row .col-md-offset-17, .scene-row .col-lg-offset-17 {
+  margin-left: 70.8333333333%;
+}
+.scene-row .cor-18, .scene-row .col-xs-18, .scene-row .col-md-18, .scene-row .col-lg-18 {
+  width: 75%;
+}
+.scene-row .col-offset-18, .scene-row .col-xs-offset-18, .scene-row .col-md-offset-18, .scene-row .col-lg-offset-18 {
+  margin-left: 75%;
+}
+.scene-row .cor-19, .scene-row .col-xs-19, .scene-row .col-md-19, .scene-row .col-lg-19 {
+  width: 79.1666666667%;
+}
+.scene-row .col-offset-19, .scene-row .col-xs-offset-19, .scene-row .col-md-offset-19, .scene-row .col-lg-offset-19 {
+  margin-left: 79.1666666667%;
+}
+.scene-row .cor-20, .scene-row .col-xs-20, .scene-row .col-md-20, .scene-row .col-lg-20 {
+  width: 83.3333333333%;
+}
+.scene-row .col-offset-20, .scene-row .col-xs-offset-20, .scene-row .col-md-offset-20, .scene-row .col-lg-offset-20 {
+  margin-left: 83.3333333333%;
+}
+.scene-row .cor-21, .scene-row .col-xs-21, .scene-row .col-md-21, .scene-row .col-lg-21 {
+  width: 87.5%;
+}
+.scene-row .col-offset-21, .scene-row .col-xs-offset-21, .scene-row .col-md-offset-21, .scene-row .col-lg-offset-21 {
+  margin-left: 87.5%;
+}
+.scene-row .cor-22, .scene-row .col-xs-22, .scene-row .col-md-22, .scene-row .col-lg-22 {
+  width: 91.6666666667%;
+}
+.scene-row .col-offset-22, .scene-row .col-xs-offset-22, .scene-row .col-md-offset-22, .scene-row .col-lg-offset-22 {
+  margin-left: 91.6666666667%;
+}
+.scene-row .cor-23, .scene-row .col-xs-23, .scene-row .col-md-23, .scene-row .col-lg-23 {
+  width: 95.8333333333%;
+}
+.scene-row .col-offset-23, .scene-row .col-xs-offset-23, .scene-row .col-md-offset-23, .scene-row .col-lg-offset-23 {
+  margin-left: 95.8333333333%;
+}
+.scene-row .cor-24, .scene-row .col-xs-24, .scene-row .col-md-24, .scene-row .col-lg-24 {
+  width: 100%;
+}
+.scene-row .col-offset-24, .scene-row .col-xs-offset-24, .scene-row .col-md-offset-24, .scene-row .col-lg-offset-24 {
+  margin-left: 100%;
+}
+
+/*# sourceMappingURL=test.css.map */

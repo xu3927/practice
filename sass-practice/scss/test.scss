@@ -1,0 +1,18 @@
+$prefix: scene;
+$total: 24;
+
+@mixin col () {
+  @for $i from 1 through $total{
+    .cor-#{$i}, .col-xs-#{$i}, .col-md-#{$i}, .col-lg-#{$i}{
+      width: 100% / $total * $i;
+    }
+    .col-offset-#{$i}, .col-xs-offset-#{$i}, .col-md-offset-#{$i}, .col-lg-offset-#{$i}{
+      margin-left: 100% / $total * $i;
+    }
+  } 
+}
+
+.#{$prefix}-row{
+    display: flex;
+    @include col;
+}
