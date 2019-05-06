@@ -1,119 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
 </head>
+
 <body>
 
-<div id="app">
-	哈哈
-</div>
+	<div id="app">
+		哈哈
+	</div>
 
-<script type="text/javascript" src="lib/traceur.js"></script>
-<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+	<script type="text/javascript" src="lib/traceur.js"></script>
+	<script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
 
-<script type="module">
+	<script type="module">
 
-// set 对象 建立没有重复值的对象
-var s = new Set([0,1,3,4,{"a" : 1 ,"b" :2},1,0,1,"1"])
-console.log(s);
-console.log(Set.prototype);
+		// set 对象 建立没有重复值的对象
+		var s = new Set([0, 1, 3, 4, { "a": 1, "b": 2 }, 1, 0, 1, "1"])
+		console.log(s);
+		console.log(Set.prototype);
 
-// clear 清空
-s.clear();
-console.log(s);
+		// clear 清空
+		s.clear();
+		console.log(s);
 
-// add 方法 添加属性; 每次只能添加一个
-s.add(55);
-s.add(1);
-s.add(0);
-s.add(2);
-s.add("1");
-console.log(s);
-
-
-
-// has 方法
-console.log(s.has(1)); 
-
-// delete 方法 删除成功返回true, 失败返回false
-var ss = s.delete(55);
-console.log(s,ss);
-
-// size 方法
-console.log(s.size);
-
-// for of 遍历 set
-for(var kk of s){
-	console.log(kk);
-}
-
-console.log("--------------");
-
-/** ========================= **/
-
-/**
-* weakset 对象
-* weakset 只能储存对象. 
-* 只有add, delete, has 方法
-*/
+		// add 方法 添加属性; 每次只能添加一个
+		s.add(55);
+		s.add(1);
+		s.add(0);
+		s.add(2);
+		s.add("1");
+		console.log(s);
 
 
-var ws = new WeakSet([{a: 1}, {b: 2}, {c: 3}])
-var d = {d: 4}
-ws.add(d)
-ws.has(d) // true
-ws.has({d: 4}) // false weakset判断的对象的引用地址. 
-ws.delete(d)
-console.log('WeakSet ----- ');
 
-/** ========================= **/
+		// has 方法
+		console.log(s.has(1));
+
+		// delete 方法 删除成功返回true, 失败返回false
+		var ss = s.delete(55);
+		console.log(s, ss);
+
+		// size 方法
+		console.log(s.size);
+
+		// for of 遍历 set
+		for (var kk of s) {
+			console.log(kk);
+		}
+
+		console.log("--------------");
+
+		/** ========================= **/
+
+		/**
+		* weakset 对象
+		* weakset 只能储存对象. 
+		* 只有add, delete, has 方法
+		*/
 
 
-// map对象;属性值可以是undefined, null , boolen等
+		var ws = new WeakSet([{ a: 1 }, { b: 2 }, { c: 3 }])
+		var d = { d: 4 }
+		ws.add(d)
+		ws.has(d) // true
+		ws.has({ d: 4 }) // false weakset判断的对象的引用地址. 
+		ws.delete(d)
+		console.log('WeakSet ----- ');
 
-var m = new Map();
+		/** ========================= **/
 
-console.log(m.__proto__);
 
-// 对map实例化对象添加属性，要用set方法,
-m.set('color', 'red')
-// 添加对象属性
-m.set(document, 'green');
-// 添加boolean属性
-m.set(true, 'blue');
-// 添加undefined属性
-var res = m.set(undefined, 'orange')
+		/**
+		 * 文档 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map
+		 * map对象;属性值可以是任意值, 包括对象, 函数以及基本类型. 如undefined, null , boolen等
+		 * map 与 object 的异同
+		 * 相同: 都是 key, value 一一对应的关系, 可以给 key 设置值, 删除 key, 或检测 key 是否存在
+		 * 不同:
+		 * 1. map 的 key 可以是任意类型, object 只能是字符串或 symbol
+		 * 2. 遍历时map中的键值同插入顺序. objects中的键按递增顺序
+	     * 3. 可以通过 size 获取 map 中键的个数, objects 不可以
+		 * 4. map可以直接使用 for of 迭代 key, value, map 迭代需要先获取其 keys, 再对 keys 进行迭代
+		 * 5. Object 都有自己的原型，原型链上的键名有可能和你自己在对象上的设置的键名产生冲突。
+		 * 6. Map 在涉及频繁增删键值对的场景下会有些性能优势
+		 */
+		var m = new Map();
 
-console.log(res === m); //true  返回值与m是同一个值
+		console.log(m.__proto__);
 
-console.log(m);
+		// 对map实例化对象添加属性，要用set方法,
+		m.set('color', 'red')
+		// 添加对象属性
+		m.set(document, 'green');
+		// 添加boolean属性
+		m.set(true, 'blue');
+		// 添加undefined属性
+		var res = m.set(undefined, 'orange')
 
-// 方法
-console.log(m.size);
+		console.log(res === m); //true  返回值与m是同一个值
 
-// 测试get方法
-console.log(m.get(document),"get 方法")
+		console.log(m);
 
-// 测试delete,has方法
-console.log(m.delete(null))
-console.log(m.has(undefined))
+		// 方法
+		console.log(m.size);
 
-// 循环 forEach
-m.forEach(function(){
-	console.log(arguments);
-})
+		// 测试get方法
+		console.log(m.get(document), "get 方法")
 
-// 支持 for of 循环
+		// 测试delete,has方法
+		console.log(m.delete(null))
+		console.log(m.has(undefined))
 
-for (var [k,v] of m ){
-	console.log(k,v);
-}
+		// 循环 forEach
+		m.forEach(function () {
+			console.log(arguments);
+		})
 
-console.log(m);
-</script>
+		// 支持 for of 循环
+
+		for (var [k, v] of m) {
+			console.log(k, v);
+		}
+
+		console.log(m);
+
+		// 循环 keys
+		for (var key of m.keys()) {
+
+		}
+
+		// 循环 keys
+		for (var key of m.values()) {
+
+		}
+
+		// map 与数组的关系
+		// 可以将二维数组转为 map
+
+		var arr = [['name', '小明'], ['age', 18]]
+		var m = new Map(arr)
+
+		// map 转为二维数组
+		var arr = Array.from(m)
+
+		// 复制 Maps
+		var m = new Map([['name', '小明'], ['age', 18]])
+		var clone = new Map(m)
+
+		// map 的合并
+		var first = new Map([
+			[1, 'one'],
+			[2, 'two'],
+			[3, 'three'],
+		]);
+
+		var second = new Map([
+			[1, 'uno'],
+			[2, 'dos']
+		]);
+
+		// 合并两个Map对象时，如果有重复的键值，则后面的会覆盖前面的。
+		// 展开运算符本质上是将Map对象转换成数组。
+		var merged = new Map([...first, ...second]);
+
+		console.log(merged.get(1)); // uno
+		console.log(merged.get(2)); // dos
+		console.log(merged.get(3)); // three
+
+		// Map对象也能与数组合并：
+
+		var first = new Map([
+			[1, 'one'],
+			[2, 'two'],
+			[3, 'three'],
+		]);
+
+		var second = new Map([
+			[1, 'uno'],
+			[2, 'dos']
+		]);
+
+		// Map对象同数组进行合并时，如果有重复的键值，则后面的会覆盖前面的。
+		var merged = new Map([...first, ...second, [1, 'eins']]);
+
+		console.log(merged.get(1)); // eins
+		console.log(merged.get(2)); // dos
+		console.log(merged.get(3)); // three
+	</script>
 
 
 </body>
+
 </html>

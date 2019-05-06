@@ -14,6 +14,7 @@ import ReduxPractice from './reduxPractice/index.jsx'
 import TodoList from './todoList/index'
 import MaterialUi from './materialUi/index'
 import AntdPractice from './antdPractice/index'
+import Keys from './keys'
 
 
 
@@ -48,6 +49,9 @@ const routeMap = [{
 }, {
     path: '/antd',
     component: AntdPractice
+}, {
+    path: '/keys',
+    component: Keys
 },]
 
 

@@ -1,31 +1,37 @@
 {
 	"presets": [
-		["env", {
-			"target": {
-				/*参考 https://github.com/ai/browserslist*/
-				"browers": ["Chrome > 30"]
+		[
+			"@babel/preset-env",
+			{
+				"targets": {
+					"chrome": "36",
+					"ie": "11"
+				}
 			}
-		}]
+		],
+		"@babel/preset-react"
 	],
 	"plugins": [
-		["transform-runtime", {
-            // 是否在行内添加helper函数
-            "helpers": true, // defaults to true
-            // 是否让新的特性(Promise, Set, Map等)使用本地的polyfill
-            "polyfill": true, // defaults to true
-            // 转化generator或async函数的 regeneratorRuntime函数是否使用全局的, 使用全局的会污染全局作用域
-            "regenerator": true, // defaults to true
-            // 设置引用帮助函数的包名字及路径
-            "moduleName": "babel-runtime" // defaults to "babel-runtime"
-	    }],
-	    // 把ES6模块转为commonJs模块
-	    ["transform-es2015-modules-commonjs", {
-            // 配置导出的模块的__esModule属性的方式
-            "loose": false, // 默认false
-            // 非严格模式下导出模块会增加__esModule属性, 严格模式不会
-            "strict": false, // boolean, defaults to false
-            "noInterop": false, //boolean, defaults to false
-	        "allowTopLevelThis": true
-	    }]
+		// Stage 2
+		[
+			"@babel/plugin-proposal-decorators",
+			{
+				"legacy": true
+			}
+		],
+		"@babel/plugin-proposal-function-sent",
+		"@babel/plugin-proposal-export-namespace-from",
+		"@babel/plugin-proposal-numeric-separator",
+		"@babel/plugin-proposal-throw-expressions",
+		// Stage 3
+		"@babel/plugin-syntax-dynamic-import",
+		"@babel/plugin-syntax-import-meta",
+		[
+			"@babel/plugin-proposal-class-properties",
+			{
+				"loose": false
+			}
+		],
+		"@babel/plugin-proposal-json-strings"
 	]
 }

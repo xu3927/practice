@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 /**
  * # 生命周期
@@ -24,11 +24,43 @@ import React, {Component} from 'react'
  * 5. componentDidUpdate
  */
 
+/**
+ * # react 16中生命周期
+ * 
+ * ## Mounting阶段, 当一个组件的实例被创建或插入到页面中时
+ * constructor()
+ * static getDerivedStateFromProps()
+ * render()
+ * componentDidMount()
+ * 
+ * ## Updating 阶段, 当props or state改变的时候会触发 re-rendered, 会触发下面的一组方法
+ * static getDerivedStateFromProps()
+ * shouldComponentUpdate()
+ * render()
+ * getSnapshotBeforeUpdate()
+ * componentDidUpdate()
+ * 
+ * ## Unmounting 当一个组件被移除的时候会触发以下过程
+ * componentWillUnmount()
+ * 
+ * ## Error Handling 当组件 rerendering 时, 如果该组件生命周期的某个阶段有错误或者子组件的 constructor 中有错误, 则会触发以下方法,
+ * static getDerivedStateFromError()
+ * componentDidCatch()
+ * 
+ * ## react 16 准备弃用的生命周期
+ * componentWillMount
+ * componentWillReceiveProps
+ * componentWillUpdate
+ * 
+ * ## 新增的生命周期
+ * 
+ */
+
 class Like extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            num: props.init
+            num: props.init,
         }
         this.like = this.like.bind(this)
     }
@@ -37,32 +69,57 @@ class Like extends React.Component {
             num: this.state.num + 1
         })
     }
-    
-    // getSnapshotBeforeUpdate(prevProps, prevState) {
-    //     console.log('getSnapshotBeforeUpdate:', prevProps, prevState);
-    // }
-    // 相当于原来的componentWillReceiveProps
-    // 在willMount 和 willUpdate时会被调用. 需要return一个对象, 该对象会被merge到新的state上
-    // 在getDerivedStateFromProps里面可以从props中取值来设置 initState
-    // static getDerivedStateFromProps(nextProps, prevState) {
-    //     console.log('getDerivedStateFromProps:', nextProps, prevState);
-    //     prevState = prevState || {
-    //         haha: '哈哈',
-    //         num: nextProps.init
-    //     }
-    //     return prevState
+
+    /**
+     * 在 mutations 即 DOM 更新之前触发的方法, return 的值会作为 componentDidUpdate 的第三个参数
+     * props, state  改变时会触发.
+     * 在父组件re-render 时也会触发, 无论 props 是否有变化
+     */
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+        console.log('getSnapshotBeforeUpdate:', prevProps, prevState);
+        return 'snapShot'
+    }
+
+    /**
+     * 相当于原来的componentWillReceiveProps
+     * 可以在该过程中根据 props 来修改 state 的值, 如果state 不需要根据 props 来改动, 可以 return null 
+     * 在willMount 和 willUpdate时会被调用. 需要return一个对象, 该对象会被merge到新的state上
+     * 在getDerivedStateFromProps里面可以从props中取值来设置 initState
+     */
+    static getDerivedStateFromProps(nextProps, prevState) {
+        console.log('getDerivedStateFromProps:', nextProps, prevState);
+        // 如果 prevState 不存在, 则设置为后面的值
+        let initState = {
+            haha: '哈哈',
+            num: nextProps.init,
+            day: 888
+        }
+        if (nextProps.num % 3 == 0) {
+
+        }
+        let state = prevState || initState
+        console.log('prevState2:', prevState)
+        // return null
+        return initState
+    }
+
+    /**
+     * props, state  改变时会触发.
+     * 在父组件re-render 时也会触发, 无论 props 是否有变化
+     */
+    // componentWillReceiveProps(nextProps, nextState) {
+    //     console.log('componentWillReceiveProps');
     // }
 
-    // 
-    componentWillReceiveProps(nextProps, nextState) {
-        console.log('componentWillReceiveProps');
-    }
-    componentWillMount() {
-        console.log('componentWillMount');
-    }
+    // componentWillMount() {
+    //     console.log('componentWillMount');
+    // }
+
     componentDidMount() {
         console.log('componentDidMount');
     }
+
+    // 如果 return 了 false 则组件不更新
     shouldComponentUpdate(nextProps, nextState) {
         console.log('shouldComponentUpdate:', nextProps, nextState);
         // num为单数更新, 双数不更新
@@ -71,21 +128,37 @@ class Like extends React.Component {
         }
         return true
     }
-    componentWillUpdate() {
-        console.log('componentWillUpdate');
-    }
-    componentDidUpdate() {
+    // componentWillUpdate() {
+    //     console.log('componentWillUpdate');
+    // }
+
+    /**
+     * componentDidUpdate 组件updating 之后触发, 在初始 render 时不会触发
+     * 在该周期中可以做一些 dom 操作
+     * 也可以在该组件中判断新旧 props 是否有变更, 并发出 ajax 请求
+     * 在该周期中也可以调用 setState, 但是通常需要有条件 约束, 否则会触发不停的render
+     * 
+     * @param {*} prevProps 更新之前的 props
+     * @param {*} prevState 更新之前的上一次的 state
+     * @param {*} snapshot getSnapshotBeforeUpdate 方法中 return 的值
+     */
+    componentDidUpdate(prevProps, prevState, snapshot) {
         console.log('componentDidUpdate');
     }
     componentWillUnmount() {
         console.log('componentWillUnmount');
     }
- 
+
     render() {
         console.log('render');
         return <div style={{ padding: '20px', fontSize: this.props.fontSize + 'px', border: '3px solid red' }}>
-            <span style={{ marginRight: '10px' }}>{this.state.num}</span>
-            <button onClick={this.like}>赞</button>
+            <div>
+                <span style={{ marginRight: '10px' }}>{this.state.num}</span>
+                <button onClick={this.like}>赞</button>
+            </div>
+            <div>
+                <button onClick={() => { console.log(this.state) }}>打印当前 state</button>
+            </div>
         </div>
     }
 }
@@ -96,23 +169,23 @@ class Show extends React.Component {
         show: true,
         fontSize: 10
     }
-    toggle () {
+    toggle() {
         this.setState({
             show: !this.state.show,
 
         })
     }
-    zoom () {
+    zoom() {
         this.setState({
             fontSize: this.state.fontSize + 2
         })
     }
-    render () {
-        return <div style={{border: '1px solid #000'}}>
-            <button onClick={this.toggle.bind(this)}>切换显示隐藏</button>
+    render() {
+        return <div style={{ border: '1px solid #000' }}>
+            <button onClick={this.toggle.bind(this)}>切换子组件 mount</button>
             <button onClick={this.zoom.bind(this)}>增大子组件文字</button>
             {
-                this.state.show && <Like init={23} fontSize={this.state.fontSize}/>
+                this.state.show && <Like init={23} fontSize={this.state.fontSize} />
             }
         </div>
     }

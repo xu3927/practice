@@ -1,5 +1,5 @@
-'use strict';
+"use strict";
 
-var _moduleExport = require('./module.export.js');
+var _moduleExport = require("./module.export.js");
 
 console.log(_moduleExport.haha);
