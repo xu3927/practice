@@ -1,0 +1,27 @@
+@media (min-resolution: 2dppx) {
+    .image {
+        background-image: url(image@2x.png);
+    }
+}
+
+body{
+    width: 100%;
+    div{
+        color: red;
+        p{
+            height: 300px;
+            width: 100px;
+        }
+    }
+    
+}
+h1{
+    color: yellow;
+    background: green;
+}
+
+#loading{
+    transform: all 1s ease 0s;
+    box-sizing: border-box;
+    display: flex;
+}

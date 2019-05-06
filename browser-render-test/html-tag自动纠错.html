@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 在行内元素中插入块级元素时会纠正该错误, 得到了如下结构 -->
+    <!-- 
+        <p></p>
+        <div>1</div>
+        <p></p>
+     -->
+   
+    <p>
+        <div>1</div>
+    </p>
+    <!--  span 种添加 div 没有被纠正 -->
+     <span>
+         <div>2</div>
+     </span>
+     <div class="too-deep-hierarchy"></div>
+     <script>
+     // 文章说超过20个的同样的 nested  的标签会被忽略, 实际测试未发现该现象
+        let str = new Array(30).fill('').reduce(function (accur, item, index) {
+            return `<b>${index}-${accur}</b>`
+        }, '哈哈')
+        document.querySelector('.too-deep-hierarchy').innerHTML = str
+     </script>
+</body>
+</html>

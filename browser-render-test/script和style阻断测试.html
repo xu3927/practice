@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        let haha, hahaStyle;
+        console.log('----1----')
+        // 此时获取不到 haha 元素
+        haha = document.querySelector('.haha')
+        console.log('haha:', haha)
+        // hahaStyle = getComputedStyle(haha)
+        // console.log('width:', hahaStyle.width)
+    </script>
+    <style>
+        .haha{
+            width: 100px;
+            height: 20px;
+            border: 1px solid #000;
+        }
+    </style>
+   
+</head>
+<body>
+    <div class="haha">哈哈</div>
+    <script>
+        console.log('----2----')
+        haha = document.querySelector('.haha')
+        console.log('haha:', haha)
+        hahaStyle = getComputedStyle(haha)
+        console.log('width:', hahaStyle.width)
+    </script>
+    <style>
+         .haha{
+            width: 200px;
+        }
+    </style>
+    <div class="xixi">xixi</div>
+    <div class="mm">mm</div>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <script>
+        console.log('----3----')
+        // js 中如果需要获取样式属性, 则会阻断解析, 等到 style加载并解析完成之后才会继续向后执行
+        // haha = document.querySelector('.haha')
+        console.log('haha:', haha)
+        // hahaStyle = getComputedStyle(haha)
+        // console.log('width:', hahaStyle.width)
+    </script>
+</body>
+</html>

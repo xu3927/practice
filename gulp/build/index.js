@@ -1,0 +1,1 @@
+"use strict";console.log("init");var haha=function(){console.log("333")},b=999,c=888;

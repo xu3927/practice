@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <h1 id="app">异步</h1>
+    <script type="text/javascript">
+        var p = new Promise((resove, reject) => {
+            setTimeout(function () {
+                resove();
+                // reject();
+            }, 5000)
+        })
+            .then(success, fail)
+            .then(function () {
+                console.log('then2');
+            })
+        function success() {
+            console.log('success');
+        }
+
+        function fail() {
+            console.log('fail');
+        }
+
+        // promise 中的return 无效, 可以终止当前函数, 但是不会捕获到return的值. 
+        var p2 = new Promise(function (resolve, reject) {
+            resolve('resolve')
+
+            return 1234;
+        })
+        p2.then(function (res) {
+            console.log('res', res);
+        }, function (err) {
+            console.log('err', err);
+        })
+        console.log(9999, p2);
+
+        /**
+         * 将一个异步对象转为promise
+         * Promise.resolve(param) 或者 Promise.reject(param)
+         * 参数如果不是一个具有then方法的对象(thenable对象), 则返回一个新的promise对象, 同时它的状态为fullfilled, 会立即执行
+         * 参数如果是一个promise的实例, 则会直接返回该实例.
+         */
+        function timeout(t) {
+            return new Promise((resovle, reject) => {
+                setTimeout(function () {
+                    console.log('timeout');
+                    resovle(111);
+                }, t);
+            });
+        }
+        var p2 = Promise.resolve(timeout(1000));
+        p2.then(res => console.log('p2:', res));
+        /**
+         * async 定义异步函数
+         * await 操作符, 用于在async函数中获取promise对象的返回值.
+         * await 后面跟一个promise对象或者普通值, 如果是promise对象,
+         * 会在该promise执行结束后获取并返回其执行结果, 如果是一个普通的值不是promise, 则直接返回该值.
+         * await会阻塞async函数, 当promise执行结束会继续执行async后面的语句.
+         * 如果 promise 是 reject 状态, 则会抛出错误, 通过 try, catch 包裹的 await, 可以在 catch 中捕获该错误, 并继续执行 catch 之后的代码
+         * 如果没有使用 try, catch. 则错误会向上传递. 同时报错之后的代码不会再执行
+         */
+
+        function resolveAfter2S(x) {
+            return new Promise((resovle, reject) => {
+                setTimeout(function () {
+                    if (x < 50) {
+                        resovle(x);
+                        console.log('resolved');
+                    } else {
+                        reject(x);
+                        console.log('rejected');
+                    }
+                }, 2000);
+            });
+        }
+        // 测试 await 以及 reject 的捕获
+        var add1 = async function (x) {
+            var a = resolveAfter2S(20);
+            var b = resolveAfter2S(30);
+            console.log('add1-1') // 输出
+            try {
+                console.log('add1-2') // 输出
+                await resolveAfter2S(60); // 当promise 为 reject时, 可以通过try catch 捕获结果
+                console.log('add1-3') // reject 时 不执行
+            }
+            catch (e) {
+                console.log('add1-4') // 输出
+                var c = e;
+            }
+            console.log('add1-5') // 输出
+            return x + await a + await b + c; // prints 60 after 2 seconds.
+        }
+        add1(10).then(res => console.log('add1执行之后:', res));
+
+        // 测试没有 catch reject的情况
+        var add3 = async function (x) {
+            var a = resolveAfter2S(20);
+            var b = resolveAfter2S(30);
+            console.log('add3-1') // 输出
+
+            await resolveAfter2S(60); // 当promise 为 reject时, 报错, 跳出当前函数, 错误向上层函数传递
+            console.log('add3-2') // 不执行
+            try {
+                console.log('add3-3') // reject 时 不执行
+            }
+            catch (e) {
+                console.log('add3-4') // 不执行
+                var c = e;
+            }
+            console.log('add3-5') // 不执行
+            return x + await a + await b + c; // prints 60 after 2 seconds.
+        }
+        add3(10).then(res => console.log('add3:', res)).catch(err => console.log('add3-错误:', err)) // 该 catch 可以捕获错误
+
+
+        // 把错误 catch, 并不向上透传, aync 是否会执行到 then 呢?
+        // 测试结果是可以的, 再 async 中的语句执行完毕之后, 都会到 add4 的 then 语句中, 如果 async 函数中有错误抛出, 则进入 add4 的 catch 中
+        var add4 = async function (x) {
+            var a = resolveAfter2S(20);
+            var b = resolveAfter2S(30);
+            console.log('add4-1') // 输出
+            try {
+                console.log('add4-2') // 输出
+                await resolveAfter2S(60); // 当promise 为 reject时, 可以通过try catch 捕获结果
+                console.log('add4-3') // reject 时 不执行
+            }
+            catch (e) {
+                console.log('add4-4') // 输出
+                var c = e;
+            }
+            console.log('add4-5') // 输出
+        }
+        var add4Res = add4(10).then(res => {
+            console.log('add4执行之后:', res)
+            return res
+        }).catch(err => {
+            console.log('add4-错误:', err);
+            return err;
+        }) // 该 catch 可以捕获错误
+
+        // add4函数执行完成之后, 这里是 promis 的链式调用, add4Res 会继续执行
+        add4Res.then(res => {
+            console.log('add4Res:', res)
+        }).catch(err => {
+            console.log('add4Res:', err)
+        })
+
+
+        var add2 = async function (x) {
+            var a = await resolveAfter2S(20); // 阻塞函数, 2s后promise执行完毕函数继续执行
+            var b = await resolveAfter2S(30); // 继续阻塞函数2s
+            console.log('await为普通值-pre');
+            var c = await 40; // 为普通值直接返回该值, 阻塞 0s.
+            console.log('await为普通值-post', c);
+            return x + a + b + c;
+        }
+        add2(10).then(res => console.log('add2:', res)); // prints 60 after 4 seconds.
+    </script>
+
+    <script type="text/javascript" src="lib/traceur.js"></script>
+    <script type="text/javascript" src="lib/traceur-bootstrap.js"></script>
+    <script type="module">
+
+    </script>
+</body>
+
+</html>

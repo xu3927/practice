@@ -1,0 +1,35 @@
+{
+  "name": "gulp-pratice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp --gulpfile gulp-test.js test",
+    "build": "cross-env NODE_ENV=development gulp",
+    "dev": "cross-env NODE_ENV=development gulp watch",
+    "pro": "cross-env NODE_ENV=production gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^5.2.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.10.0",
+    "gulp-error-handle": "^1.0.1",
+    "gulp-if": "^2.0.2",
+    "gulp-plumber": "^1.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-uglify": "^3.0.1",
+    "pump": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "autoprefixer": "^9.1.5",
+    "cssnano": "^4.1.4",
+    "gulp-babel": "^8.0.0",
+    "gulp-postcss": "^8.0.0",
+    "gulp-webserver": "^0.9.1"
+  }
+}
