@@ -8,3 +8,7 @@ elif guess == number:
 else:
     print('小了')
 print('完成')
+
+# if 做三元运算
+# 语法 value_when_true if condition else value_when_false
+result = "true value" if 5 > 2 else "false value"

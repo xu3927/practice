@@ -56,7 +56,7 @@ process.env.NODE_PATH = (process.env.NODE_PATH || '')
   .map(folder => path.resolve(appDirectory, folder))
   .join(path.delimiter);
 
-process.env.REACT_APP_PRERENDER_DOM_STR = '135677'
+process.env.REACT_APP_PRERENDER_DOM_STR = ''
 
 // Grab NODE_ENV and REACT_APP_* environment variables and prepare them to be
 // injected into the application via DefinePlugin in Webpack configuration.
