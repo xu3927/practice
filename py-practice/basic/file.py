@@ -26,4 +26,10 @@ while True:
     print(line, end='')
 _fileR.close()
 
+
+# 去重保存
+f = open('1.txt', 'r')
+fileLines = f.readlines()
+
+
 # pickle 持久化存储 python 对象
