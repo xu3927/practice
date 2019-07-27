@@ -6,12 +6,13 @@ import time
 import os
 import pdb
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_ALL
+from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_ALL, EVENT_SCHEDULER_STARTED
 import logging
 
 
 logging.basicConfig()
-logging.getLogger('apscheduler').setLevel(logging.INFO)
+#  设置 log
+logging.getLogger('apscheduler').setLevel(logging.WARN)
 
 n = 0
 
@@ -30,6 +31,9 @@ def count():
     if n % 10 > 8:
         # 任务重启
         timeJob.resume()
+    if n % 10 == 3:
+        # 任务抛出错误
+        raise ValueError('666 值错误')
 
 
 def tick():
@@ -38,6 +42,8 @@ def tick():
 
 
 def my_listener(event):
+    print 'my_listener', type(event)
+    print 'my_listener2', event.exception
     if event.exception:
         print 'job crashed'
     else:
@@ -48,7 +54,8 @@ if __name__ == '__main__':
     scheduler = BackgroundScheduler()
     timeJob = scheduler.add_job(tick, 'interval', seconds=1)
     countJob = scheduler.add_job(count, 'interval', seconds=1)
-    scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
+    scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED |
+                           EVENT_JOB_ERROR | EVENT_SCHEDULER_STARTED)
 
     scheduler.start()
     print '===启动定时器==='
