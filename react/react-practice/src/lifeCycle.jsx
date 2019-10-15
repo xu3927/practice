@@ -1,5 +1,22 @@
 import React, { Component } from 'react'
 
+const colors = [
+    'yellow',
+    'silver',
+    'grey',
+    'black',
+    'navy',
+    'blue',
+    'cerulean',
+    'skyblue',
+    'turquoise',
+    'blue-green',
+    'azure',
+    'teal',
+    'cyan',
+    'green',
+    'lime']
+
 /**
  * # 生命周期
  * ## mount 过程
@@ -61,12 +78,20 @@ class Like extends React.Component {
         super(props)
         this.state = {
             num: props.init,
+            colorIndex: props.colorIndex,
+            prePropColorIndex: props.colorIndex
         }
         this.like = this.like.bind(this)
+        this.changeColor = this.changeColor.bind(this)
     }
     like() {
         this.setState({
             num: this.state.num + 1
+        })
+    }
+    changeColor() {
+        this.setState({
+            colorIndex: this.state.colorIndex + 1
         })
     }
 
@@ -97,6 +122,13 @@ class Like extends React.Component {
         if (nextProps.num % 3 == 0) {
 
         }
+        // 判断 propschange，通过把上一个 props 的值绑定到 state 上来进行判断
+        if (nextProps.colorIndex !== prevState.prePropColorIndex) {
+            prevState.colorIndex = nextProps.colorIndex
+            prevState.prePropColorIndex = nextProps.colorIndex
+        }
+
+
         let state = prevState || initState
         console.log('prevState2:', prevState)
         // return null
@@ -151,10 +183,12 @@ class Like extends React.Component {
 
     render() {
         console.log('render');
+        let _color = colors[this.state.colorIndex % colors.length]
         return <div style={{ padding: '20px', fontSize: this.props.fontSize + 'px', border: '3px solid red' }}>
             <div>
-                <span style={{ marginRight: '10px' }}>{this.state.num}</span>
+                <span style={{ marginRight: '10px', color: _color }}>{this.state.num}</span>
                 <button onClick={this.like}>赞</button>
+                <button onClick={this.changeColor}>更改自身组件颜色</button>
             </div>
             <div>
                 <button onClick={() => { console.log(this.state) }}>打印当前 state</button>
@@ -167,7 +201,8 @@ class Like extends React.Component {
 class Show extends React.Component {
     state = {
         show: true,
-        fontSize: 10
+        fontSize: 10,
+        colorIndex: 0
     }
     toggle() {
         this.setState({
@@ -180,12 +215,23 @@ class Show extends React.Component {
             fontSize: this.state.fontSize + 2
         })
     }
+    changeColor() {
+        this.setState({
+            colorIndex: this.state.colorIndex + 1
+        })
+    }
     render() {
+        let _color = colors[this.state.colorIndex % colors.length]
         return <div style={{ border: '1px solid #000' }}>
-            <button onClick={this.toggle.bind(this)}>切换子组件 mount</button>
-            <button onClick={this.zoom.bind(this)}>增大子组件文字</button>
+
+            <div>
+                <button onClick={this.toggle.bind(this)}>切换子组件 mount</button>
+                <button onClick={this.zoom.bind(this)}>增大子组件文字</button>
+                <button onClick={this.changeColor.bind(this)}>更改自身和子组件颜色</button>
+            </div>
+            <div style={{ color: _color }}>当前父组件颜色为{_color}</div>
             {
-                this.state.show && <Like init={23} fontSize={this.state.fontSize} />
+                this.state.show && <Like init={23} fontSize={this.state.fontSize} colorIndex={this.state.colorIndex} />
             }
         </div>
     }

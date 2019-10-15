@@ -2,6 +2,7 @@
 # -*- coding:UTF-8 -*-
 
 
+
 class Dog:
     """
     定义一个类 Dog
