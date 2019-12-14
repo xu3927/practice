@@ -65,6 +65,8 @@ print('characters 1 to -1 is', name[1:-1])
 print('characters start to end is', name[:])
 
 # Set 集合, 如果只关心项的存在与否, 而不关心其次序或次数的话, 可以使用集合.
+# 集合是无序的, 无法通过数字索引. 且集合中的元素不能重复
+
 vegetables = set(['白菜', '萝卜', '西红柿'])
 print('白菜' in vegetables)
 print('篮球' in vegetables)
@@ -75,3 +77,26 @@ print(vegetables)
 subSet = set(['白菜', '萝卜'])
 print('是否是超集', vegetables.issuperset(subSet))
 print('是否是子集', subSet.issubset(vegetables))
+
+# 创建 set
+o1 = {'a': 1, 'b': 2, 'c': 33}
+s1 = set(o1)
+print(s1)  # {'b', 'c', 'a'}
+# 字符串创建 set
+str_set1 = set('hello 3927!')
+# {'l', '!', ' ', 'e', 'o', '3', 'h', '9', '2', '7'}
+print('字符串创建 set:', str_set1)
+
+# set 可以使用运算符
+s2 = set(['a', 'd', 'e'])
+print('交集:', s1 & s2)  # {'a'}
+print('并集:', s1 | s2)  # {'a', 'b', 'c', 'e', 'd'}
+print('差集:', s1 - s2)  # {'b', 'c'}
+print('对称差集:', s1 ^ s2)  # 值只存在 s1 或 s2中, 不会同时存在 {'c', 'b', 'e', 'd'}
+
+# set应用 - 去除数组重复项
+arr1 = [77, 1, 2, 3, 4, 2, 3, 5, 88]
+s1 = set(arr1)
+print('生成的 set:', s1)  # {1, 2, 3, 4, 5, 77, 88}
+arr2 = [i for i in s1]
+print('去重后的数组:', arr2)  # [1, 2, 3, 4, 5, 77, 88]
