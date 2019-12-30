@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Worker Test</title>
+</head>
+
+<body>
+    <h1>Worker</h1>
+    <section id="once">
+        <h3>单 worker 测试</h3>
+        <p>worker 执行完成即销毁</p>
+        <label for="">
+            <span>worker 计算时间(秒): </span><input type="number" name="workerTime" id="workerTime" value="10" style="width: 40px;" />
+        </label>
+        <label for="">
+            <span>worker 计算次数(M): </span><input type="number" name="taskCount" id="taskCount" value="0" style="width: 40px;" />
+            8s 运算 1000 M 次
+        </label>
+        <label for="">
+            <span>worker 数量: </span><input type="number" name="count" id="count" value="1" style="width: 40px;" />
+        </label>
+        <button onclick="createOneWorker()">创建 worker</button>
+        <!-- <button onclick="createMultipleWorkerInterval()">定时创建多个worker</button> -->
+    </section>
+    <section id="multiple">
+        <section>
+            <h3> worker 管理器测试</h3>
+            <label for="">
+                <span>worker 数量: </span><input type="number" name="workerNum" id="workerNum" value="8" style="width: 40px;" />
+            </label>
+            <label for="">
+                <span>worker 计算时间(秒): </span><input type="number" name="workerTime" id="workerTime" value="2" style="width: 40px;" />
+            </label>
+            <button onclick="createMultipleWorker()">创建多个worker</button>
+            <button onclick="createMultipleWorkerInterval()">定时创建多个worker</button>
+        </section>
+        <section>
+            <label for="">
+                <span>block 时间(秒): </span><input type="number" name="main-block-time" id="main-block-time" value="5" style="width: 40px;" />
+            </label>
+            <button onclick="blockMainThread()">主进程 block</button>
+        </section>
+
+        <section id="result">
+            <h3>统计结果</h3>
+            <div>
+                <button onclick="formatResult()">结果统计</button>
+            </div>
+            <label for="">
+                把 console 面板的输出复制到此处:
+                <div>
+                    <textarea name="" id="resultStr" cols="30" rows="10"></textarea>
+                </div>
+
+            </label>
+            <div id="formatResult"></div>
+        </section>
+
+        <section id="testTransfer">
+            <h3>数据量传输测试</h3>
+            <div>
+                <button onclick="testTransfer()">start</button>
+            </div>
+        </section>
+        <section>
+            <h3>内存占用测试</h3>
+            <div>
+                <button onclick="mainMemoryGrow()">主线程Grow</button>
+                <button onclick="workerMemoryGrow()">WorkerGrow</button>
+                <button onclick="printMemory()">查看内存占用</button>
+            </div>
+        </section>
+        <script type="text/javascript" src="worker-manager.js"></script>
+        <script type="text/javascript">
+            // resArr = []
+            // r2 = new Array(100).fill('').forEach((i, mCount) => {
+            //     var data = []
+            //     new Array(50).fill('').forEach((i, workerCount) => {
+            //         data.push(arr.filter(i => (i.idx == workerCount && i.c == mCount * 10))[0].t)
+            //     })
+            //     resArr.push({
+            //         name: `${mCount * 10}M`,
+            //         type:'bar',
+            //         stack: '排名',
+            //         data: data,
+            //         barWidth:7
+            //     }) 
+            // })
+
+            let { general, array, WorkerManager, onceWorker } = WorkerCompute
+
+
+
+            function createOneWorker() {
+                const workerTime = parseInt(document.querySelector('#once #workerTime').value)
+                const workerNum = parseInt(document.querySelector('#once #count').value)
+                const taskCount = parseInt(document.querySelector('#once #taskCount').value) // 计算次数, 单位 M
+
+                let workerCount = 0;
+                let t0 = +new Date()
+
+
+
+
+                new Array(workerNum).fill('').forEach((item, _idx) => {
+
+                    onceWorker({ workerTime: workerTime || 1, index: _idx, t0, taskCount: taskCount }, function (data) {
+                        let t1 = +new Date()
+                        console.log(`inworker: 第 ${data.index} 个 worker 创建完成, 耗时: ${t1 - data.t0} ms`)
+
+
+                        if (data.taskCount > 0) {
+                            for (var countIdx = 0; countIdx < data.taskCount; countIdx++) {
+                                if (countIdx % 10 === 0) {
+                                    console.log(`inworker-进度: 第${data.index}个 worker 已完成 ${countIdx} M 耗时 ${+new Date() - data.t0}`)
+                                }
+                                for (var j = 0; j < 1000; j++) {
+                                    for (var k = 0; k < 1000; k++) {
+                                        let tmp = 0
+                                    }
+                                }
+                            }
+                            console.log(`inworker: 第${data.index}个 worker 内部处理完成, 总计算量 ${countIdx} M, 耗时: ${+new Date() - t1}ms`)
+                            return data.index
+                        } else {
+                            let i = 0
+                            while (true) {
+                                let t2 = +new Date()
+                                if (t2 - t1 > data.workerTime * 1000) {
+                                    console.log('第' + data.index + '个 worker 处理完成, 总计算量 ' + i)
+                                    return data.index
+                                }
+                            }
+                        }
+                    }).then(generalRes => {
+                        console.log('main: 主进程收到:', _idx, generalRes)
+
+                        console.log(
+                            'main: 第 ' + _idx + ' 完成, 从任务创建到完成总耗时' + ((+new Date() - t0)) + 'ms'
+                        )
+                        if (workerCount + 1 >= workerNum) {
+                            console.log('main: 全部完成:', +new Date() - t0)
+                        }
+                        workerCount++
+                    }, err => {
+                        console.log(err)
+                    })
+                })
+            }
+
+
+
+
+
+            function createMultipleWorker() {
+                const workerNum = parseInt(
+                    document.querySelector('#multiple #workerNum').value
+                )
+                const workerTime = parseInt(
+                    document.querySelector('#multiple #workerTime').value
+                )
+
+                let data = { workerTime }
+                var t0 = +new Date(),
+                    workerCount = 0
+                new Array(workerNum).fill('').forEach((item, _idx) => {
+                    general(
+                        { workerTime, index: _idx },
+                        function (data) {
+                            console.log(
+                                'compute-worker-general 第' +
+                                data.index +
+                                '个 worker 创建完成'
+                            )
+                            let t1 = +new Date()
+                            let i = 0
+                            while (true) {
+                                let t2 = +new Date()
+                                i++
+                                if (t2 - t1 > data.workerTime * 1000) {
+                                    console.log('第' + data.index + '个 worker 处理完成, 总计算量 ' + i)
+                                    return data.index
+                                }
+                            }
+                        },
+                        1000
+                    ).then(generalRes => {
+                        console.log('主进程收到:', _idx, generalRes)
+
+                        console.log(
+                            '第 ' + workerCount + ' 完成' + (+new Date() - t0)
+                        )
+                        if (workerCount + 1 >= workerNum) {
+                            console.log('全部完成:', +new Date() - t0)
+                        }
+                        workerCount++
+                    })
+                })
+            }
+            function createMultipleWorkerInterval() {
+                setInterval(() => {
+                    createMultipleWorker()
+                }, 1000 * 10)
+            }
+
+
+            function blockMainThread() {
+                const blockTime = parseInt(document.querySelector('#main-block-time').value)
+                console.log(`主进程开始 block ${blockTime}s`)
+                let t1 = +new Date()
+                while (true) {
+                    let t2 = +new Date()
+
+                    if (t2 - t1 > blockTime * 1000) {
+                        console.log('主进程结束block, 共耗时:' + (t2 - t1))
+                        break
+
+                    }
+                }
+            }
+
+            function formatResult() {
+                let res = format()
+                let htmlStr = `
+                    <div>
+                        <h4>worker 创建完成</h4>
+                        <p>${res['createdTime'].map(i => i.v).join(',')}</p>
+                        <h4>任务完成总耗时</h4>
+                        <p>${res['completeTime'].map(i => i.v).join(',')}</p>
+                        <h4>worker 中总计算量</h4>
+                        <p>${res['workerTime'].map(i => i.count).join(',')}</p>
+                        <h4>worker 中任务耗时</h4>
+                        <p>${res['workerTime'].map(i => i.t).join(',')}</p>
+                    </div>
+                `
+
+                document.querySelector('#result #formatResult').innerHTML = htmlStr
+
+                function format(str) {
+                    let originStr = str || document.querySelector('#result #resultStr').value
+                    let arr = originStr.split(/\n/)
+                    let createdTimeArr = arr.filter(i => i.includes('创建完成')).map(i => {
+
+                        let res = i.match(/([\d\.]+)/g)
+                        return {
+                            idx: Number(res[res.length - 2]),
+                            v: Number(res[res.length - 1])
+                        }
+                    }).sort((a, b) => a.idx - b.idx)
+                    let completeTimeArr = arr.filter(i => i.includes('完成总耗时')).map(i => {
+                        let res = i.match(/([\d\.]+)/g)
+                        return {
+                            idx: Number(res[res.length - 2]),
+                            v: Number(res[res.length - 1])
+                        }
+                    }).sort((a, b) => a.idx - b.idx)
+
+                    let workerTimeArr = arr.filter(i => i.includes('总计算量')).map(i => {
+                        let res = i.match(/([\d\.]+)/g)
+                        return {
+                            idx: Number(res[0]),
+                            count: Number(res[1]),
+                            t: Number(res[2]) / 1000,
+                        }
+                    }).sort((a, b) => a.idx - b.idx)
+
+                    let times = {
+                        createdTime: createdTimeArr,
+                        completeTime: completeTimeArr,
+                        workerTime: workerTimeArr,
+                    }
+                    console.log(times)
+                    return times
+                }
+
+            }
+
+
+
+            // 输出传输测试, 不同数据量两种方式对比
+            async function testTransfer() {
+                let kstr = new Array(1000).fill('哈').join('')
+
+                await createTest(kstr.repeat(5)) // 5K
+                await createTest(kstr.repeat(5), 'string') // 5K
+                await createTest(kstr.repeat(1000)) // 1M
+                await createTest(kstr.repeat(1000), 'string') // 1M
+                await createTest(kstr.repeat(1000 * 10)) // 10M
+                await createTest(kstr.repeat(1000 * 10), 'string') // 10M
+                await createTest(kstr.repeat(1000 * 25)) // 25M
+                await createTest(kstr.repeat(1000 * 25), 'string') // 25M
+                await createTest(kstr.repeat(1000 * 50)) // 50M
+                await createTest(kstr.repeat(1000 * 50), 'string') // 50M
+
+
+                function createTest(data, type) {
+                    return new Promise((resolve, reject) => {
+                        sendData(data, type)
+                        setTimeout(() => {
+                            resolve()
+                        }, 10000);
+                    })
+                }
+
+
+                function sendData(data = '', type = 'buffer') {
+                    // 测试数据量 500K, 1M, 10M, 30M
+                    console.log(`[mainThread]传输长度${data.length / 1000} K`)
+
+                    let t_start_create = +new Date()
+                    console.log(`[mainThread]创建 worker: ${t_start_create}`)
+                    let worker = new Worker('worker-transfer.js')
+                    worker.successcallback = function () {
+                        let t_start_transfer = +new Date()
+                        if (type == 'buffer') {
+                            let bufs = new ArrayBuffer(data.length * 2)
+                            let u16V = new Uint16Array(bufs)
+                            u16V.set(data.split('').map(char => char.charCodeAt(0)))
+                            console.log(`生成 buffer 耗时: ${+new Date() - t_start_transfer}ms`)
+                            worker.postMessage(
+                                {
+                                    type: 'transfer',
+                                    data: {
+                                        t_start_create,
+                                        t_start_transfer,
+                                        buffers: bufs
+                                    },
+                                },
+                                [bufs]
+                            )
+
+                        } else {
+                            worker.postMessage(
+                                {
+                                    type: 'transfer',
+                                    data: {
+                                        t_start_create,
+                                        t_start_transfer,
+                                        str: data
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                    worker.onmessage = event => {
+
+                        if (event.data.type == 'created') {
+                            worker.successcallback && worker.successcallback()
+                        }
+
+                        if (event.data.type == 'transfer') {
+                            setTimeout(() => {
+                                worker.terminate()
+                            }, 1000)
+                        }
+                    }
+                }
+            }
+
+
+            // 内存占用
+
+            function mainMemoryGrow() {
+                if (!window.memoArrs) {
+                    window.memoArrs = []
+                }
+                const _arr = new Array(1000 * 1000 * 10).fill(1)
+                window.memoArrs.push(_arr)
+            }
+
+            function workerMemoryGrow() {
+                if (!window.memoryWM) {
+                    window.memoryWM = new WorkerManager('worker-compute.js')
+                }
+
+                window.memoryWM.getWorker().then(worker => {
+                    worker.postMessage({
+                        type: ''
+                    })
+                })
+
+
+                general(
+                    {},
+                    function (data) {
+                        console.log(`[inworker]当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 1000)}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
+                        console.log('[inworker]增加内存')
+
+                    }
+                ).then(generalRes => {
+                    console.log('主进程收到:', _idx, generalRes)
+
+                    console.log(
+                        '第 ' + workerCount + ' 完成' + (+new Date() - t0)
+                    )
+                    if (workerCount + 1 >= workerNum) {
+                        console.log('全部完成:', +new Date() - t0)
+                    }
+                    workerCount++
+                })
+            }
+
+            function printMemory() {
+                console.log(`当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 1000)}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
+
+            }
+        </script>
+</body>
+
+</html>

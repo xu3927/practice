@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>web worker</title>
+    </head>
+    <body>
+        <h1>web worker</h1>
+        <button onclick="sendToSw()">发送消息到 shared worker</button>
+        <button onclick="triggerError()">发出错误</button>
+        <script type="text/javascript">
+            /**
+             * 共享 worker
+             * 与一个共享worker通信必须通过端口对象——一个确切的打开的端口供脚本与worker通信
+             * 在传递消息之前，端口连接必须被显式的打开，打开方式是使用onmessage事件处理函数或者start()方法
+             */
+            let sw = new SharedWorker('share-worker.js')
+            // 打开共享 worker 的端口, 通过 start 方法或者 使用 onmessage 方法, 如果使用 addEventListener 监听事件, 则需要先执行 start 方法
+            // sw.port.start()
+            //  发送消息
+            function sendToSw() {
+                console.log('sendToSw')
+                sw.port.postMessage(['index2 向 sw 发送消息', 333, 444])
+            }
+            // 监听消息
+            sw.port.onmessage = function(a, b, c) {
+                console.log(`Message received from shared worker`, a, b, c)
+            }
+            sw.port.onerror = function(e) {
+                console.log(`shared worker 错误:`, e)
+            }
+        </script>
+    </body>
+</html>

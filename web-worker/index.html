@@ -1,81 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>web worker</title>
-    </head>
-    <body>
-        <h1>web worker</h1>
-        <button onclick="triggerError()">发出错误</button>
-        <button onclick="sendLargeData()">发送大数据</button>
-        <button onclick="sendToSw()">发送消息到 shared worker</button>
-        <button onclick="swTriggerError()">sw 发出错误</button>
 
-        <script type="text/javascript">
-            /**
-             * 新建子线程. 通过构造函数建立worker, 参数是一段要执行的js脚本.
-             * 子线程中也可以新建线程
-             * 线程关闭:
-             * worker.terminate(); 或者在子线程中 self.close();
-             * 通过postMessage方法可以实现父子线程的通信
-             * 父子线程通信可以传递文本, 或对象. 不过是拷贝后的对象, 子线程修改对象不会影响父线程.
-             */
-            console.log('worker-1')
-            var worker = new Worker('worker.js')
-            console.log('worker-2')
-            worker.postMessage('我是父线程, 向你发送消息')
-            console.log('worker-3')
-            worker.addEventListener('message', function(event) {
-                console.log('父线程:', event)
-                var obj = { a: 1, b: 2 }
-                console.log(this)
-            })
+<head>
+    <meta charset="UTF-8" />
+    <title>web worker</title>
+</head>
 
-            // 错误处理
+<body>
+    <h1>web worker</h1>
+    <button onclick="triggerError()">发出错误</button>
+    <button onclick="sendLargeData()">发送大数据</button>
+    <button onclick="sendToSw()">发送消息到 shared worker</button>
+    <button onclick="swTriggerError()">sw 发出错误</button>
+    <button onclick="testTransfer()">数据传输测试</button>
 
-            worker.addEventListener('error', function(event) {
-                console.log('父线程收到 错误:', event)
-                var obj = { a: 1, b: 2 }
-                console.log(this)
-            })
+    <script type="text/javascript">
+        /**
+         * 新建子线程. 通过构造函数建立worker, 参数是一段要执行的js脚本.
+         * 子线程中也可以新建线程
+         * 线程关闭:
+         * worker.terminate(); 或者在子线程中 self.close();
+         * 通过postMessage方法可以实现父子线程的通信
+         * 父子线程通信可以传递文本, 或对象. 不过是拷贝后的对象, 子线程修改对象不会影响父线程.
+         */
+        console.log('worker-1')
+        var worker = new Worker('worker.js')
+        console.log('worker-2')
+        worker.postMessage('我是父线程, 向你发送消息')
+        console.log('worker-3')
+        worker.addEventListener('message', function (event) {
+            console.log('父线程:', event)
+            var obj = { a: 1, b: 2 }
+            console.log(this)
+        })
 
-            function triggerError() {
-                worker.postMessage('trigger error')
-            }
+        // 错误处理
 
-            /**
-             * 共享 worker
-             * 共享 worker 可以被不同的脚本访问, 即使处于不同的 window, iframe 或 worker
-             */
+        worker.addEventListener('error', function (event) {
+            console.log('父线程收到 错误:', event)
+            var obj = { a: 1, b: 2 }
+            console.log(this)
+        })
 
-            let sw = new SharedWorker('share-worker.js')
-            // 打开共享 worker 的端口, 通过 start 方法或者 使用 onmessage 方法会隐式调用 start 方法, 如果使用 addEventListener 监听事件, 则需要先执行 start 方法
-            sw.port.start()
-            //  发送消息
-            function sendToSw() {
-                console.log('sendToSw')
-                sw.port.postMessage(['index 向 sw 发送消息', 333, 444])
-            }
-            // 监听消息
-            sw.port.onmessage = function(a) {
-                console.log(`Message received from shared worker`, a)
-            }
-            // 监听错误
-            sw.onerror = function(e) {
-                console.log(`shared worker 错误:`, e)
-            }
-            sw.port.onmessageerror = function(e) {
-                console.log(`onmessageerror shared worker 错误:`, e)
-            }
-            function swTriggerError(params) {
-                sw.port.postMessage('error')
-            }
+        function triggerError() {
+            worker.postMessage('trigger error')
+        }
 
-            // 大数据对象转让
-            function sendLargeData() {
-                let largeData = new Uint8Array(1024 * 1024 * 32).fill(1) // 32M 数据
-                worker.postMessage(largeData.buffer, [largeData.buffer])
-            }
-        </script>
-    </body>
+        /**
+         * 共享 worker
+         * 共享 worker 可以被不同的脚本访问, 即使处于不同的 window, iframe 或 worker
+         */
+
+        let sw = new SharedWorker('share-worker.js')
+        // 打开共享 worker 的端口, 通过 start 方法或者 使用 onmessage 方法会隐式调用 start 方法, 如果使用 addEventListener 监听事件, 则需要先执行 start 方法
+        sw.port.start()
+        //  发送消息
+        function sendToSw() {
+            console.log('sendToSw')
+            sw.port.postMessage(['index 向 sw 发送消息', 333, 444])
+        }
+        // 监听消息
+        sw.port.onmessage = function (a) {
+            console.log(`Message received from shared worker`, a)
+        }
+        // 监听错误
+        sw.onerror = function (e) {
+            console.log(`shared worker 错误:`, e)
+        }
+        sw.port.onmessageerror = function (e) {
+            console.log(`onmessageerror shared worker 错误:`, e)
+        }
+        function swTriggerError(params) {
+            sw.port.postMessage('error')
+        }
+
+        // 大数据对象转让
+        function sendLargeData() {
+            let largeData = new Uint8Array(1024 * 1024 * 32).fill(1) // 32M 数据
+            worker.postMessage(largeData.buffer, [largeData.buffer])
+        }
+
+       
+    </script>
+</body>
+
 </html>

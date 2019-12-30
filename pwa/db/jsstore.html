@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>jsStore</title>
+    </head>
+    <body>
+        <h1>jsStore 一个包装 IndexDb 的库</h1>
+        <script src="./jsstore.js"></script>
+        <script type="text/javascript">
+            // 一个带有SQL语法的IndexedDB包装器。
+            async function init(params) {
+                var dbName = 'JsStore_Demo'
+                // 定义 schema
+                function getDbSchema() {
+                    var tblProduct = {
+                        name: 'Product',
+                        columns: {
+                            // Here "Id" is name of column
+                            id: { primaryKey: true, autoIncrement: true },
+                            itemName: { notNull: true, dataType: 'string' },
+                            price: { notNull: true, dataType: 'number' },
+                            quantity: { notNull: true, dataType: 'number' }
+                        }
+                    }
+                    var db = {
+                        name: dbName,
+                        tables: [tblProduct]
+                    }
+                    return db
+                }
+                // executing jsstore inside a web worker
+                var connection = new JsStore.Instance(
+                    new Worker('./jsstore.worker.js')
+                )
+
+                async function initJsStore() {
+                    var database = getDbSchema()
+                    const isDbCreated = await connection.initDb(database)
+                    if (isDbCreated === true) {
+                        console.log('db created')
+                        // here you can prefill database with some data
+                    } else {
+                        console.log('db opened')
+                    }
+                }
+
+                await initJsStore()
+
+                var value = {
+                    itemName: 'Blue Jeans',
+                    price: 2000,
+                    quantity: 1000
+                }
+
+                var values = new Array(10).fill('').map((item, idx) => {
+                    return {
+                        itemName: `Blue Jeans${idx}`,
+                        price: parseInt(2000 * Math.random()),
+                        quantity: parseInt(1000 * Math.random())
+                    }
+                })
+
+                // 插入数据
+
+                // var noOfDataInserted = await connection.insert({
+                //     into: 'Product',
+                //     values
+                // })
+
+                // if (noOfDataInserted > 0) {
+                //     console.log('successfully added')
+                // }
+
+                // 读取数据
+                // results will be array of objects
+                var results = await connection.select({
+                    from: 'Product',
+                    where: {
+                        id: 5
+                    }
+                })
+                console.log(results.length + 'record found')
+
+                // Updating data
+                var rowsUpdated = await connection.update({
+                    in: 'Product',
+                    where: {
+                        itemName: {
+                            like: '%black%'
+                        }
+                    },
+                    set: {
+                        quantity: 2000
+                    }
+                })
+                console.log(rowsUpdated + ' rows updated')
+
+                // Remove data
+
+                var rowsDeleted = await connection.remove({
+                    from: 'Product',
+                    where: {
+                        id: 10
+                    }
+                })
+                console.log(rowsDeleted + ' record deleted')
+            }
+            init()
+        </script>
+    </body>
+</html>

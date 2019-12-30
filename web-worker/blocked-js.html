@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>blocked-js 测试</h1>
+        <script type="text/javascript">
+            function blocked(t) {
+                console.log('start')
+                var t1 = +new Date()
+                while (true) {
+                    var t2 = +new Date()
+                    if (t2 - t1 > t * 1000) {
+                        console.log('stop')
+                        break
+                    }
+                }
+            }
+            setInterval(() => {
+                blocked(5)
+            }, 1000 * 10)
+        </script>
+    </body>
+</html>

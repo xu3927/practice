@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Worker Memory Test</title>
+</head>
+
+<body>
+    <h1>Worker</h1>
+    <section>
+        <h3>内存占用测试</h3>
+
+        <div>
+            <button onclick="mainMemoryGrow()">主线程Grow</button>
+            <button onclick="workerMemoryGrow()">WorkerGrow</button>
+            <button onclick="workerMemoryGrowScope()">WorkerGrow局部变量</button>
+            <button onclick="printMemory()">查看内存占用</button>
+        </div>
+    </section>
+    <script type="text/javascript">
+
+
+        // worker 占用的内存在内存管理中, 与当前 tab 合并计算. 不过从 performance.memory 中读不到
+        createWorker('worker-memory.js')
+            .then(worker => window.testWorker = worker)
+        function createWorker(workerScriptUrl) {
+            return new Promise((resolve, reject) => {
+                const worker = new Worker(workerScriptUrl)
+                worker.onmessage = event => {
+                    let msgType = event.data ? event.data.type : ''
+                    if (msgType === 'created') {
+                        console.log('[main]worker created')
+                        resolve(worker)
+                        return
+                    }
+                    if (typeof worker.successCallback === 'function') {
+                        worker.successCallback(event.data && event.data.data)
+                    }
+                }
+                worker.onerror = event => {
+                    console.error('[main]收到worker错误:', event)
+                    if (typeof worker.errorCallback === 'function')
+                        worker.errorCallback()
+                    reject()
+                }
+            })
+        }
+        // 内存占用
+
+        function mainMemoryGrow() {
+            if (!window.memoArrs) {
+                window.memoArrs = []
+            }
+            for (var i = 0; i < 30; i++) {
+                const _arr = new Array(1000 * 1000 * 10).fill(1)
+                window.memoArrs.push(_arr)
+            }
+
+        }
+
+        function workerMemoryGrow() {
+
+
+            testWorker.postMessage({
+                type: 'general',
+                data: {},
+                handler: fn_string(function (data) {
+                    // console.log(`[inworker]当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 1000)}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
+                    console.log('[inworker]增加内存')
+                    if (!self.memoArrs) {
+                        self.memoArrs = []
+                    }
+                    const _arr = new Array(1000 * 1000 * 10).fill(1)
+                    self.memoArrs.push(_arr)
+                    return 'ok'
+                })
+            })
+
+            testWorker.successCallback = data => {
+                console.log(`[main] 主进程收到: ${data}`)
+                printMemory()
+            }
+        }
+
+        function workerMemoryGrowScope() {
+            testWorker.postMessage({
+                type: 'general',
+                data: {},
+                handler: fn_string(function (data) {
+                    // console.log(`[inworker]当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 1000)}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
+                    console.log('[inworker]增加内存')
+                    let memoArrs = []
+                    const _arr = new Array(1000 * 1000 * 10).fill(1)
+                    memoArrs.push(_arr)
+                    return 'ok'
+                })
+            })
+
+            testWorker.successCallback = data => {
+                console.log(`[main] 主进程收到: ${data}`)
+                printMemory()
+            }
+        }
+
+        function printMemory() {
+            console.log(`当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 1000)}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
+
+        }
+
+        function fn_string(fn) {
+            var name = ''
+            if (typeof fn === 'function') {
+                name = fn.name
+                fn = fn.toString()
+            }
+
+            return {
+                name: name,
+                args: fn.substring(fn.indexOf('(') + 1, fn.indexOf(')')),
+                body: fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}'))
+            }
+        }
+    </script>
+</body>
+
+</html>

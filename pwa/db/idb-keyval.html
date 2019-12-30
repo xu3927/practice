@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>idb-keyval</title>
+    </head>
+    <body>
+        <h1>IDB-keyval 一个包装 IndexDb 的库</h1>
+        <script src="https://cdn.jsdelivr.net/npm/idb-keyval@3/dist/idb-keyval-iife.min.js"></script>
+        <script type="text/javascript">
+            // 一个简单易用的存 key value 的库
+            // 定义 db 和 store
+            const customStore = new idbKeyval.Store(
+                'custom-db-name',
+                'custom-store-name'
+            )
+
+            //  添加
+            idbKeyval.set('foo', 'bar', customStore)
+
+            idbKeyval
+                .set('hello', 'world', customStore)
+                .then(() => console.log('It worked!'))
+                .catch(err => console.log('It failed!', err))
+
+            // get
+            idbKeyval
+                .get('hello', customStore)
+                .then(val => console.log('get val:', val))
+
+            // set arr
+            idbKeyval.set('arr1', [3, 6, 7, 8, 8], customStore)
+            // get arr
+            idbKeyval
+                .get('arr1', customStore)
+                .then(val => console.log('get arr:', val))
+
+            // set arr
+            idbKeyval.set('obj1', { a: 1, b: [66, 33, 778, 88] }, customStore)
+            // get arr
+            idbKeyval
+                .get('obj1', customStore)
+                .then(val => console.log('get obj:', val))
+        </script>
+    </body>
+</html>

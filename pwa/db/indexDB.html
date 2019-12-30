@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>IndexDB</title>
+    </head>
+    <body>
+        <h1>原生 IndexDB</h1>
+
+        <script type="text/javascript">
+            // 参考文档 https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API/Using_IndexedDB
+
+            /**
+             * 打开数据库 open(dbname, version)
+             * open 请求不会立即打开数据库或者开始一个事务。
+             * 对 open() 函数的调用会返回一个我们可以作为事件来处理的包含 result（成功的话）或者错误值的 IDBOpenDBRequest 对象
+             * open 函数的结果是一个 IDBDatabase 对象的实例。
+             * 数据库如果不存在, 则创建该数据库, 并触发 onupgradeneeded
+             * 如果传入了更高的版本. 也会触发 onupgradeneeded 事件, 该事件中可以更新数据库
+             * version 必须是整数
+             */
+            var request = window.indexedDB.open('MyTestDatabase')
+
+            request.onerror = function(event) {
+                console.log('db error:', event.target.errorCode)
+                // Do something with request.errorCode!
+            }
+            request.onsuccess = function(event) {
+                console.log('db success')
+                // Do something with request.result!
+                // 得到 IDBDatabase 对象
+                window.db = event.target.result
+                console.log(db)
+            }
+
+            // 该事件仅在较新的浏览器中实现了
+            request.onupgradeneeded = function(event) {
+                // 保存 IDBDataBase 接口
+                var db = event.target.result
+
+                // 为该数据库创建一个对象仓库
+                var objectStore = db.createObjectStore('name', {
+                    keyPath: 'myKey'
+                })
+            }
+
+            // 增加数据
+            const customerData = [
+                {
+                    ssn: '444-44-4444',
+                    name: 'Bill',
+                    age: 35,
+                    email: 'bill@company.com'
+                },
+                {
+                    ssn: '555-55-5555',
+                    name: 'Donna',
+                    age: 32,
+                    email: 'donna@home.org'
+                }
+            ]
+
+            var customerRequest = window.indexedDB.open('origin-customer-db', 2)
+
+            request.onerror = function(event) {
+                console.log('db error:', event.target.errorCode)
+            }
+            customerRequest.onsuccess = function(event) {
+                var db = event.target.result
+                // 创建一个事务, 事务类型可以是 readwrite, readonly, 或 versionchange
+                var transaction = db.transaction('customers', 'readwrite')
+                var customerObjectStore = transaction.objectStore('customers')
+
+                // 添加数据
+                // customerObjectStore.add({
+                //     ssn: '555-55-5555',
+                //     name: 'Donna',
+                //     age: 32,
+                //     email: 'donna@home.org'
+                // })
+
+                // 获取数据
+                // let getResult = customerObjectStore.get('555-55-5555')
+                // getResult.onsuccess = event => {
+                //     // 结果可以通过 event.target.result 或 getResult.result 获得
+                //     console.log('获取数据 getResult :', getResult.result.name)
+                //     console.log('获取数据 event :', event.target.result)
+                // }
+                // getResult.onerror = event => {
+                //     console.log('get失败:', getResult.error)
+                // }
+
+                // 删除数据
+                // db
+                //     .transaction('customers', 'readwrite')
+                //     .objectStore('customers')
+                //     .delete('555-55-5555').onsuccess = event =>
+                //     console.log('删除 555-55-5555 成功')
+
+                /**
+                 * 使用游标 cursor
+                 * openCursor(query, direction) 打开游标,
+                 * 参数 query optional, 要查询的 key 或 IDBKeyRange, 如 IDBKeyRange.bound("A", "F");
+                 * direction optional, 游标的移动方向, 有效值 "next" 、"nextunique" 、"prev" 和 "prevunique", 默认是 "next"
+                 */
+                db
+                    .transaction('customers')
+                    .objectStore('customers')
+                    .openCursor().onsuccess = event => {
+                    var cursor = event.target.result
+
+                    if (cursor) {
+                        console.log(
+                            'Name for SSN ' +
+                                cursor.key +
+                                ' is ' +
+                                cursor.value.name
+                        )
+                        cursor.continue()
+                    } else {
+                        console.log('No more entries!')
+                    }
+                }
+            }
+            // onupgradeneeded 是唯一可以修改数据库结构的地方
+            customerRequest.onupgradeneeded = function(event) {
+                var db = event.target.result
+                // ssn 作为 keyPath
+                var objectStore = db.createObjectStore('customers', {
+                    keyPath: 'ssn',
+                    // 是否自动生成键
+                    autoIncrement: false
+                })
+
+                // 建立索引, 通过姓名搜索, 非唯一, 所以 unique false, store.createIndex(indexName, keyPath, objectParameters)
+                objectStore.createIndex('name', 'name', { unique: false })
+
+                // 邮箱索引, 邮箱是唯一的
+                objectStore.createIndex('email', 'email', { unique: true })
+
+                // 使用事务的 oncomplete 事件确保在插入数据前对象仓库已经创建完毕
+                objectStore.transaction.oncomplete = function(event) {
+                    // 将数据保存到新创建的对象仓库
+                    var customerObjectStore = db
+                        .transaction('customers', 'readwrite')
+                        .objectStore('customers')
+                    customerData.forEach(function(item) {
+                        customerObjectStore.add(item)
+                    })
+                }
+            }
+        </script>
+    </body>
+</html>

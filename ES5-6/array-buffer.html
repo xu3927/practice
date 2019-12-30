@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>ArrayBuffer</h1>
+        <script type="text/javascript">
+            /*
+             * ArrayBuffer 二进制缓存
+             * ArrayBuffer 是二进制原始数据, 不能直接操作 ArrayBuffer 的内容,
+             * 通过类型数组(Typed Array) 或 DataView 对象位二进制buffer数据指定一种处理格式, 才可以操作
+             * buffer 没有具体的格式, 只是一个数据块儿. View 为访问 buffer, 提供了上下文(数据类型, 起始偏移量和元素数), 将数据转换为有实际类型的数组
+             */
+
+            /**
+                Typed Arrays 包含以下类型
+                Type	Value Range	Size in bytes	Description	Web IDL type	Equivalent C type
+                Int8Array	-128 to 127	1	8-bit two's complement signed integer	byte	int8_t
+                Uint8Array	0 to 255	1	8-bit unsigned integer	octet	uint8_t
+                Uint8ClampedArray	0 to 255	1	8-bit unsigned integer (clamped)	octet	uint8_t
+                Int16Array	-32768 to 32767	2	16-bit two's complement signed integer	short	int16_t
+                Uint16Array	0 to 65535	2	16-bit unsigned integer	unsigned short	uint16_t
+                Int32Array	-2147483648 to 2147483647	4	32-bit two's complement signed integer	long	int32_t
+                Uint32Array	0 to 4294967295	4	32-bit unsigned integer	unsigned long	uint32_t
+                Float32Array	1.2x10-38 to 3.4x1038	4	32-bit IEEE floating point number ( 7 significant digits e.g. 1.1234567)	unrestricted float	float
+                Float64Array	5.0x10-324 to 1.8x10308	8	64-bit IEEE floating point number (16 significant digits e.g. 1.123...15)	unrestricted double	double
+                BigInt64Array	-263 to 263-1	8	64-bit two's complement signed integer	bigint	int64_t (signed long long)
+                BigUint64Array	0 to 264-1	
+            */
+
+            // 除 Typed Arrays 外, DataView 也提供了访问 buffer 的接口, 可以访问任意类型的数据
+            /**
+             * 类型数组 Typed Arrays https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Typed_arrays
+             * js 类型数组将实现拆分为 buffer(ArrayBuffer) 和 view(如 Uint8Array) 两部分.
+             */
+            //  使用方式
+            // 创建一个 32bytes 的内存
+            var buffer = new ArrayBuffer(32);
+            if (buffer.byteLength === 16) {
+                console.log("Yes, it's 16 bytes.");
+            } else {
+                console.log("Oh no, it's the wrong size!");
+            }
+            // 定义一种视图格式
+            var int32View = new Int32Array(buffer);
+            // 写入数据
+            for (var i = 0; i < int32View.length; i++) {
+                int32View[i] = i * 2;
+            }
+            console.log("int32View:", int32View); // Int32Array(8) [0, 2, 4, 6, 8, 10, 12, 14]
+
+            // 对同一个 buffer 可以使用不同的视图处理
+            var int16View = new Int16Array(buffer);
+
+            for (var i = 0; i < int16View.length; i++) {
+                console.log("Entry " + i + ": " + int16View[i]);
+            }
+            console.log("int16View:", int16View); // Int16Array(16) [0, 0, 2, 0, 4, 0, 6, 0, 8, 0, 10, 0, 12, 0, 14, 0]
+
+            // DataView 使用
+            // 语法 new DataView(buffer [, byteOffset [, byteLength]])
+            var dv = new DataView(buffer); // 建立一个 dataview 视图对象
+            dv.getInt16(0); // 从第 0 位取一个16位 int 数, return 0
+            dv.getInt16(3); // 从第 3 位取一个16位 int 数, 即 2 个 byte, return 2
+            dv.getInt16(7); // 从第 3 位取一个16位 int 数, 即 2 个 byte, return 4
+            // 写入
+            console.log("dv5", dv.getInt16(5)); // return 0
+            dv.setInt16(5, 666); // 从第5个字节开始, 写一个16bit 的 int 数, 666
+            console.log("dv5", dv.getInt16(5)); // return 666
+        </script>
+    </body>
+</html>
