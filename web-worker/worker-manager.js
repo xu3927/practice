@@ -18,13 +18,34 @@ window.WorkerCompute = (function() {
     class WorkerManager {
         constructor(workerScriptUrl) {
             this.workers = []
+            this.tasks = [] // 计算任务
             this.workerScriptUrl = workerScriptUrl || 'worker-compute.js'
             // worker 回收器
             this.collector = null // 回收期实例
             this.createCollector() // 创建回收期
         }
+        createTask = ({type, data, handler, memoryUseage, successCallback, errorCallback}) => {
+            this.tasks.push( {
+                type, data, handler, memoryUseage, successCallback, errorCallback
+            })
+        }
+        hasAvailableWorker = () => {
+            return this.workers.length < window.navigator.hardwareConcurrency / 2 || this.workers.findIndex(item => item.state == workerStateEnum.waiting) > -1
+        }
+        callTask = () => {
+            if (this.tasks.length == 0) return
+            let availableMemory = (window.performance.memory.jsHeapSizeLimit - window.performance.memory.totalJSHeapSize) / 1000 / 1000
+            let {memoryUseage, successCallback, errorCallback, ...msg} = this.tasks[0]
+            if (memoryUseage > availableMemory || !this.hasAvailableWorker()) {
+                return
+            } else {
+                this.tasks.shift()
+                this.workerExcute(msg).then(successCallback, errorCallback)
+            }
+        }
         // 创建新 worker
         create = () => {
+            let that = this
             return new Promise((resolve, reject) => {
                 const worker = new Worker(this.workerScriptUrl)
                 worker.state = workerStateEnum.init
@@ -39,13 +60,14 @@ window.WorkerCompute = (function() {
                     worker.state = workerStateEnum.waiting
                     if (typeof worker.successCallback === 'function') {
                         worker.successCallback(event.data && event.data.data)
-                    }
+                    }                    
                 }
                 worker.onerror = event => {
                     console.error('ParallelCompute中收到worker错误:', event)
-                    if (typeof worker.errorCallback === 'function')
-                        worker.errorCallback()
-                    reject()
+                    if (typeof worker.errorCallback === 'function') {
+                        worker.errorCallback(event)
+                    }   
+                    reject(event)
                 }
                 this.workers.push(worker)
                 this.createCollector()
@@ -71,18 +93,34 @@ window.WorkerCompute = (function() {
         // 计算
         compute = msg => {
             return new Promise((resolve, reject) => {
+                this.createTask({...msg, 
+                    successCallback(data){
+                        resolve(data)
+                    }, errorCallback (event) {
+                        reject(event)
+                    }
+                })
+                this.callTask()
+            })
+        }
+        // worker执行
+        workerExcute = msg => {
+            let that = this
+            return new Promise((resolve, reject) => {
                 this.getWorker().then(worker => {
                     worker.state = workerStateEnum.running
 
                     worker.postMessage(msg)
                     worker.successCallback = data => {
                         resolve(data)
+                        that.callTask()
                     }
                     worker.errorCallback = event => {
                         reject(event)
+                        that.callTask()
                     }
                 })
-            })
+            }) 
         }
         // 创建 worker 回收器, 回收周期
         createCollector = () => {
@@ -210,12 +248,20 @@ window.WorkerCompute = (function() {
         }
     })
 
-    // 通用处理函数
-    const general = async function(data, handler) {
+
+
+    /**
+     * 通用处理函数
+     * @param {object} data - 传到handler中的参数
+     * @param {func} handler - 计算函数
+     * @param {number} [memoryUseage] - 所需要的内存, 单位 M
+     */ 
+    const general = async function(data, handler, memoryUseage) {
         return await workerManager.compute({
             type: 'general',
             data: data,
-            handler: fn_string(handler)
+            handler: fn_string(handler),
+            memoryUseage
         })
     }
 

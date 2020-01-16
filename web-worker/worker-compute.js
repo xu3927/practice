@@ -57,6 +57,6 @@ self.addEventListener('message', function(event) {
 
     // 错误处理
     if (event.data == 'error') {
-        throw new Error('worker 中发出错误')
+        throw new Error('worker 中发生错误')
     }
 })

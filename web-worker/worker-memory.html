@@ -18,6 +18,7 @@
             <button onclick="workerMemoryGrow()">WorkerGrow</button>
             <button onclick="workerMemoryGrowScope()">WorkerGrow局部变量</button>
             <button onclick="printMemory()">查看内存占用</button>
+            <button onclick="funcMemoryUseage()">计算函数内存消耗</button>
         </div>
     </section>
     <script type="text/javascript">
@@ -68,7 +69,6 @@
                 type: 'general',
                 data: {},
                 handler: fn_string(function (data) {
-                    // console.log(`[inworker]当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 1000)}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
                     console.log('[inworker]增加内存')
                     if (!self.memoArrs) {
                         self.memoArrs = []
@@ -106,7 +106,7 @@
         }
 
         function printMemory() {
-            console.log(`当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 1000)}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
+            console.log(`当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 10) / 100}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
 
         }
 
@@ -122,6 +122,27 @@
                 args: fn.substring(fn.indexOf('(') + 1, fn.indexOf(')')),
                 body: fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}'))
             }
+        }
+
+        function funcMemoryUseage() {
+            // 内存占用较少(小于80M)时可能输出为0. 
+            console.log('--funcMemoryUseage start--')
+            printMemory()
+            var m1 = window.performance.memory.usedJSHeapSize
+            var str = new Array(1000).fill('1').join('')
+            var arr = new Array(1000 * 1000 * 15).fill(str)
+            console.log('--funcMemoryUseage end--')
+
+            printMemory()
+            var m2 = window.performance.memory.usedJSHeapSize
+            console.log(`内存消耗: ${((m2 - m1) / 1000 / 1000).toFixed(2)}MB`)
+            
+            // setTimeout(() => {
+            //     printMemory()
+            //     var m2 = window.performance.memory.usedJSHeapSize
+            //     console.log(`内存消耗: ${((m2 - m1) / 1000 / 1000).toFixed(2)}MB`)
+            // }, 0);
+           
         }
     </script>
 </body>
