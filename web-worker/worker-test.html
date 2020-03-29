@@ -285,16 +285,18 @@
             async function testTransfer() {
                 let kstr = new Array(1000).fill('哈').join('')
 
-                await createTest(kstr.repeat(5)) // 5K
-                await createTest(kstr.repeat(5), 'string') // 5K
-                await createTest(kstr.repeat(1000)) // 1M
-                await createTest(kstr.repeat(1000), 'string') // 1M
+                // await createTest(kstr.repeat(5)) // 5K
+                // await createTest(kstr.repeat(5), 'string') // 5K
+                // await createTest(kstr.repeat(1000)) // 1M
+                // await createTest(kstr.repeat(1000), 'string') // 1M
                 await createTest(kstr.repeat(1000 * 10)) // 10M
                 await createTest(kstr.repeat(1000 * 10), 'string') // 10M
                 await createTest(kstr.repeat(1000 * 25)) // 25M
                 await createTest(kstr.repeat(1000 * 25), 'string') // 25M
                 await createTest(kstr.repeat(1000 * 50)) // 50M
                 await createTest(kstr.repeat(1000 * 50), 'string') // 50M
+                await createTest(kstr.repeat(1000 * 100)) // 100M
+                await createTest(kstr.repeat(1000 * 100), 'string') // 100M
 
 
                 function createTest(data, type) {

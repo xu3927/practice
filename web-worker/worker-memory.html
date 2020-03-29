@@ -15,6 +15,7 @@
 
         <div>
             <button onclick="mainMemoryGrow()">主线程Grow</button>
+            <button onclick="probeMemoryGrow(3500)">主线程探测内存Grow</button>
             <button onclick="workerMemoryGrow()">WorkerGrow</button>
             <button onclick="workerMemoryGrowScope()">WorkerGrow局部变量</button>
             <button onclick="printMemory()">查看内存占用</button>
@@ -55,9 +56,181 @@
             if (!window.memoArrs) {
                 window.memoArrs = []
             }
-            for (var i = 0; i < 30; i++) {
+            for (var i = 0; i < 10; i++) {
                 const _arr = new Array(1000 * 1000 * 10).fill(1)
                 window.memoArrs.push(_arr)
+            }
+
+        }
+
+        function createEle() {
+            return ['1', '1', { n: 1 }][parseInt(Math.random() * 4)]
+        }
+        function createMData(n) {
+
+            let _arr = []
+            for (let i = 0; i < Math.ceil(n / 10); i++) {
+                if ((window.performance.memory.jsHeapSizeLimit - window.performance.memory.usedJSHeapSize) / 1024 / 1024 < 50) {
+                    console.log('Exit: 剩余内存小于50M')
+                    return
+                }
+                let _num = i * 10 > n ? n % 10 : 10
+                let __arr = new Array(parseInt(1024 * 1024 * 0.25 * _num)).fill(createEle())
+                _arr.push(__arr)
+            }
+            return _arr
+        }
+
+
+        // 自动探测内存
+        // @param target 目标内存单位 M
+        async function probeMemoryGrow(target) {
+            target = target || 3800
+            window.memoArrs = []
+            let heap_limit_start = window.performance.memory.jsHeapSizeLimit
+            let heap_used_start = window.performance.memory.usedJSHeapSize
+            console.log('初始总内存:', heap_limit_start)
+            if (heap_limit_start / 1024 / 1024 > target) {
+                console.log(`内存已达目标内存${target}`)
+                return
+            }
+
+            let usableHeap = getUesableHeapSize()
+
+            console.log('当前可用内存(M):', usableHeap)
+            // let time = parseInt(usableHeap * 0.7 / 50 / 4)
+            // console.log(`共执行 ${time} 次`)
+
+            // let max_time = (usableHeap * 0.9 / 100)
+            // for (var i = 0; i < max_time; i++) {
+            //     window.memoArrs.push(createMData(100))
+            //     let heap_limit_now = window.performance.memory.jsHeapSizeLimit
+            //     if (heap_limit_now > heap_limit_start) {
+            //         console.log('总内存已增加', window.performance.memory.jsHeapSizeLimit)
+            //         break;
+            //     } else if (i % 3 == 2) {
+            //         let heap_used_current = window.performance.memory.usedJSHeapSize - heap_used_start
+            //         let per_round_heap = heap_used_current / i / 1024 / 1024
+            //         max_time = (usableHeap / per_round_heap) * 0.92
+            //         console.log('max_time:', max_time)
+            //     }
+            //     console.log(3)
+            // }
+            while (true) {
+                if (getUesableHeapSize() < 50) {
+                    break
+                }
+                window.memoArrs.push(createMData(10))
+            }
+            // createMData(30)
+            // await makeData(0.8, 6)
+            memoryUsedPercent()
+            // await makeData(0.90, 5)
+            console.log('已用内存增加:', (window.performance.memory.usedJSHeapSize - heap_used_start) / 1024 / 1024)
+            console.log(`内存占比: ${memoryUsedPercent()}%`)
+            console.log('运行结束', window.performance.memory)
+            console.log('共增加内存:', (window.performance.memory.jsHeapSizeLimit - heap_limit_start) / 1024 / 1024)
+
+            function getUesableHeapSize() {
+                return (window.performance.memory.jsHeapSizeLimit - window.performance.memory.usedJSHeapSize) / 1024 / 1024
+            }
+            // 创建 x兆 数据, 实际数据会偏小 参数 Number
+
+            function memoryUsedPercent() {
+                let percent = (window.performance.memory.totalJSHeapSize / window.performance.memory.jsHeapSizeLimit * 100).toFixed(2)
+                console.log('当前内存占用比:', `${percent}%`)
+                return percent
+
+            }
+
+
+
+            /**
+            * 创建可用内存的 百分比 数据, 所用次数, 会动态调节
+            * @param percent {Float} 如 0.8 当前可用内存的 百分比
+            * @n 所用次数 如 5
+            */
+            function makeData(percent, n) {
+                console.log(`makeData: ${percent}, 次数 ${n}`)
+                percent = percent || 0.8
+                n = n || 10
+                let usableHeap = getUesableHeapSize()
+                let makeData_heap_used_start = window.performance.memory.usedJSHeapSize
+                let max_time = n
+                let per_round_heap = usableHeap * percent / n
+                function createMData(n) {
+                    let _arr = []
+                    for (let i = 0; i < Math.ceil(n / 10); i++) {
+                        let _num = i * 10 > n ? n % 10 : 10
+                        let __arr = new Array(parseInt(1024 * 1024 * 0.25 * _num)).fill(1)
+                        _arr.push(__arr)
+                    }
+                    return _arr
+                }
+                per_round_heap = per_round_heap > 200 ? 200 : per_round_heap
+                console.log('max_time:', max_time, 'per_round_heap:', per_round_heap)
+
+
+                return new Promise((resolve, reject) => {
+                    function increaseMemory(i, max_time) {
+                        window.memoArrs.push(createMData(per_round_heap))
+                        let heap_limit_now = window.performance.memory.jsHeapSizeLimit
+                        if (getUesableHeapSize() - per_round_heap < 100) {
+                            console.log('内存已不可增加, 当前内存占用比:', `${memoryUsedPercent()}%`)
+                            resolve()
+                            return;
+                        }
+                        if (heap_limit_now > heap_limit_start) {
+                            console.log('总内存已增加', window.performance.memory.jsHeapSizeLimit)
+                            resolve()
+                            return;
+                        } else if (i % 3 == 2) {
+                            let heap_used_current = window.performance.memory.usedJSHeapSize - makeData_heap_used_start
+                            per_round_heap = heap_used_current / i / 1024 / 1024
+                            per_round_heap = per_round_heap > 200 ? 200 : per_round_heap
+                            max_time = parseInt(usableHeap * percent / per_round_heap)
+                            console.log('max_time:', max_time, per_round_heap)
+
+                            if (max_time < 1) {
+                                resolve()
+                                return
+                            }
+                        }
+                        console.log(i)
+
+                        if (i < max_time) {
+                            setTimeout(() => {
+                                i++
+                                increaseMemory(i, max_time)
+                            }, 10)
+                        } else {
+                            resolve()
+                        }
+                    }
+                    increaseMemory(0, max_time)
+                })
+
+
+                // for (var i = 0; i < max_time; i++) {
+                //     window.memoArrs.push(createMData(per_round_heap))
+                //     let heap_limit_now = window.performance.memory.jsHeapSizeLimit
+                //     if (getUesableHeapSize() - per_round_heap < 100) {
+                //         console.log('内存已不可增加, 当前内存占用比:', `${memoryUsedPercent()}%`)
+                //         break;
+                //     }
+                //     if (heap_limit_now > heap_limit_start) {
+                //         console.log('总内存已增加', window.performance.memory.jsHeapSizeLimit)
+                //         break;
+                //     } else if (i % 3 == 2) {
+                //         let heap_used_current = window.performance.memory.usedJSHeapSize - makeData_heap_used_start
+                //         per_round_heap = heap_used_current / i / 1024 / 1024
+                //         max_time = parseInt(usableHeap * percent / per_round_heap)
+                //         console.log('max_time:', max_time, per_round_heap)
+                //         if (max_time < 1) { break }
+
+                //     }
+                //     console.log(3)
+                // }
             }
 
         }
@@ -73,8 +246,12 @@
                     if (!self.memoArrs) {
                         self.memoArrs = []
                     }
-                    const _arr = new Array(1000 * 1000 * 10).fill(1)
-                    self.memoArrs.push(_arr)
+                    for (var i = 0; i < 10; i++) {
+                        const _arr = new Array(1000 * 1000 * 10).fill(1)
+                        self.memoArrs.push(_arr)
+                    }
+
+
                     return 'ok'
                 })
             })
@@ -107,6 +284,7 @@
 
         function printMemory() {
             console.log(`当前内存占用: ${parseInt(window.performance.memory.usedJSHeapSize / 1000 / 10) / 100}M - totalJSHeapSize: ${parseInt(window.performance.memory.totalJSHeapSize / 1000 / 1000)}M - jsHeapSizeLimit: ${parseInt(window.performance.memory.jsHeapSizeLimit / 1000 / 1000)}M`)
+            console.log(`当前可用内存: ${(window.performance.memory.jsHeapSizeLimit - window.performance.memory.totalJSHeapSize) / 1000 / 1000}`)
 
         }
 
@@ -136,13 +314,13 @@
             printMemory()
             var m2 = window.performance.memory.usedJSHeapSize
             console.log(`内存消耗: ${((m2 - m1) / 1000 / 1000).toFixed(2)}MB`)
-            
+
             // setTimeout(() => {
             //     printMemory()
             //     var m2 = window.performance.memory.usedJSHeapSize
             //     console.log(`内存消耗: ${((m2 - m1) / 1000 / 1000).toFixed(2)}MB`)
             // }, 0);
-           
+
         }
     </script>
 </body>
