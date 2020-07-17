@@ -1,8 +1,7 @@
 # NodeJS stream 一：Buffer
 官方Api: [http://nodejs.cn/api/buffer.html](http://nodejs.cn/api/buffer.html)
-作者：撒玛利亚人
 链接：[https://zhuanlan.zhihu.com/p/24429470](https://zhuanlan.zhihu.com/p/24429470)
-来源：知乎
+
 
 当年是看了朴灵的九浅一深 NodeJS 入门的 Node， 朴大大的书讲实践很少更多的篇幅用在了讲原理上，道理听了那么多，后来开始在前端工程领域使用 NodeJS 却处处掣肘，总结原因发现 NodeJS 中难的部分无非是文件和网络，文件操作和网络都依赖了一个很重要的对象—— Stream，这恰恰是朴大大书中没有提及的。
 Buffer 朴大大在书中是有提到过的，但因为流实际上就是在处理 Buffer，所以还是要简单总结一下。
