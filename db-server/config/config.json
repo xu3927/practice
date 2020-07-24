@@ -1,0 +1,35 @@
+{
+    "development": {
+        "username": "root",
+        "password": "12345678",
+        "database": "sequelize_development",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "operatorsAliases": false,
+        "define": {
+            "freezeTableName": true
+        }
+    },
+    "test": {
+        "username": "root",
+        "password": "12345678",
+        "database": "sequelize_test",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "operatorsAliases": false,
+        "define": {
+            "freezeTableName": true
+        }
+    },
+    "production": {
+        "username": "root",
+        "password": "12345678",
+        "database": "sequelize_production",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "operatorsAliases": false,
+        "define": {
+            "freezeTableName": true
+        }
+    }
+}
