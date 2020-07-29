@@ -1,26 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import './App.scss';
-
+import './App.scss'
 
 class App extends Component {
-    componentDidMount() {
-
-    }
+    componentDidMount() {}
     state = {
         showWelcome: true,
-        removeWelcome: false
+        removeWelcome: false,
     }
     render() {
         return (
             <div className="App">
-                <div className="title">wpk4 test</div>
+                <div className="title">wpk4 77 test</div>
             </div>
-        );
+        )
     }
 }
 
-
-
 export default App
-
