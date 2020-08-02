@@ -3,6 +3,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import statsmodels.api as sm
 
 plt.close('all')
 # 导入数据
@@ -31,7 +32,6 @@ print('a=', a)
 
 # 使用 statsmodels 模块计算
 # 1. 构建回归模型
-import statsmodels.api as sm
 fit = sm.formula.ols('Salary ~ YearsExperience', data=income).fit()
 # 2. 查看参数
 print('statsmodels计算的回归参数:', fit.params)
