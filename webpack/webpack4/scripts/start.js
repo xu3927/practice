@@ -52,6 +52,9 @@ choosePort(HOST, DEFAULT_PORT)
             return
         }
 
+        // 启用 HMR, 增加 HMR entry
+        WebpackDevServer.addDevServerEntrypoints(config, devServerConfig)
+
         // Create a webpack compiler that is configured with custom messages.
 
         const compiler = webpack(config)

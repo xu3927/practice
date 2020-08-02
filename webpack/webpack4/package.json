@@ -14,7 +14,8 @@
     "copy-webpack-plugin": "^5.0.3",
     "events": "^3.2.0",
     "fs-extra": "^8.1.0",
-    "sugarss": "^2.0.0"
+    "sugarss": "^2.0.0",
+    "supports-color-cli": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
