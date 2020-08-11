@@ -17,7 +17,7 @@ module.exports = {
      */
     // 值为字符串, 需要时 node require 函数的参数字符串，如文件路径或模块名
     // 值为字符串文件路径
-    entry: resolveApp('src/index.js'),
+    entry: ['react-hot-loader/patch', resolveApp('src/index.js')],
     //  值为模块名字符串
     // entry: {
     //     'my-lodash': 'lodash'
@@ -73,6 +73,21 @@ module.exports = {
         //  'none' | 'info' | 'verbose' 默认info.  log 的级别
         // 'info-verbosity': 'info',
     },
+    // 引用外部库的方式
+    externals: {
+        lodash: {
+            commonjs: 'lodash',
+            commonjs2: 'lodash',
+            amd: 'lodash',
+            root: '_',
+        },
+        react: {
+            commonjs: 'React',
+            commonjs2: 'React',
+            amd: 'React',
+            root: 'React',
+        },
+    },
     module: {
         rules: [
             {
@@ -84,6 +99,7 @@ module.exports = {
                     cacheDirectory: true,
                     presets: ['@babel/preset-react', '@babel/preset-env'],
                     plugins: [
+                        ['react-hot-loader/babel'],
                         [
                             'wildcard',
                             {

@@ -26,7 +26,7 @@ const devServerConfig = require('./config/devserver.config')
 const isInteractive = process.stdout.isTTY
 
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3005
 const HOST = '127.0.0.1'
 
 if (process.env.HOST) {
@@ -52,8 +52,8 @@ choosePort(HOST, DEFAULT_PORT)
             return
         }
 
-        // 启用 HMR, 增加 HMR entry
-        WebpackDevServer.addDevServerEntrypoints(config, devServerConfig)
+        // 启用 HMR, 增加 HMR entry, react 中使用 react-hot-reload 实现HMR
+        // WebpackDevServer.addDevServerEntrypoints(config, devServerConfig)
 
         // Create a webpack compiler that is configured with custom messages.
 

@@ -1,7 +1,19 @@
 import React from 'react'
+import _ from 'lodash'
 
 const Comp1 = () => {
-    return <div>哈哈哈33ff 1234</div>
+    return (
+        <div>
+            <div>comp1</div>
+            <button
+                onClick={() => {
+                    console.log(33, _.VERSION)
+                }}
+            >
+                btn
+            </button>
+        </div>
+    )
 }
 
 export default Comp1
