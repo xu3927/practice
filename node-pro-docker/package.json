@@ -1,0 +1,33 @@
+{
+  "name": "node-pro-docker",
+  "version": "1.0.0",
+  "description": "docker中的node项目",
+  "main": "main.js",
+  "repository": "",
+  "scripts": {
+    "start": "node app/main.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{json,css,scss,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{jsx,js}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "keywords": [
+    ""
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.0"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  server:
+    image: <username>/<imagename>:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:8080"
+      - "9229:9229"
+    command:
+      - node
+      - "--inspect"
+      - "app/main.js"
+    container_name: "gateway-compose"
+    volumes:
+      - .:/usr/src
+      - ./node_modules:/usr/src/app/node_modules
