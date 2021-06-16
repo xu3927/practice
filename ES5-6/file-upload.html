@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <input class="file" value="" type="file" onChange="fileOnChange">
+
+    </input>
+    <script type="text/javascript">
+
+        const ele = document.querySelector('.file')
+        ele.addEventListener('change', fileOnChange)
+        function fileOnChange(event) {
+            console.log('fileOnChange:', event)
+            const fileList = this.files;
+            console.log('fileList:', fileList)
+            const blobs = fileList[0].slice(0)
+            console.log('blobs', blobs);
+            const text = blobs.text()
+            console.log('文本内容', text);
+
+        }
+
+    </script>
+</body>
+
+</html>
